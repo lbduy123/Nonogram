@@ -1,0 +1,50 @@
+import axios from 'axios'
+
+const API_URL = '/api/nonograms/'
+
+// Create new Nonogram
+const createNonogram = async (nonogramData, token) => {
+    const config = {
+        headers: { 
+            Authorization: `Bearer ${token}`
+        }
+    }
+
+    const response = await axios.post(API_URL, nonogramData, config)
+
+    return response.data
+}
+
+// Get user Nonograms
+const getNonograms = async (token) => {
+    const config = {
+        headers: {
+        Authorization: `Bearer ${token}`,
+        },
+    }
+
+    const response = await axios.get(API_URL, config)
+
+    return response.data
+}
+
+// Delete user Nonogram
+const deleteNonogram = async (nonogramId, token) => {
+    const config = {
+        headers: {
+        Authorization: `Bearer ${token}`,
+        },
+    }
+
+    const response = await axios.delete(API_URL + nonogramId, config)
+
+    return response.data
+}
+
+const nonogramService = {
+    createNonogram,
+    getNonograms,
+    deleteNonogram
+}
+
+export default nonogramService
