@@ -3,10 +3,13 @@ import React from "react";
 import "./Grid.css";
 // Components
 import Cell from "../Cell/Cell"
+import RowHints from "../Hints/RowHints";
 
 const Grid = ({ rows, cols, updateGridData }) => {
 
 	const gridData = []
+
+	const rowHintsData = [[1, 2, 3], [1], [1, 2, 3], [2, 3], []]
 
 	for (var i = 0; i < rows; i++) {
 		gridData[i] = [];
@@ -23,27 +26,10 @@ const Grid = ({ rows, cols, updateGridData }) => {
 			flexDirection: "row",
 			justifyContent: "center",
 		}}>
-			<div style={{ marginTop: "5px" }}>
-				{[...Array(rows)].map((row, rowIndex) => {
-					return (
-						<div style={{
-							display: "grid",
-							gridTemplateColumns: `repeat(${cols}, auto)`,
-							columnGap: "10px",
-						}}>
-							{[...Array(cols)].map((col, colIndex) => {
-								return (
-									<label>3</label>
-								);
-							})}
-						</div>
-					);
-				})}
-			</div>
+			<RowHints hintsData={rowHintsData} />
 
 			<div style={{
-				display: "flex",
-				marginLeft: "10px"
+				display: "flex"
 			}}>
 				<table className="grid-table">
 					<tbody>
@@ -68,23 +54,7 @@ const Grid = ({ rows, cols, updateGridData }) => {
 				</table>
 			</div>
 
-			<div style={{ visibility: "hidden" }}>
-				{[...Array(rows)].map((row, rowIndex) => {
-					return (
-						<div style={{
-							display: "grid",
-							gridTemplateColumns: `repeat(${cols}, auto)`,
-							columnGap: "10px"
-						}}>
-							{[...Array(cols)].map((col, colIndex) => {
-								return (
-									<label>3</label>
-								);
-							})}
-						</div>
-					);
-				})}
-			</div>
+			<RowHints hidden={true} hintsData={rowHintsData} />
 
 		</div>
 

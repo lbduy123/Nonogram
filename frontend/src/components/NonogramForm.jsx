@@ -4,11 +4,15 @@ import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { createNonogram } from '../features/nonograms/nonogramSlice'
 import Grid from './Grid/Grid'
+import ColumnHints from './Hints/ColumnHints'
 
 function NonogramForm() {
 	const [rows, setRows] = useState(5)
 	const [cols, setCols] = useState(5)
 	let updatedGridData = []
+
+	// const columnHintsData = Array.from(Array(cols).keys())
+	const columnHintsData = [[1, 2, 3], [1], [1, 2, 3], [2, 3], []]
 
 	const { user } = useSelector((state) => state.auth)
 	const navigate = useNavigate()
@@ -53,27 +57,9 @@ function NonogramForm() {
 					</select>
 
 					<div>
-						<div style={{
-							display: "grid",
-							gridTemplateColumns: `repeat(${cols}, auto)`,
-							alignSelf: "center",
-							alignItems: "center",
-							justifyContent: "center",
-							columnGap: "17px",
-						}}>
-							{[...Array(cols)].map((cell, columnIndex) => {
-								return (
-									<div style={{
-										display: "grid",
-										gridTemplateRows: "auto auto auto",
-									}}>
-										<label>5</label>
-										<label>5</label>
-										<label>5</label>
-									</div>
-								);
-							})}
-						</div>
+						<ColumnHints
+							hintsData={columnHintsData} />
+
 						<Grid
 							rows={rows}
 							cols={cols}
