@@ -11,6 +11,32 @@ const getNonograms = asyncHandler(async (req, res) => {
 	res.status(200).json(nonograms)
 })
 
+// @desc    Get nonograms
+// @route   GET /api/nonograms
+// @access  Private
+const getNonogram = asyncHandler(async (req, res) => {
+	const nonogram = await Nonogram.findById(req.params.id)
+
+	// Check for user
+	if (!req.user) {
+		res.status(401)
+		throw new Error('User not found')
+	}
+
+	// Make sure the logged in user matches the goal user
+	if (nonogram.author.toString() !== req.user.id) {
+		res.status(401)
+		throw new Error('User not authorized')
+	}
+
+	if (!nonogram) {
+		res.status(400)
+		throw new Error('Nonogram not found')
+	}
+
+	res.status(200).json(nonogram)
+})
+
 // @desc    Set Nonogram
 // @route   POST /api/nonograms
 // @access  Private
@@ -90,6 +116,7 @@ const deleteNonogram = asyncHandler(async (req, res) => {
 
 module.exports = {
 	getNonograms,
+	getNonogram,
 	setNonogram,
 	updateNonogram,
 	deleteNonogram

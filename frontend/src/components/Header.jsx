@@ -22,7 +22,7 @@ function Header() {
 			{user ? (
 				<>
 					<div className="logo">
-						<Link to={'/creator/' + user._id}>My Creation</Link>
+						<Link to='/creation'>My Creation</Link>
 					</div>
 					<ul>
 						<li>

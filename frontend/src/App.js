@@ -6,7 +6,8 @@ import Login from './pages/Login'
 import Register from './pages/Register'
 import Header from './components/Header'
 import MyCreation from './pages/MyCreation'
-import NonogramForm from './components/NonogramForm'
+import New from './pages/Nonogram/New'
+import Edit from './pages/Nonogram/Edit'
 
 function App() {
   return (
@@ -18,8 +19,9 @@ function App() {
             <Route path="/" element={<Dashboard />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
-            <Route path="/creator/*" element={<MyCreation />} />
-            <Route path="/new" element={<NonogramForm />} />
+            <Route path="/creation" element={<MyCreation />} />
+            <Route path="/new" element={<New />} />
+            <Route path="/*" element={<Edit />} />
           </Routes>
         </div>
       </Router>

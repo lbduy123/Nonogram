@@ -5,15 +5,16 @@ import "./Grid.css";
 import Cell from "../Cell/Cell"
 import RowHints from "../Hints/RowHints";
 
-const Grid = ({ rows, cols, updateGridData }) => {
+const Grid = ({ rows, cols, gridData, updateGridData }) => {
 
-	const gridData = []
+	if (!gridData) {
+		gridData = []
+		for (var i = 0; i < rows; i++) {
+			gridData[i] = [];
+		}
+	}
 
 	const rowHintsData = [[1, 2, 3], [1], [1, 2, 3], [2, 3], []]
-
-	for (var i = 0; i < rows; i++) {
-		gridData[i] = [];
-	}
 
 	const handleCellClick = (props, isActive) => {
 		gridData[props.rowIndex][props.columnIndex] = isActive
@@ -42,7 +43,7 @@ const Grid = ({ rows, cols, updateGridData }) => {
 												key={rowIndex + "-" + columnIndex}
 												rowIndex={rowIndex}
 												columnIndex={columnIndex}
-												isActive={false}
+												isActive={(gridData[rowIndex][columnIndex] ? (gridData[rowIndex][columnIndex]) : false)}
 												handleCellClick={handleCellClick}
 											/>
 										);
