@@ -55,7 +55,9 @@ function MyCreation() {
 				) : (<h3>Currently have no creation</h3>)}
 			</section>
 
-			<button onClick={handleCreate} className="btn btn-primary">Create new nonogram</button>
+			<div style={{ display: 'flex', justifyContent: 'center', marginTop: '50px' }}>
+				<button onClick={handleCreate} className="btn btn-primary">Create new nonogram</button>
+			</div>
 		</>
 	)
 }

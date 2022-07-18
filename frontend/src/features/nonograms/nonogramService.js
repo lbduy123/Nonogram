@@ -42,15 +42,14 @@ const getNonogram = async (nonogramId, token) => {
 }
 
 // Update user Nonogram
-const updateNonogram = async (nonogramId, token) => {
+const updateNonogram = async (nonogramId, nonogramData, token) => {
   const config = {
     headers: {
       Authorization: `Bearer ${token}`,
     },
   }
 
-  const response = await axios.put(API_URL + nonogramId, config)
-
+  const response = await axios.put(API_URL + nonogramId, nonogramData, config)
   return response.data
 }
 

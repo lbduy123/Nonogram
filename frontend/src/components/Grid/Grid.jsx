@@ -1,4 +1,4 @@
-import React from "react";
+import { React } from "react";
 // Css files
 import "./Grid.css";
 // Components
@@ -7,18 +7,34 @@ import RowHints from "../Hints/RowHints";
 
 const Grid = ({ rows, cols, gridData, updateGridData }) => {
 
-	if (!gridData) {
+	if (!rows || !cols) {
+		rows = 5
+		cols = 5
+	}
+
+	function initGridData() {
 		gridData = []
-		for (var i = 0; i < rows; i++) {
-			gridData[i] = [];
+		for (let i = 0; i < rows; i++) {
+			gridData[i] = []
+			for (let j = 0; j < cols; j++) {
+				gridData[i][j] = false;
+			}
 		}
 	}
+
+	if (!gridData) {
+		initGridData()
+	}
+
+	let updatedGridData = gridData.map((item) =>
+		Object.assign({}, item, { selected: false })
+	)
 
 	const rowHintsData = [[1, 2, 3], [1], [1, 2, 3], [2, 3], []]
 
 	const handleCellClick = (props, isActive) => {
-		gridData[props.rowIndex][props.columnIndex] = isActive
-		updateGridData(gridData);
+		updatedGridData[props.rowIndex][props.columnIndex] = isActive
+		updateGridData(updatedGridData);
 	}
 
 	return (

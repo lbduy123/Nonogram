@@ -9,7 +9,18 @@ import ColumnHints from '../../components/Hints/ColumnHints'
 function New() {
   const [rows, setRows] = useState(5)
   const [cols, setCols] = useState(5)
-  let updatedGridData = []
+  let gridData = []
+
+  for (let i = 0; i < rows; i++) {
+    gridData[i] = []
+    for (let j = 0; j < cols; j++) {
+      gridData[i][j] = false;
+    }
+  }
+
+  console.log(gridData);
+
+  let updatedGridData = gridData
 
   // const columnHintsData = Array.from(Array(cols).keys())
   const columnHintsData = [[1, 2, 3], [1], [1, 2, 3], [2, 3], []]
@@ -62,6 +73,7 @@ function New() {
             <Grid
               rows={rows}
               cols={cols}
+              gridData={gridData}
               updateGridData={updateGridData}
             />
           </div>
@@ -69,8 +81,8 @@ function New() {
 
         </div>
 
-        <div className="form-group">
-          <button className="btn btn-block" type="submit">
+        <div style={{ display: 'flex', justifyContent: 'center', marginTop: '50px' }}>
+          <button className="btn btn-primary" type="submit">
             Create this nonogram
           </button>
         </div>

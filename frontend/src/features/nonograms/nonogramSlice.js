@@ -60,10 +60,10 @@ export const getNonogram = createAsyncThunk(
 )
 
 // Update user Nonogram
-export const updateNonogram = createAsyncThunk('nonograms/update', async (id, thunkAPI) => {
+export const updateNonogram = createAsyncThunk('nonograms/update', async (nonogram, thunkAPI) => {
   try {
     const token = thunkAPI.getState().auth.user.token
-    return await nonogramService.updateNonogram(id, token)
+    return await nonogramService.updateNonogram(nonogram.id, nonogram.nonogramData, token)
   } catch (error) {
     const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString()
     return thunkAPI.rejectWithValue(message)
