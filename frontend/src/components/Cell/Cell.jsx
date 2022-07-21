@@ -1,9 +1,13 @@
 import React from "react";
 import "./Cell.css";
-import { useState } from "react"
+import { useState, useEffect } from "react"
 
 const Cell = (props) => {
 	const [isActive, setIsActive] = useState(props.isActive)
+
+	useEffect(() => {
+		setIsActive(props.isActive)
+	}, [props.isActive])
 
 	const handleClick = () => {
 		setIsActive(!isActive);

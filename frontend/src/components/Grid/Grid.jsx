@@ -1,25 +1,41 @@
-import { React } from "react";
+import { React, useState, useEffect } from "react";
+import { useSelector } from 'react-redux'
 // Css files
 import "./Grid.css";
 // Components
 import Cell from "../Cell/Cell"
 import RowHints from "../Hints/RowHints";
 
-const Grid = ({ rows, cols, gridData, updateGridData }) => {
+const Grid = ({ rows, cols, id, gridData, updateGridData, mode }) => {
+
+	const [gridState, setGridState] = useState(Array.from({ length: rows }, () => Array.from({ length: cols }, () => false)))
+	const [viewState, setViewState] = useState(Array.from({ length: rows }, () => Array.from({ length: cols }, () => false)))
+
+	const { nonogram } = useSelector(
+		(state) => state.nonograms
+	)
 
 	if (!rows || !cols) {
 		rows = 5
 		cols = 5
 	}
 
-	function initGridData() {
-		gridData = []
-		for (let i = 0; i < rows; i++) {
-			gridData[i] = []
-			for (let j = 0; j < cols; j++) {
-				gridData[i][j] = false;
-			}
+	useEffect(() => {
+		if (mode === "new") {
+			const newGrid = Array.from({ length: rows }, () => Array.from({ length: cols }, () => false))
+			setGridState(newGrid)
+		} else {
+			const viewGrid = (nonogram.gridData ?
+				nonogram.gridData.map((item) =>
+					Object.assign({}, item, { selected: false })
+				) :
+				Array.from({ length: rows }, () => Array.from({ length: cols }, () => false)))
+			setViewState(viewGrid)
 		}
+	}, [rows, cols, mode, nonogram])
+
+	function initGridData() {
+		gridData = Array.from({ length: rows }, () => Array.from({ length: cols }, () => false))
 	}
 
 	if (!gridData) {
@@ -33,8 +49,15 @@ const Grid = ({ rows, cols, gridData, updateGridData }) => {
 	const rowHintsData = [[1, 2, 3], [1], [1, 2, 3], [2, 3], []]
 
 	const handleCellClick = (props, isActive) => {
-		updatedGridData[props.rowIndex][props.columnIndex] = isActive
-		updateGridData(updatedGridData);
+		if (mode === "new") {
+			let newGrid = [...gridState]
+			newGrid[props.rowIndex][props.columnIndex] = isActive
+			setGridState(newGrid)
+			updateGridData(newGrid);
+		} else {
+			updatedGridData[props.rowIndex][props.columnIndex] = isActive
+			updateGridData(updatedGridData);
+		}
 	}
 
 	return (
@@ -50,23 +73,41 @@ const Grid = ({ rows, cols, gridData, updateGridData }) => {
 			}}>
 				<table className="grid-table">
 					<tbody>
-						{[...Array(rows)].map((row, rowIndex) => {
-							return (
-								<tr className="row" key={rowIndex}>
-									{[...Array(cols)].map((cell, columnIndex) => {
-										return (
-											<Cell
-												key={rowIndex + "-" + columnIndex}
-												rowIndex={rowIndex}
-												columnIndex={columnIndex}
-												isActive={(gridData[rowIndex][columnIndex] ? (gridData[rowIndex][columnIndex]) : false)}
-												handleCellClick={handleCellClick}
-											/>
-										);
-									})}
-								</tr>
-							);
-						})}
+						{mode === "new" ?
+							[...Array(rows)].map((row, rowIndex) => {
+								return (
+									<tr className="row" key={rowIndex}>
+										{[...Array(cols)].map((cell, columnIndex) => {
+											return (
+												<Cell
+													key={rowIndex + "-" + columnIndex}
+													rowIndex={rowIndex}
+													columnIndex={columnIndex}
+													isActive={(gridState[rowIndex] ? (gridState[rowIndex][columnIndex]) : false)}
+													handleCellClick={handleCellClick}
+												/>
+											);
+										})}
+									</tr>
+								);
+							}) :
+							[...Array(rows)].map((row, rowIndex) => {
+								return (
+									<tr className="row" key={rowIndex}>
+										{[...Array(cols)].map((cell, columnIndex) => {
+											return (
+												<Cell
+													key={rowIndex + "-" + columnIndex}
+													rowIndex={rowIndex}
+													columnIndex={columnIndex}
+													isActive={(viewState[rowIndex] ? (viewState[rowIndex][columnIndex]) : false)}
+													handleCellClick={handleCellClick}
+												/>
+											);
+										})}
+									</tr>
+								);
+							})}
 					</tbody>
 				</table>
 			</div>

@@ -19,12 +19,16 @@ function Edit() {
     (state) => state.nonograms
   )
 
+  const [rows, setRows] = useState(5)
+  const [cols, setCols] = useState(5)
+
   const navigate = useNavigate()
   const dispatch = useDispatch()
 
   useEffect(() => {
     if (isError) {
       console.log(message)
+      navigate('/')
     }
 
     if (!user) {
@@ -32,23 +36,16 @@ function Edit() {
     }
 
     dispatch(getNonogram(gridId))
+    if (nonogram.rows && nonogram.rows !== rows) setRows(nonogram.rows)
+    if (nonogram.cols && nonogram.cols !== cols) setCols(nonogram.cols)
 
-    return () => {
-      dispatch(reset())
-    }
-  }, [user, navigate, isError, message, dispatch, gridId])
+  }, [user, navigate, isError, message, dispatch, gridId, nonogram.rows, nonogram.cols])
 
-  const [rows, setRows] = useState(isSuccess ? nonogram.rows : 5)
-  const [cols, setCols] = useState(isSuccess ? nonogram.cols : 5)
+  console.log(rows, nonogram.rows);
 
-  let gridData = []
+  let gridData
   function initGridData(rows, cols) {
-    for (let i = 0; i < rows; i++) {
-      gridData[i] = []
-      for (let j = 0; j < cols; j++) {
-        gridData[i][j] = false;
-      }
-    }
+    gridData = Array.from({ length: rows }, () => Array.from({ length: cols }, () => false))
   }
 
   initGridData(rows, cols)
@@ -58,8 +55,6 @@ function Edit() {
       Object.assign({}, item, { selected: false })
     )
   }
-
-  console.log(nonogram);
 
   let updatedGridData = gridData
 
@@ -118,6 +113,7 @@ function Edit() {
             <Grid
               rows={nonogram.rows}
               cols={nonogram.cols}
+              id={gridId}
               gridData={nonogram.gridData}
               updateGridData={updateGridData}
             />

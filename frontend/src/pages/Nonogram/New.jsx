@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { createNonogram } from '../../features/nonograms/nonogramSlice'
@@ -9,18 +9,8 @@ import ColumnHints from '../../components/Hints/ColumnHints'
 function New() {
   const [rows, setRows] = useState(5)
   const [cols, setCols] = useState(5)
-  let gridData = []
 
-  for (let i = 0; i < rows; i++) {
-    gridData[i] = []
-    for (let j = 0; j < cols; j++) {
-      gridData[i][j] = false;
-    }
-  }
-
-  console.log(gridData);
-
-  let updatedGridData = gridData
+  let updatedGridData = Array.from({ length: rows }, () => Array.from({ length: cols }, () => false))
 
   // const columnHintsData = Array.from(Array(cols).keys())
   const columnHintsData = [[1, 2, 3], [1], [1, 2, 3], [2, 3], []]
@@ -30,6 +20,14 @@ function New() {
 
   const updateGridData = (gridData) => {
     updatedGridData = gridData
+  }
+
+  const handleChangeRows = (e) => {
+    setRows(parseInt(e.target.value))
+  }
+
+  const handleChangeCols = (e) => {
+    setCols(parseInt(e.target.value))
   }
 
   const onSubmit = (e) => {
@@ -52,14 +50,14 @@ function New() {
     <section className="form">
       <form onSubmit={onSubmit}>
         <div className="form-group">
-          <select value={rows} onChange={(e) => setRows(parseInt(e.target.value))}>
+          <select value={rows} onChange={handleChangeRows}>
             <option value={5}>5</option>
             <option value={10}>10</option>
             <option value={15}>15</option>
             <option value={20}>20</option>
           </select>
 
-          <select value={cols} onChange={(e) => setCols(parseInt(e.target.value))}>
+          <select value={cols} onChange={handleChangeCols}>
             <option value={5}>5</option>
             <option value={10}>10</option>
             <option value={15}>15</option>
@@ -73,7 +71,7 @@ function New() {
             <Grid
               rows={rows}
               cols={cols}
-              gridData={gridData}
+              mode="new"
               updateGridData={updateGridData}
             />
           </div>
