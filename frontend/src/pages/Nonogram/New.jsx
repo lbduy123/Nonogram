@@ -4,16 +4,12 @@ import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { createNonogram } from '../../features/nonograms/nonogramSlice'
 import Grid from '../../components/Grid/Grid'
-import ColumnHints from '../../components/Hints/ColumnHints'
 
 function New() {
   const [rows, setRows] = useState(5)
   const [cols, setCols] = useState(5)
 
   let updatedGridData = Array.from({ length: rows }, () => Array.from({ length: cols }, () => false))
-
-  // const columnHintsData = Array.from(Array(cols).keys())
-  const columnHintsData = [[1, 2, 3], [1], [1, 2, 3], [2, 3], []]
 
   const navigate = useNavigate()
   const dispatch = useDispatch()
@@ -64,18 +60,12 @@ function New() {
             <option value={20}>20</option>
           </select>
 
-          <div>
-            <ColumnHints
-              hintsData={columnHintsData} />
-
-            <Grid
-              rows={rows}
-              cols={cols}
-              mode="new"
-              updateGridData={updateGridData}
-            />
-          </div>
-
+          <Grid
+            rows={rows}
+            cols={cols}
+            mode="new"
+            updateGridData={updateGridData}
+          />
 
         </div>
 

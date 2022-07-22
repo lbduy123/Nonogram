@@ -5,76 +5,82 @@ import "./Grid.css";
 // Components
 import Cell from "../Cell/Cell"
 import RowHints from "../Hints/RowHints";
+import ColumnHints from "../Hints/ColumnHints";
 
-const Grid = ({ rows, cols, id, gridData, updateGridData, mode }) => {
+const Grid = ({ rows, cols, updateGridData, mode }) => {
 
-	const [gridState, setGridState] = useState(Array.from({ length: rows }, () => Array.from({ length: cols }, () => false)))
+	const [newState, setNewState] = useState(Array.from({ length: rows }, () => Array.from({ length: cols }, () => false)))
 	const [viewState, setViewState] = useState(Array.from({ length: rows }, () => Array.from({ length: cols }, () => false)))
+	const [isLoaded, setIsLoaded] = useState(false)
 
 	const { nonogram } = useSelector(
 		(state) => state.nonograms
 	)
 
-	if (!rows || !cols) {
-		rows = 5
-		cols = 5
-	}
+	// const columnHintsData = Array.from(Array(cols).keys())
+	const columnHintsData = [[1, 2, 3], [1], [1, 2, 3], [2, 3], []]
 
+	// Clear grid when changing rows or cols
 	useEffect(() => {
 		if (mode === "new") {
 			const newGrid = Array.from({ length: rows }, () => Array.from({ length: cols }, () => false))
-			setGridState(newGrid)
-		} else {
+			setNewState(newGrid)
+		} else if (isLoaded) {
+			const viewGrid = Array.from({ length: rows }, () => Array.from({ length: cols }, () => false))
+			setViewState(viewGrid)
+			updateGridData(viewGrid)
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [rows, cols, mode, updateGridData])
+
+	// Load grid from store
+	useEffect(() => {
+		if (mode !== "new") {
 			const viewGrid = (nonogram.gridData ?
 				nonogram.gridData.map((item) =>
 					Object.assign({}, item, { selected: false })
 				) :
 				Array.from({ length: rows }, () => Array.from({ length: cols }, () => false)))
+			updateGridData(viewGrid)
 			setViewState(viewGrid)
+			setIsLoaded(true)
 		}
-	}, [rows, cols, mode, nonogram])
-
-	function initGridData() {
-		gridData = Array.from({ length: rows }, () => Array.from({ length: cols }, () => false))
-	}
-
-	if (!gridData) {
-		initGridData()
-	}
-
-	let updatedGridData = gridData.map((item) =>
-		Object.assign({}, item, { selected: false })
-	)
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [mode, nonogram.gridData])
 
 	const rowHintsData = [[1, 2, 3], [1], [1, 2, 3], [2, 3], []]
 
 	const handleCellClick = (props, isActive) => {
 		if (mode === "new") {
-			let newGrid = [...gridState]
+			let newGrid = [...newState]
 			newGrid[props.rowIndex][props.columnIndex] = isActive
-			setGridState(newGrid)
+			setNewState(newGrid)
 			updateGridData(newGrid);
 		} else {
-			updatedGridData[props.rowIndex][props.columnIndex] = isActive
-			updateGridData(updatedGridData);
+			let viewGrid = [...viewState]
+			viewGrid[props.rowIndex][props.columnIndex] = isActive
+			setViewState(viewGrid)
+			updateGridData(viewGrid);
 		}
 	}
 
 	return (
-		<div style={{
-			display: "flex",
-			flexDirection: "row",
-			justifyContent: "center",
-		}}>
-			<RowHints hintsData={rowHintsData} />
+		<>
+			<ColumnHints hintsData={columnHintsData} />
 
 			<div style={{
-				display: "flex"
+				display: "flex",
+				flexDirection: "row",
+				justifyContent: "center",
 			}}>
-				<table className="grid-table">
-					<tbody>
-						{mode === "new" ?
-							[...Array(rows)].map((row, rowIndex) => {
+				<RowHints hintsData={rowHintsData} />
+
+				<div style={{
+					display: "flex"
+				}}>
+					<table className="grid-table">
+						<tbody>
+							{[...Array(rows)].map((row, rowIndex) => {
 								return (
 									<tr className="row" key={rowIndex}>
 										{[...Array(cols)].map((cell, columnIndex) => {
@@ -83,24 +89,9 @@ const Grid = ({ rows, cols, id, gridData, updateGridData, mode }) => {
 													key={rowIndex + "-" + columnIndex}
 													rowIndex={rowIndex}
 													columnIndex={columnIndex}
-													isActive={(gridState[rowIndex] ? (gridState[rowIndex][columnIndex]) : false)}
-													handleCellClick={handleCellClick}
-												/>
-											);
-										})}
-									</tr>
-								);
-							}) :
-							[...Array(rows)].map((row, rowIndex) => {
-								return (
-									<tr className="row" key={rowIndex}>
-										{[...Array(cols)].map((cell, columnIndex) => {
-											return (
-												<Cell
-													key={rowIndex + "-" + columnIndex}
-													rowIndex={rowIndex}
-													columnIndex={columnIndex}
-													isActive={(viewState[rowIndex] ? (viewState[rowIndex][columnIndex]) : false)}
+													isActive={mode === "new" ?
+														(newState[rowIndex] ? (newState[rowIndex][columnIndex]) : false) :
+														(viewState[rowIndex] ? (viewState[rowIndex][columnIndex]) : false)}
 													handleCellClick={handleCellClick}
 												/>
 											);
@@ -108,13 +99,14 @@ const Grid = ({ rows, cols, id, gridData, updateGridData, mode }) => {
 									</tr>
 								);
 							})}
-					</tbody>
-				</table>
+						</tbody>
+					</table>
+				</div>
+
+				<RowHints hidden={true} hintsData={rowHintsData} />
+
 			</div>
-
-			<RowHints hidden={true} hintsData={rowHintsData} />
-
-		</div>
+		</>
 
 	);
 };

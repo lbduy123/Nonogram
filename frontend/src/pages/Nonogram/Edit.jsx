@@ -2,20 +2,16 @@ import { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { toast } from 'react-toastify'
-import { getNonogram, updateNonogram, reset } from '../../features/nonograms/nonogramSlice'
+import { getNonogram, updateNonogram } from '../../features/nonograms/nonogramSlice'
 import Grid from '../../components/Grid/Grid'
-import ColumnHints from '../../components/Hints/ColumnHints'
 import Spinner from '../../components/Spinner'
 
 function Edit() {
   const location = useLocation()
   const gridId = location.pathname.substring(1)
 
-  // const columnHintsData = Array.from(Array(cols).keys())
-  const columnHintsData = [[1, 2, 3], [1], [1, 2, 3], [2, 3], []]
-
   const { user } = useSelector((state) => state.auth)
-  const { nonogram, isLoading, isError, message, isSuccess } = useSelector(
+  const { nonogram, isLoading, isError, message } = useSelector(
     (state) => state.nonograms
   )
 
@@ -36,27 +32,12 @@ function Edit() {
     }
 
     dispatch(getNonogram(gridId))
-    if (nonogram.rows && nonogram.rows !== rows) setRows(nonogram.rows)
-    if (nonogram.cols && nonogram.cols !== cols) setCols(nonogram.cols)
+    setRows(nonogram.rows)
+    setCols(nonogram.cols)
 
   }, [user, navigate, isError, message, dispatch, gridId, nonogram.rows, nonogram.cols])
 
-  console.log(rows, nonogram.rows);
-
-  let gridData
-  function initGridData(rows, cols) {
-    gridData = Array.from({ length: rows }, () => Array.from({ length: cols }, () => false))
-  }
-
-  initGridData(rows, cols)
-
-  if (nonogram.gridData) {
-    gridData = nonogram.gridData.map((item) =>
-      Object.assign({}, item, { selected: false })
-    )
-  }
-
-  let updatedGridData = gridData
+  let updatedGridData
 
   const updateGridData = (gridData) => {
     updatedGridData = gridData
@@ -106,19 +87,11 @@ function Edit() {
             <option value={20}>20</option>
           </select>
 
-          <div>
-            <ColumnHints
-              hintsData={columnHintsData} />
-
-            <Grid
-              rows={nonogram.rows}
-              cols={nonogram.cols}
-              id={gridId}
-              gridData={nonogram.gridData}
-              updateGridData={updateGridData}
-            />
-          </div>
-
+          <Grid
+            rows={rows}
+            cols={cols}
+            updateGridData={updateGridData}
+          />
 
         </div>
 
