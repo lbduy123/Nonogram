@@ -17,11 +17,16 @@ const Cell = (props) => {
 	}, [props.isActive])
 
 	const handleClick = () => {
-		if (props.mode === "play" && nonogram.gridData[props.rowIndex][props.columnIndex] === false) {
-			setIsWrong(true)
-		} else {
+		if (props.mode !== "play") {
 			setIsActive(!isActive);
 			props.handleCellClick(props, !isActive);
+		} else {
+			if (nonogram.gridData[props.rowIndex][props.columnIndex] === false) {
+				setIsWrong(true)
+			} else if (isActive === false) {
+				setIsActive(true)
+				props.handleCellClick(props, true)
+			}
 		}
 	}
 
@@ -31,18 +36,19 @@ const Cell = (props) => {
 		}
 	}
 
-	const className = isActive ?
-		(isWrong ?
-			"cell-invalid" :
-			"cell-correct") :
-		"cell cell-modifiable"
+	const className = isWrong ?
+		"cell-invalid" :
+		(isActive ? "cell-correct" :
+			"cell-modifiable")
 
 	return (
 		<td
 			className={className}
 			onClick={handleClick}
 			onMouseOver={handleDrag}
-		/>
+		>
+			{className === "cell-invalid" ? <label className="cell-wrong">x</label> : <></>}
+		</td>
 	);
 };
 

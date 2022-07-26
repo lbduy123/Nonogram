@@ -8,7 +8,7 @@ function NonogramItem({ nonogram }) {
 
 	const handleEdit = (e) => {
 		e.preventDefault()
-		navigate('/' + nonogram._id)
+		navigate('/e/' + nonogram._id)
 	}
 
 	const handlePlay = (e) => {

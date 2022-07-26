@@ -22,7 +22,7 @@ function App() {
             <Route path="/register" element={<Register />} />
             <Route path="/creation" element={<MyCreation />} />
             <Route path="/new" element={<New />} />
-            <Route path="/*" element={<Edit />} />
+            <Route path="/e/*" element={<Edit />} />
             <Route path="/p/*" element={<Play />} />
           </Routes>
         </div>

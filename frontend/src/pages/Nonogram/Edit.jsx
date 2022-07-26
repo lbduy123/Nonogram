@@ -8,7 +8,7 @@ import Spinner from '../../components/Spinner'
 
 function Edit() {
   const location = useLocation()
-  const gridId = location.pathname.substring(1)
+  const gridId = location.pathname.substring(3)
 
   const { user } = useSelector((state) => state.auth)
   const { nonogram, isLoading, isError, message } = useSelector(
@@ -61,6 +61,11 @@ function Edit() {
     setCols(parseInt(e.target.value))
   }
 
+  const handleClickBack = (e) => {
+    e.preventDefault()
+    navigate('/creation')
+  }
+
   const onSubmit = (e) => {
     e.preventDefault()
 
@@ -102,7 +107,10 @@ function Edit() {
 
         </div>
 
-        <div style={{ display: 'flex', justifyContent: 'center', marginTop: '50px' }}>
+        <div style={{ display: 'flex', justifyContent: 'center', marginTop: '50px', gap: '20px' }}>
+          <button className="btn btn-primary" onClick={handleClickBack}>
+            Back
+          </button>
           <button className="btn btn-primary" type="submit">
             Save
           </button>

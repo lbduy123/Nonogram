@@ -16,9 +16,13 @@ td {
   border-bottom: 3px solid #141c3a;
 }
 
-.cell-modifiable{
+.cell-modifiable {
   cursor: pointer;
   color: blue;
+}
+
+.cell-modifiable:hover {
+  border: 3px solid #E8A0BF;
 }
 
 .cell-correct {
@@ -26,7 +30,12 @@ td {
 }
 
 .cell-invalid {
-  background-color: #ff000054;
+  /* background-color: #ff000054; */
+}
+
+.cell-wrong {
+  color: #ff000054;
+  font-size: xx-large;
 }
 
 .cell-hinted{
