@@ -18,11 +18,12 @@ const Grid = ({ rows, cols, updateGridData, mode }) => {
 	)
 
 	// const columnHintsData = Array.from(Array(cols).keys())
+	const rowHintsData = [[1, 2, 3], [1], [1, 2, 3], [2, 3], []]
 	const columnHintsData = [[1, 2, 3], [1], [1, 2, 3], [2, 3], []]
 
 	// Clear grid when changing rows or cols
 	useEffect(() => {
-		if (mode === "new") {
+		if (mode !== "edit") {
 			const newGrid = Array.from({ length: rows }, () => Array.from({ length: cols }, () => false))
 			setNewState(newGrid)
 		} else if (isLoaded) {
@@ -35,11 +36,9 @@ const Grid = ({ rows, cols, updateGridData, mode }) => {
 
 	// Load grid from store
 	useEffect(() => {
-		if (mode !== "new") {
+		if (mode === "edit") {
 			const viewGrid = (nonogram.gridData ?
-				nonogram.gridData.map((item) =>
-					Object.assign({}, item, { selected: false })
-				) :
+				nonogram.gridData.map(Object.values) :
 				Array.from({ length: rows }, () => Array.from({ length: cols }, () => false)))
 			updateGridData(viewGrid)
 			setViewState(viewGrid)
@@ -48,10 +47,8 @@ const Grid = ({ rows, cols, updateGridData, mode }) => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [mode, nonogram.gridData])
 
-	const rowHintsData = [[1, 2, 3], [1], [1, 2, 3], [2, 3], []]
-
 	const handleCellClick = (props, isActive) => {
-		if (mode === "new") {
+		if (mode !== "edit") {
 			let newGrid = [...newState]
 			newGrid[props.rowIndex][props.columnIndex] = isActive
 			setNewState(newGrid)
@@ -87,11 +84,13 @@ const Grid = ({ rows, cols, updateGridData, mode }) => {
 											return (
 												<Cell
 													key={rowIndex + "-" + columnIndex}
+													mode={mode}
 													rowIndex={rowIndex}
 													columnIndex={columnIndex}
-													isActive={mode === "new" ?
+													isActive={mode !== "edit" ?
 														(newState[rowIndex] ? (newState[rowIndex][columnIndex]) : false) :
 														(viewState[rowIndex] ? (viewState[rowIndex][columnIndex]) : false)}
+													resultCell={mode === "play" ? true : false}
 													handleCellClick={handleCellClick}
 												/>
 											);

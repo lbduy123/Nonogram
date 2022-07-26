@@ -15,26 +15,25 @@ const getNonograms = asyncHandler(async (req, res) => {
 // @route   GET /api/nonograms
 // @access  Private
 const getNonogram = asyncHandler(async (req, res) => {
-	const nonogram = await Nonogram.findById(req.params.id)
+	try {
+		const nonogram = await Nonogram.findById(req.params.id)
 
-	// Check for user
-	if (!req.user) {
-		res.status(401)
-		throw new Error('User not found')
-	}
+		// Check for user
+		if (!req.user) {
+			res.status(401)
+			throw new Error('User not found')
+		}
 
-	// Make sure the logged in user matches the goal user
-	if (nonogram.author.toString() !== req.user.id) {
-		res.status(401)
-		throw new Error('User not authorized')
-	}
+		if (!nonogram) {
+			res.status(400)
+			throw new Error('Nonogram not found')
+		}
 
-	if (!nonogram) {
+		res.status(200).json(nonogram)
+	} catch (error) {
 		res.status(400)
-		throw new Error('Nonogram not found')
+		throw new Error(error.response)
 	}
-
-	res.status(200).json(nonogram)
 })
 
 // @desc    Set Nonogram

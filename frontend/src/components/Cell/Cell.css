@@ -21,6 +21,10 @@ td {
   color: blue;
 }
 
+.cell-correct {
+  background-color: #8f8dd8;
+}
+
 .cell-invalid {
   background-color: #ff000054;
 }

@@ -8,6 +8,7 @@ import Header from './components/Header'
 import MyCreation from './pages/MyCreation'
 import New from './pages/Nonogram/New'
 import Edit from './pages/Nonogram/Edit'
+import Play from './pages/Nonogram/Play'
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
             <Route path="/creation" element={<MyCreation />} />
             <Route path="/new" element={<New />} />
             <Route path="/*" element={<Edit />} />
+            <Route path="/p/*" element={<Play />} />
           </Routes>
         </div>
       </Router>

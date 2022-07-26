@@ -24,6 +24,7 @@ function Edit() {
   useEffect(() => {
     if (isError) {
       console.log(message)
+      toast.error(message)
       navigate('/')
     }
 
@@ -31,11 +32,16 @@ function Edit() {
       navigate('/login')
     }
 
+    if (nonogram.author && nonogram.author !== user._id) {
+      toast.error("Not authorized")
+      navigate("/")
+    }
+
     dispatch(getNonogram(gridId))
     setRows(nonogram.rows)
     setCols(nonogram.cols)
 
-  }, [user, navigate, isError, message, dispatch, gridId, nonogram.rows, nonogram.cols])
+  }, [user, navigate, isError, message, dispatch, gridId, nonogram._id, nonogram.author, nonogram.rows, nonogram.cols])
 
   let updatedGridData
 
@@ -90,6 +96,7 @@ function Edit() {
           <Grid
             rows={rows}
             cols={cols}
+            mode="edit"
             updateGridData={updateGridData}
           />
 

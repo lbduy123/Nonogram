@@ -11,6 +11,11 @@ function NonogramItem({ nonogram }) {
 		navigate('/' + nonogram._id)
 	}
 
+	const handlePlay = (e) => {
+		e.preventDefault()
+		navigate('/p/' + nonogram._id)
+	}
+
 	return (
 		<div className="goal">
 			<div>
@@ -19,7 +24,7 @@ function NonogramItem({ nonogram }) {
 			<h2>{nonogram.rows}x{nonogram.cols}</h2>
 			<button onClick={() => dispatch(deleteNonogram(nonogram._id))} className="close">x</button>
 			<button onClick={handleEdit} className="edit">Edit</button>
-			<button onClick={() => dispatch(deleteNonogram(nonogram._id))} className="play">Play</button>
+			<button onClick={handlePlay} className="play">Play</button>
 		</div>
 	)
 }
