@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import nonogramService from './nonogramService'
 
 const initialState = {
+  allNonograms: [],
   nonograms: [],
   nonogram: {},
   isError: false,
@@ -23,11 +24,30 @@ export const createNonogram = createAsyncThunk('nonograms/create', async (nonogr
 
 // Get user Nonograms
 export const getNonograms = createAsyncThunk(
-  'nonograms/getAll',
+  'nonograms/getUserOnes',
   async (_, thunkAPI) => {
     try {
       const token = thunkAPI.getState().auth.user.token
       return await nonogramService.getNonograms(token)
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString()
+      return thunkAPI.rejectWithValue(message)
+    }
+  }
+)
+
+// Get all Nonograms
+export const getAllNonograms = createAsyncThunk(
+  'nonograms/getAll',
+  async (_, thunkAPI) => {
+    try {
+      const token = thunkAPI.getState().auth.user.token
+      return await nonogramService.getAllNonograms(token)
     } catch (error) {
       const message =
         (error.response &&
@@ -102,6 +122,7 @@ export const nonogramSlice = createSlice({
         state.isSuccess = true
         state.message = action.payload
       })
+
       .addCase(getNonograms.pending, (state) => {
         state.isLoading = true
       })
@@ -111,6 +132,20 @@ export const nonogramSlice = createSlice({
         state.nonograms = action.payload
       })
       .addCase(getNonograms.rejected, (state, action) => {
+        state.isLoading = false
+        state.isError = true
+        state.message = action.payload
+      })
+
+      .addCase(getAllNonograms.pending, (state) => {
+        state.isLoading = true
+      })
+      .addCase(getAllNonograms.fulfilled, (state, action) => {
+        state.isLoading = false
+        state.isSuccess = true
+        state.allNonograms = action.payload
+      })
+      .addCase(getAllNonograms.rejected, (state, action) => {
         state.isLoading = false
         state.isError = true
         state.message = action.payload

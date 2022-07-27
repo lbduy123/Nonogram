@@ -1,15 +1,45 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 
-function RowHints({ hintsData, hidden }) {
+function RowHints({ gridData, hidden }) {
+
+  const [rowHints, setRowHints] = useState(Array.from({ length: 5 }, () => []))
+  let rowHintsData = []
+
+  useEffect(() => {
+    if (gridData && gridData.length) {
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      rowHintsData = []
+      const convertedGrid = gridData.map(Object.values)
+      let rowHintsCount = 0
+
+      for (let i = 0; i < convertedGrid.length; i++) {
+        rowHintsData.push([])
+        for (let j = 0; j < convertedGrid[i].length; j++) {
+          if (convertedGrid[i][j] === true) {
+            rowHintsCount++
+            if (j + 1 === convertedGrid[i].length) {
+              rowHintsData[i].push(rowHintsCount)
+              rowHintsCount = 0;
+            }
+          } else if (rowHintsCount !== 0) {
+            rowHintsData[i].push(rowHintsCount)
+            rowHintsCount = 0;
+          }
+        }
+      }
+      setRowHints(rowHintsData)
+    }
+  }, [gridData])
+
   return (
     <div style={{
       margin: "0px 20px",
       display: "grid",
-      gridTemplateRows: `repeat(${hintsData.length}, auto)`,
+      gridTemplateRows: `repeat(${rowHints.length}, auto)`,
       justifyItems: "end",
       visibility: hidden ? "hidden" : ""
     }}>
-      {[...hintsData].map((row, rowIndex) => {
+      {[...rowHints].map((row, rowIndex) => {
         return (
           <div
             style={{

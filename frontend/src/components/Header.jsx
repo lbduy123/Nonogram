@@ -16,15 +16,15 @@ function Header() {
 
 	return (
 		<header className="header">
+			<div className="logo header-first-child">
+				<Link to='/'>Dashboard</Link>
+			</div>
 			<div className="logo">
-				<Link to='/'>GoalSetter</Link>
+				<Link to='/creation'>My Creation</Link>
 			</div>
 			{user ? (
 				<>
-					<div className="logo">
-						<Link to='/creation'>My Creation</Link>
-					</div>
-					<ul>
+					<ul className="btn-header-area" >
 						<li>
 							<button className="btn" onClick={onLogout}>
 								<FaSignOutAlt /> Logout
@@ -33,7 +33,7 @@ function Header() {
 					</ul>
 				</>
 			) : (
-				<ul>
+				<ul className="btn-header-area">
 					<li>
 						<Link to='/login'>
 							<FaSignInAlt /> Login

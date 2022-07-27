@@ -15,6 +15,19 @@ const createNonogram = async (nonogramData, token) => {
   return response.data
 }
 
+// Get all Nonograms
+const getAllNonograms = async (token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }
+
+  const response = await axios.get(API_URL + "all", config)
+
+  return response.data
+}
+
 // Get user Nonograms
 const getNonograms = async (token) => {
   const config = {
@@ -68,6 +81,7 @@ const deleteNonogram = async (nonogramId, token) => {
 
 const nonogramService = {
   createNonogram,
+  getAllNonograms,
   getNonograms,
   getNonogram,
   updateNonogram,

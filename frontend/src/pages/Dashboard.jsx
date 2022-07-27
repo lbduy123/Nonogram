@@ -1,19 +1,17 @@
 import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
-import GoalForm from '../components/GoalForm'
-import GoalItem from '../components/GoalItem'
+import NonogramItem from '../components/NonogramItem'
 import Spinner from '../components/Spinner'
-import { getGoals } from '../features/goals/goalSlice'
-import { reset } from '../features/auth/authSlice'
+import { getAllNonograms, reset } from '../features/nonograms/nonogramSlice'
 
 function Dashboard() {
   const navigate = useNavigate()
   const dispatch = useDispatch()
 
   const { user } = useSelector((state) => state.auth)
-  const { goals, isLoading, isError, message } = useSelector(
-    (state) => state.goals
+  const { allNonograms, isLoading, isError, message } = useSelector(
+    (state) => state.nonograms
   )
 
   useEffect(() => {
@@ -25,7 +23,7 @@ function Dashboard() {
       navigate('/login')
     }
 
-    dispatch(getGoals())
+    dispatch(getAllNonograms())
 
     return () => {
       dispatch(reset())
@@ -40,19 +38,17 @@ function Dashboard() {
     <>
       <section className="heading">
         <h1>Welcome {user && user.name}</h1>
-        <p>Goals Dashboard</p>
+        <p>Nonograms Dashboard</p>
       </section>
 
-      <GoalForm />
-
       <section className="content">
-        {goals.length > 0 ? (
+        {allNonograms.length > 0 ? (
           <div className="goals">
-            {goals.map((goal) => (
-              <GoalItem key={goal._id} goal={goal} />
+            {allNonograms.map((nonogram) => (
+              <NonogramItem key={nonogram._id} nonogram={nonogram} isEditShown={false} />
             ))}
           </div>
-        ) : (<h3>You have not set any goals</h3>)}
+        ) : (<h3>Not available</h3>)}
       </section>
     </>
   )

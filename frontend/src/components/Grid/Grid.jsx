@@ -17,10 +17,6 @@ const Grid = ({ rows, cols, updateGridData, mode }) => {
 		(state) => state.nonograms
 	)
 
-	// const columnHintsData = Array.from(Array(cols).keys())
-	const rowHintsData = [[1, 2, 3], [1], [1, 2, 3], [2, 3], []]
-	const columnHintsData = [[1, 2, 3], [1], [1, 2, 3], [2, 3], []]
-
 	// Clear grid when changing rows or cols
 	useEffect(() => {
 		if (mode !== "edit") {
@@ -61,16 +57,23 @@ const Grid = ({ rows, cols, updateGridData, mode }) => {
 		}
 	}
 
+	const className =
+		rows === 10 ? 'nonogram-10' :
+			(rows === 15 ? 'nonogram-15' :
+				(rows === 20 ? 'nonogram-20' : ''))
+
 	return (
-		<>
-			<ColumnHints hintsData={columnHintsData} />
+		<div className={className}>
+			<ColumnHints gridData={mode === "new" ?
+				newState : (mode === "edit" ? viewState : nonogram.gridData)} />
 
 			<div style={{
 				display: "flex",
 				flexDirection: "row",
 				justifyContent: "center",
 			}}>
-				<RowHints hintsData={rowHintsData} />
+				<RowHints gridData={mode === "new" ?
+					newState : (mode === "edit" ? viewState : nonogram.gridData)} />
 
 				<div style={{
 					display: "flex"
@@ -102,10 +105,11 @@ const Grid = ({ rows, cols, updateGridData, mode }) => {
 					</table>
 				</div>
 
-				<RowHints hidden={true} hintsData={rowHintsData} />
+				<RowHints hidden={true} gridData={mode === "new" ?
+					newState : (mode === "edit" ? viewState : nonogram.gridData)} />
 
 			</div>
-		</>
+		</div>
 
 	);
 };

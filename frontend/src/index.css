@@ -43,12 +43,22 @@ h3 {
 }
 
 .header {
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: 1fr repeat(2, auto) 1fr;
+  grid-column-gap: 100px;
+  justify-items: center;
   align-items: center;
   padding: 20px 0;
   border-bottom: 1px solid #e6e6e6;
   margin-bottom: 60px;
+}
+
+.btn-header-area {
+  margin-left: auto;
+}
+
+.header-first-child {
+  grid-column-start: 2;
 }
 
 .header ul {
@@ -85,9 +95,30 @@ h3 {
   color: #828282;
 }
 
+/* .nonogram-10 {
+  --scale: 0.9;
+  transform: scale(var(--scale));
+  transform-origin: top;
+  margin-bottom: calc((var(--scale) - 1) * 100%);
+}
+
+.nonogram-15 {
+  --scale: 0.5;
+  transform: scale(var(--scale));
+  transform-origin: top;
+  margin-bottom: calc((var(--scale) - 1) * 100%);
+}
+
+.nonogram-20 {
+  --scale: 0.3;
+  transform: scale(var(--scale));
+  transform-origin: top;
+  margin-bottom: calc((var(--scale) - 1) * 100%);
+} */
+
 .goals {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   gap: 10px;
 }
 
@@ -130,7 +161,7 @@ h3 {
 
 .form,
 .content {
-  width: 70%;
+  width: 100%;
   margin: 0 auto;
 }
 
@@ -141,11 +172,11 @@ h3 {
 .form-group input,
 .form-group textarea,
 .form-group select {
-  width: 100%;
+  width: auto;
   padding: 10px;
-  border: 1px solid #e6e6e6;
+  margin: 0 10px 10px;
+  border: 2px solid #4d4d4d;
   border-radius: 5px;
-  margin-bottom: 10px;
   font-family: inherit;
 }
 
@@ -165,7 +196,7 @@ h3 {
   font-weight: 700;
   cursor: pointer;
   text-align: center;
-  appearance: button;
+  -webkit-appearance: button;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -215,6 +246,7 @@ h3 {
   0% {
     transform: rotate(0deg);
   }
+
   100% {
     transform: rotate(360deg);
   }

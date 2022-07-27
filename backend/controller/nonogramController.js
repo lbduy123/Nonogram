@@ -2,7 +2,15 @@ const asyncHandler = require('express-async-handler');
 
 const Nonogram = require('../model/nonogramModel')
 
-// @desc    Get nonograms
+// @desc    Get all nonograms
+// @route   GET /api/nonograms/all
+// @access  Private
+const getAllNonograms = asyncHandler(async (req, res) => {
+	const nonograms = await Nonogram.find({})
+	res.status(200).json(nonograms)
+})
+
+// @desc    Get user nonograms
 // @route   GET /api/nonograms
 // @access  Private
 const getNonograms = asyncHandler(async (req, res) => {
@@ -11,8 +19,8 @@ const getNonograms = asyncHandler(async (req, res) => {
 	res.status(200).json(nonograms)
 })
 
-// @desc    Get nonograms
-// @route   GET /api/nonograms
+// @desc    Get nonogram by id
+// @route   GET /api/nonograms/id
 // @access  Private
 const getNonogram = asyncHandler(async (req, res) => {
 	try {
@@ -114,6 +122,7 @@ const deleteNonogram = asyncHandler(async (req, res) => {
 })
 
 module.exports = {
+	getAllNonograms,
 	getNonograms,
 	getNonogram,
 	setNonogram,

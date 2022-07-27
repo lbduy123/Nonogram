@@ -2,7 +2,7 @@ import { useDispatch } from 'react-redux'
 import { deleteNonogram } from '../features/nonograms/nonogramSlice'
 import { useNavigate } from 'react-router-dom'
 
-function NonogramItem({ nonogram }) {
+function NonogramItem({ isEditShown, nonogram }) {
 	const dispatch = useDispatch()
 	const navigate = useNavigate()
 
@@ -23,7 +23,7 @@ function NonogramItem({ nonogram }) {
 			</div>
 			<h2>{nonogram.rows}x{nonogram.cols}</h2>
 			<button onClick={() => dispatch(deleteNonogram(nonogram._id))} className="close">x</button>
-			<button onClick={handleEdit} className="edit">Edit</button>
+			{isEditShown ? <button onClick={handleEdit} className="edit">Edit</button> : <></>}
 			<button onClick={handlePlay} className="play">Play</button>
 		</div>
 	)

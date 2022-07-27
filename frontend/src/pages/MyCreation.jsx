@@ -49,7 +49,7 @@ function MyCreation() {
 				{nonograms.length > 0 ? (
 					<div className="goals">
 						{nonograms.map((nonogram) => (
-							<NonogramItem key={nonogram._id} nonogram={nonogram} />
+							<NonogramItem key={nonogram._id} nonogram={nonogram} isEditShown={true} />
 						))}
 					</div>
 				) : (<h3>Currently have no creation</h3>)}
