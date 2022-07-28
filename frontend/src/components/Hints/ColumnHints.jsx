@@ -3,28 +3,20 @@ import React, { useEffect, useState } from 'react'
 function ColumnHints({ gridData }) {
 
   const [colHints, setColHints] = useState(Array.from({ length: 5 }, () => []))
-  let colHintsData = []
+  const [maxHints, setMaxHints] = useState(3) // Max number of hints per column
 
   useEffect(() => {
     if (gridData && gridData.length) {
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-      colHintsData = []
-      let rotatedGrid = []
+      let colHintsData = []
       let colHintsCount = 0
       let convertedGrid = gridData.map(Object.values)
-      for (let i = 0; i < convertedGrid[0].length; i++) {
-        rotatedGrid.push([])
-        for (let j = 0; j < convertedGrid.length; j++) {
-          rotatedGrid[i].push(convertedGrid[j][i])
-        }
-      }
 
-      for (let i = 0; i < rotatedGrid.length; i++) {
+      for (let i = 0; i < convertedGrid[0].length; i++) {
         colHintsData.push([])
-        for (let j = 0; j < rotatedGrid[i].length; j++) {
-          if (rotatedGrid[i][j] === true) {
+        for (let j = 0; j < convertedGrid.length; j++) {
+          if (convertedGrid[j][i] === true) {
             colHintsCount++
-            if (j + 1 === rotatedGrid[i].length) {
+            if (j + 1 === convertedGrid.length) {
               colHintsData[i].push(colHintsCount)
               colHintsCount = 0;
             }
@@ -34,6 +26,7 @@ function ColumnHints({ gridData }) {
           }
         }
       }
+      setMaxHints(Math.round(gridData.length / 2))
       setColHints(colHintsData)
     }
 
@@ -45,7 +38,8 @@ function ColumnHints({ gridData }) {
       gridTemplateColumns: `repeat(${colHints.length}, auto)`,
       alignItems: "end",
       justifyContent: "center",
-      margin: "10px 0px"
+      margin: "10px 0px",
+      height: `calc(30px*${maxHints})`
     }}>
       {[...colHints].map((col, colIndex) => {
         return (

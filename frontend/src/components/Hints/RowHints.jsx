@@ -3,12 +3,10 @@ import React, { useEffect, useState } from 'react'
 function RowHints({ gridData, hidden }) {
 
   const [rowHints, setRowHints] = useState(Array.from({ length: 5 }, () => []))
-  let rowHintsData = []
 
   useEffect(() => {
     if (gridData && gridData.length) {
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-      rowHintsData = []
+      let rowHintsData = []
       const convertedGrid = gridData.map(Object.values)
       let rowHintsCount = 0
 
