@@ -1,12 +1,20 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { getNonogram } from '../../features/nonograms/nonogramSlice'
 import Grid from '../../components/Grid/Grid'
 import Spinner from '../../components/Spinner'
+import Modal from 'react-modal';
+import { AiFillStar, AiOutlineStar } from 'react-icons/ai'
+import CompleteDialog from '../../components/CompleteDialog'
 
 function Play() {
+  const [modalIsOpen, setIsOpen] = useState(false);
+
+  const handleCloseDialog = useCallback(() => setIsOpen(false), []);
+  const handleOpenDialog = useCallback(() => setIsOpen(true), []);
+
   const location = useLocation()
   const gridId = location.pathname.substring(3)
 
@@ -56,7 +64,7 @@ function Play() {
   const updateGridData = (gridData) => {
     updatedGridData = gridData
     if (compareGridData(updatedGridData, resultGridData)) {
-      toast.success("Cleared")
+      handleOpenDialog()
     }
   }
 
@@ -65,12 +73,20 @@ function Play() {
   }
 
   return (
-    <Grid
-      rows={rows}
-      cols={cols}
-      mode="play"
-      updateGridData={updateGridData}
-    />
+    <>
+      <CompleteDialog
+        modalIsOpen={modalIsOpen}
+        handleCloseDialog={handleCloseDialog}
+      />
+
+      <Grid
+        rows={rows}
+        cols={cols}
+        mode="play"
+        updateGridData={updateGridData}
+      />
+    </>
+
   )
 }
 

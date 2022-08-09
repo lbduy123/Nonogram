@@ -93,7 +93,6 @@ const Grid = ({ rows, cols, updateGridData, mode }) => {
 													isActive={mode !== "edit" ?
 														(newState[rowIndex] ? (newState[rowIndex][columnIndex]) : false) :
 														(viewState[rowIndex] ? (viewState[rowIndex][columnIndex]) : false)}
-													resultCell={mode === "play" ? true : false}
 													handleCellClick={handleCellClick}
 												/>
 											);
