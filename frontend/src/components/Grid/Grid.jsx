@@ -6,7 +6,7 @@ import "./Grid.css";
 import Cell from "../Cell/Cell"
 import RowHints from "../Hints/RowHints";
 import ColumnHints from "../Hints/ColumnHints";
-
+let blur = [];
 const Grid = ({ rows, cols, updateGridData, mode }) => {
 
 	const [newState, setNewState] = useState(Array.from({ length: rows }, () => Array.from({ length: cols }, () => false)))
@@ -47,6 +47,37 @@ const Grid = ({ rows, cols, updateGridData, mode }) => {
 		if (mode !== "edit") {
 			let newGrid = [...newState]
 			newGrid[props.rowIndex][props.columnIndex] = isActive
+			let rowCorrect = true;
+			for (let i = 0; i < cols; i++) {
+				if (newGrid[props.rowIndex][i] !== nonogram.gridData[props.rowIndex][i]) {
+					rowCorrect = false
+					break;
+				}
+			}
+
+			if (rowCorrect === true) {
+				newGrid[props.rowIndex].forEach((value, colIdx) => {
+					if (newGrid[props.rowIndex][colIdx] === false) {
+						blur.push([props.rowIndex, colIdx])
+					}
+				})
+			}
+
+			let colCorrect = true;
+			for (let i = 0; i < rows; i++) {
+				if (newGrid[i][props.columnIndex] !== nonogram.gridData[i][props.columnIndex]) {
+					colCorrect = false
+					break;
+				}
+			}
+			if (colCorrect === true) {
+				newGrid.forEach((value, rowIdx) => {
+					if (newGrid[rowIdx][props.columnIndex] === false) {
+						blur.push([rowIdx, props.columnIndex])
+					}
+				})
+			}
+
 			setNewState(newGrid)
 			updateGridData(newGrid);
 		} else {
@@ -72,8 +103,9 @@ const Grid = ({ rows, cols, updateGridData, mode }) => {
 				flexDirection: "row",
 				justifyContent: "center",
 			}}>
-				<RowHints gridData={mode === "new" ?
-					newState : (mode === "edit" ? viewState : nonogram.gridData)} />
+				<RowHints
+					gridData={mode === "new" ?
+						newState : (mode === "edit" ? viewState : nonogram.gridData)} />
 
 				<div style={{
 					display: "flex"
@@ -81,6 +113,8 @@ const Grid = ({ rows, cols, updateGridData, mode }) => {
 					<table className="grid-table">
 						<tbody>
 							{[...Array(rows)].map((row, rowIndex) => {
+								// let check = rowBlur.includes(rowIndex);
+								// console.log(check)
 								return (
 									<tr className="row" key={rowIndex}>
 										{[...Array(cols)].map((cell, columnIndex) => {
@@ -90,6 +124,10 @@ const Grid = ({ rows, cols, updateGridData, mode }) => {
 													mode={mode}
 													rowIndex={rowIndex}
 													columnIndex={columnIndex}
+													isBlur={(blur.some(
+														r => r.length === [rowIndex, columnIndex].length &&
+															r.every((value, index) => [rowIndex, columnIndex][index] === value)
+													)) ? true : false}
 													isActive={mode !== "edit" ?
 														(newState[rowIndex] ? (newState[rowIndex][columnIndex]) : false) :
 														(viewState[rowIndex] ? (viewState[rowIndex][columnIndex]) : false)}
