@@ -40,6 +40,7 @@ function RowHints({ gridData, hidden }) {
       {[...rowHints].map((row, rowIndex) => {
         return (
           <div
+            id={`rowHint-${rowIndex}`}
             style={{
               display: "grid",
               gridTemplateColumns: `repeat(${row.length}, auto)`,

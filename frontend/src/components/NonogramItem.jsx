@@ -22,7 +22,9 @@ function NonogramItem({ isEditShown, nonogram }) {
 				{new Date(nonogram.createdAt).toLocaleString('en-US')}
 			</div>
 			<h2>{nonogram.rows}x{nonogram.cols}</h2>
-			<button onClick={() => dispatch(deleteNonogram(nonogram._id))} className="close">x</button>
+			{window.location.pathname !== '/' ?
+				<button onClick={() => dispatch(deleteNonogram(nonogram._id))} className="close">x</button> :
+				<></>}
 			{isEditShown ? <button onClick={handleEdit} className="edit">Edit</button> : <></>}
 			<button onClick={handlePlay} className="play">Play</button>
 		</div>

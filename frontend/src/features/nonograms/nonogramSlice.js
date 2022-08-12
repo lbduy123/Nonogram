@@ -187,6 +187,9 @@ export const nonogramSlice = createSlice({
         state.nonograms = state.nonograms.filter(
           (nonogram) => nonogram._id !== action.payload.id
         )
+        state.allNonograms = state.allNonograms.filter(
+          (nonogram) => nonogram._id !== action.payload.id
+        )
       })
       .addCase(deleteNonogram.rejected, (state, action) => {
         state.isLoading = false

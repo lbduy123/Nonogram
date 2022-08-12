@@ -5,8 +5,6 @@ import { toast } from 'react-toastify'
 import { getNonogram } from '../../features/nonograms/nonogramSlice'
 import Grid from '../../components/Grid/Grid'
 import Spinner from '../../components/Spinner'
-import Modal from 'react-modal';
-import { AiFillStar, AiOutlineStar } from 'react-icons/ai'
 import CompleteDialog from '../../components/CompleteDialog'
 
 function Play() {

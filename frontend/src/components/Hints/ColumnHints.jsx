@@ -44,6 +44,7 @@ function ColumnHints({ gridData }) {
       {[...colHints].map((col, colIndex) => {
         return (
           <div
+            id={`colHint-${colIndex}`}
             style={{
               display: "grid",
               gridTemplateRows: `repeat(${col.length}, auto)`,

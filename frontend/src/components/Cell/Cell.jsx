@@ -46,6 +46,7 @@ const Cell = (props) => {
 
 	return (
 		<td
+			id={props.rowIndex + "-" + props.columnIndex}
 			className={className}
 			onClick={handleClick}
 			onMouseOver={handleDrag}
