@@ -21,7 +21,7 @@ const Cell = (props) => {
 			setIsActive(!isActive);
 			props.handleCellClick(props, !isActive);
 		} else {
-			if (props.isBlur === false) {
+			if (!isActive && !props.isBlur) {
 				if (nonogram.gridData[props.rowIndex][props.columnIndex] === false) {
 					setIsWrong(true)
 				} else {

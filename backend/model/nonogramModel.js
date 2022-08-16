@@ -23,8 +23,20 @@ const nonogramSchema = mongoose.Schema(
 			required: [true, 'Please add your grid'],
 		},
 		meta: {
-			votes: Number,
-			played: Number
+			votes: {
+				type: [],
+				default: [],
+			},
+			played: {
+				quantity: {
+					type: Number,
+					default: 0,
+				},
+				by: {
+					type: [],
+					default: [],
+				}
+			}
 		}
 	},
 	{
