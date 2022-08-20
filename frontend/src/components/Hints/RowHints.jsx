@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 function RowHints({ gridData, hidden }) {
 
   const [rowHints, setRowHints] = useState(Array.from({ length: 5 }, () => []))
+  const [maxHints, setMaxHints] = useState(3) // Max number of hints per row
 
   useEffect(() => {
     if (gridData && gridData.length) {
@@ -25,6 +26,7 @@ function RowHints({ gridData, hidden }) {
           }
         }
       }
+      setMaxHints(Math.round(gridData.length / 2))
       setRowHints(rowHintsData)
     }
   }, [gridData])
@@ -42,11 +44,19 @@ function RowHints({ gridData, hidden }) {
           <div
             id={`rowHint-${rowIndex}`}
             style={{
-              display: "grid",
-              gridTemplateColumns: `repeat(${row.length}, auto)`,
+              display: "flex",
+              // gridTemplateColumns: `repeat(${row.length}, auto)`,
               alignItems: "center",
-              columnGap: "10px",
-              height: "60px"
+              justifyContent:'end',
+              // columnGap: "10px",
+              
+              // -------------------------properties changing---------
+              height: "58px",
+              margin:'1px 0', 
+              width: `calc(30px*${maxHints})`,
+              backgroundColor:'#e7edf6',
+              border:'1px solid rgba(0,0,0,0.2)',
+              borderRadius:'8px'
             }}
             key={rowIndex}>
             {[...row].map((hint, idx) => {
