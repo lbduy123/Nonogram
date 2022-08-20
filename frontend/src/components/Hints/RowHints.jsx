@@ -43,6 +43,7 @@ function RowHints({ gridData, hidden }) {
         return (
           <div
             id={`rowHint-${rowIndex}`}
+            className="rowHint"
             style={{
               display: "flex",
               // gridTemplateColumns: `repeat(${row.length}, auto)`,
@@ -54,14 +55,18 @@ function RowHints({ gridData, hidden }) {
               height: "58px",
               margin:'1px 0', 
               width: `calc(30px*${maxHints})`,
-              backgroundColor:'#e7edf6',
+             
               border:'1px solid rgba(0,0,0,0.2)',
               borderRadius:'8px'
             }}
             key={rowIndex}>
             {[...row].map((hint, idx) => {
               return (
-                <label key={idx}>{hint}</label>
+                <div style={{
+                  marginRight:'10px',
+                  color:'#625e84',
+                  fontWeight:'600'
+                }} key={idx}>{hint}</div>
               );
             })}
           </div>
