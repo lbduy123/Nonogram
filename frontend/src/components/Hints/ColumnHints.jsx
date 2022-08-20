@@ -46,10 +46,18 @@ function ColumnHints({ gridData }) {
           <div
             id={`colHint-${colIndex}`}
             style={{
-              display: "grid",
-              gridTemplateRows: `repeat(${col.length}, auto)`,
-              justifyItems: "center",
-              width: "60px",
+              display: "flex",
+              flexDirection: "column",
+              // gridTemplateRows: `repeat(${col.length}, auto)`,
+              justifyContent: "end",
+              // ---------------------Properties changing------------------
+              alignItems: "center",
+              width: "58px",
+              margin: '0 1px', 
+              height:`calc(30px*${maxHints})`,
+              backgroundColor:'#e7edf6',
+              border:'1px solid rgba(0,0,0,0.)',
+              borderRadius:'8px'
             }}
             key={colIndex}
           >
