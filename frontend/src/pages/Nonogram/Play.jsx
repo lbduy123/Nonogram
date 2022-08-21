@@ -6,7 +6,7 @@ import { getNonogram } from '../../features/nonograms/nonogramSlice'
 import Grid from '../../components/Grid/Grid'
 import Spinner from '../../components/Spinner'
 import CompleteDialog from '../../components/CompleteDialog'
-import Timer from '../../components/Timmer/Timer'
+import Timer from '../../components/Timer/Timer'
 import { FcIdea } from 'react-icons/fc'
 var timeBegin;
 
