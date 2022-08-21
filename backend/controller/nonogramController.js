@@ -64,7 +64,7 @@ const setNonogram = asyncHandler(async (req, res) => {
 })
 
 // @desc    Update Nonogram
-// @route   PUT /api/nonograms
+// @route   PUT /api/nonograms/id
 // @access  Private
 const updateNonogram = asyncHandler(async (req, res) => {
 	const nonogram = await Nonogram.findById(req.params.id)
@@ -93,8 +93,70 @@ const updateNonogram = asyncHandler(async (req, res) => {
 	res.status(200).json(updatedNonogram)
 })
 
+// @desc    Update Nonogram votes Array
+// @route   PUT /api/nonograms/id
+// @access  Private
+const updateNonogramVotes = asyncHandler(async (req, res) => {
+	const nonogram = await Nonogram.findById(req.params.id)
+
+	if (!nonogram) {
+		res.status(400)
+		throw new Error('Nonogram not found')
+	}
+
+	// Check for user
+	if (!req.user) {
+		res.status(401)
+		throw new Error('User not found')
+	}
+
+	let votes = nonogram.meta.votes
+	if (votes.includes(req.user.id)) {
+		votes = votes.filter(v => v !== req.user.id)
+	} else {
+		votes.push(req.user.id)
+	}
+
+	const updatedNonogram = await Nonogram.findByIdAndUpdate(req.params.id, { "meta.votes": votes }, {
+		new: true,
+	})
+
+	res.status(200).json(updatedNonogram)
+})
+
+// @desc    Update Nonogram played Object
+// @route   PUT /api/nonograms/id
+// @access  Private
+const updateNonogramPlayed = asyncHandler(async (req, res) => {
+	const nonogram = await Nonogram.findById(req.params.id)
+
+	if (!nonogram) {
+		res.status(400)
+		throw new Error('Nonogram not found')
+	}
+
+	// Check for user
+	if (!req.user) {
+		res.status(401)
+		throw new Error('User not found')
+	}
+
+	let playedBy = nonogram.meta.played.by
+	if (!playedBy.includes(req.user.id)) {
+		playedBy.push(req.user.id)
+	}
+
+	const updatedNonogram = await Nonogram.findByIdAndUpdate(
+		req.params.id,
+		{ "meta.played.by": playedBy, $inc: { "meta.played.quantity": 1 } },
+		{ new: true, }
+	)
+
+	res.status(200).json(updatedNonogram)
+})
+
 // @desc    Delete nonogram
-// @route   DELETE /api/goals
+// @route   DELETE /api/goals/id
 // @access  Private
 const deleteNonogram = asyncHandler(async (req, res) => {
 	const nonogram = await Nonogram.findById(req.params.id)
@@ -127,5 +189,7 @@ module.exports = {
 	getNonogram,
 	setNonogram,
 	updateNonogram,
+	updateNonogramVotes,
+	updateNonogramPlayed,
 	deleteNonogram
 }

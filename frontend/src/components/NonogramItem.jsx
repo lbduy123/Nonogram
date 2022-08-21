@@ -1,5 +1,5 @@
 import { useDispatch } from 'react-redux'
-import { deleteNonogram } from '../features/nonograms/nonogramSlice'
+import { deleteNonogram, updateNonogramPlayed } from '../features/nonograms/nonogramSlice'
 import { useNavigate } from 'react-router-dom'
 
 function NonogramItem({ isEditShown, nonogram }) {
@@ -13,6 +13,7 @@ function NonogramItem({ isEditShown, nonogram }) {
 
 	const handlePlay = (e) => {
 		e.preventDefault()
+		dispatch(updateNonogramPlayed(nonogram._id));
 		navigate('/p/' + nonogram._id)
 	}
 
@@ -22,6 +23,8 @@ function NonogramItem({ isEditShown, nonogram }) {
 				{new Date(nonogram.createdAt).toLocaleString('en-US')}
 			</div>
 			<h2>{nonogram.rows}x{nonogram.cols}</h2>
+			<h3>Votes: {nonogram.meta.votes.length}</h3>
+			<h3>Played: {nonogram.meta.played.quantity}</h3>
 			{window.location.pathname !== '/' ?
 				<button onClick={() => dispatch(deleteNonogram(nonogram._id))} className="close">x</button> :
 				<></>}

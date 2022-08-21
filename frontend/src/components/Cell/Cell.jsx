@@ -21,7 +21,7 @@ const Cell = (props) => {
 			setIsActive(!isActive);
 			props.handleCellClick(props, !isActive);
 		} else {
-			if (!isActive && !props.isBlur) {
+			if (!isActive && !props.isBlur && !props.isPlayComplete) {
 				if (nonogram.gridData[props.rowIndex][props.columnIndex] === false) {
 					setIsWrong(true)
 				} else {
@@ -38,11 +38,11 @@ const Cell = (props) => {
 		}
 	}
 
-	const className = (isWrong) ?
-		"cell-invalid" :
+	const className = (isWrong) ? "cell-invalid" :
 		(isActive ? "cell-correct" :
 			(props.isBlur ? "cell-blur" :
-				"cell-modifiable"))
+				(!props.isPlayComplete ? "cell-modifiable"
+					: "")))
 
 	return (
 		<td

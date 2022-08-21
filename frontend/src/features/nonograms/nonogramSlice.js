@@ -101,6 +101,28 @@ export const deleteNonogram = createAsyncThunk('nonograms/delete', async (id, th
   }
 })
 
+// Update Nonogram Votes
+export const updateNonogramVotes = createAsyncThunk('nonograms/updateVotes', async (id, thunkAPI) => {
+  try {
+    const token = thunkAPI.getState().auth.user.token
+    return await nonogramService.updateNonogramVotes(id, token)
+  } catch (error) {
+    const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString()
+    return thunkAPI.rejectWithValue(message)
+  }
+})
+
+// Update Nonogram Played
+export const updateNonogramPlayed = createAsyncThunk('nonograms/updatePlayed', async (id, thunkAPI) => {
+  try {
+    const token = thunkAPI.getState().auth.user.token
+    return await nonogramService.updateNonogramPlayed(id, token)
+  } catch (error) {
+    const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString()
+    return thunkAPI.rejectWithValue(message)
+  }
+})
+
 export const nonogramSlice = createSlice({
   name: 'nonogram',
   initialState,
@@ -109,6 +131,7 @@ export const nonogramSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      // Handle create Nonogram    
       .addCase(createNonogram.pending, (state) => {
         state.isLoading = true
       })
@@ -123,6 +146,7 @@ export const nonogramSlice = createSlice({
         state.message = action.payload
       })
 
+      // Handle get all user Nonograms
       .addCase(getNonograms.pending, (state) => {
         state.isLoading = true
       })
@@ -137,6 +161,7 @@ export const nonogramSlice = createSlice({
         state.message = action.payload
       })
 
+      // Handle get all Nonograms
       .addCase(getAllNonograms.pending, (state) => {
         state.isLoading = true
       })
@@ -151,6 +176,7 @@ export const nonogramSlice = createSlice({
         state.message = action.payload
       })
 
+      // Handle get user's Nonogram
       .addCase(getNonogram.pending, (state) => {
         state.isLoading = true
       })
@@ -165,6 +191,7 @@ export const nonogramSlice = createSlice({
         state.message = action.payload
       })
 
+      // Handle update user's Nonogram
       .addCase(updateNonogram.pending, (state) => {
         state.isLoading = true
       })
@@ -178,6 +205,7 @@ export const nonogramSlice = createSlice({
         state.message = action.payload
       })
 
+      // Handle delete user's Nonogram
       .addCase(deleteNonogram.pending, (state) => {
         state.isLoading = true
       })
@@ -192,6 +220,36 @@ export const nonogramSlice = createSlice({
         )
       })
       .addCase(deleteNonogram.rejected, (state, action) => {
+        state.isLoading = false
+        state.isError = true
+        state.message = action.payload
+      })
+
+      // Handle update Nonogram votes Array
+      .addCase(updateNonogramVotes.pending, (state) => {
+        state.isLoading = true
+      })
+      .addCase(updateNonogramVotes.fulfilled, (state, action) => {
+        state.isLoading = false
+        state.isSuccess = true
+        state.nonogram = action.payload
+      })
+      .addCase(updateNonogramVotes.rejected, (state, action) => {
+        state.isLoading = false
+        state.isError = true
+        state.message = action.payload
+      })
+
+      // Handle update Nonogram played Object
+      .addCase(updateNonogramPlayed.pending, (state) => {
+        state.isLoading = true
+      })
+      .addCase(updateNonogramPlayed.fulfilled, (state, action) => {
+        state.isLoading = false
+        state.isSuccess = true
+        state.nonogram = action.payload
+      })
+      .addCase(updateNonogramPlayed.rejected, (state, action) => {
         state.isLoading = false
         state.isError = true
         state.message = action.payload

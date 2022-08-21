@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom'
 import Modal from 'react-modal';
 import { useState } from 'react'
 import { AiFillStar, AiOutlineStar } from 'react-icons/ai'
+import { useSelector } from 'react-redux';
+import nonogramService from '../features/nonograms/nonogramService';
 
 const customStyles = {
   content: {
@@ -24,7 +26,8 @@ const customStyles = {
 Modal.setAppElement('#root');
 let subtitle;
 
-function CompleteDialog({ modalIsOpen, handleCloseDialog }) {
+function CompleteDialog({ modalIsOpen, handleCloseDialog, gridId }) {
+  const { user } = useSelector((state) => state.auth);
   const [isOpen, setIsOpen] = useState(modalIsOpen);
 
   React.useEffect(() => {
@@ -37,7 +40,10 @@ function CompleteDialog({ modalIsOpen, handleCloseDialog }) {
     subtitle.style.color = '#000';
   }
 
-  function closeModal() {
+  const closeModal = () => {
+    if (user) {
+      nonogramService.updateNonogramVotes(gridId, user.token)
+    }
     handleCloseDialog();
   }
 

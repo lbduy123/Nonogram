@@ -1,20 +1,20 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useMemo } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { toast } from 'react-toastify'
-import { getNonogram } from '../../features/nonograms/nonogramSlice'
+import { getNonogram, updateNonogramVotes } from '../../features/nonograms/nonogramSlice'
 import Grid from '../../components/Grid/Grid'
 import Spinner from '../../components/Spinner'
 import CompleteDialog from '../../components/CompleteDialog'
 
 function Play() {
+  const location = useLocation()
+  const gridId = location.pathname.substring(3)
+
   const [modalIsOpen, setIsOpen] = useState(false);
 
   const handleCloseDialog = useCallback(() => setIsOpen(false), []);
-  const handleOpenDialog = useCallback(() => setIsOpen(true), []);
-
-  const location = useLocation()
-  const gridId = location.pathname.substring(3)
+  const handleOpenDialog = () => setIsOpen(true);
 
   const { user } = useSelector((state) => state.auth)
   const { nonogram, isLoading, isError, message } = useSelector(
@@ -23,6 +23,7 @@ function Play() {
 
   const [rows, setRows] = useState(5)
   const [cols, setCols] = useState(5)
+  const [isPlayComplete, setIsPlayComplete] = useState(false)
 
   const navigate = useNavigate()
   const dispatch = useDispatch()
@@ -62,6 +63,7 @@ function Play() {
   const updateGridData = (gridData) => {
     updatedGridData = gridData
     if (compareGridData(updatedGridData, resultGridData)) {
+      setIsPlayComplete(true)
       handleOpenDialog()
     }
   }
@@ -75,6 +77,7 @@ function Play() {
       <CompleteDialog
         modalIsOpen={modalIsOpen}
         handleCloseDialog={handleCloseDialog}
+        gridId={gridId}
       />
 
       <Grid
@@ -82,9 +85,9 @@ function Play() {
         cols={cols}
         mode="play"
         updateGridData={updateGridData}
+        isPlayComplete={isPlayComplete}
       />
     </>
-
   )
 }
 

@@ -6,7 +6,7 @@ import "./Grid.css";
 import Cell from "../Cell/Cell"
 import RowHints from "../Hints/RowHints";
 import ColumnHints from "../Hints/ColumnHints";
-const Grid = ({ rows, cols, updateGridData, mode }) => {
+const Grid = ({ rows, cols, updateGridData, mode, isPlayComplete }) => {
 
 	const [newState, setNewState] = useState(Array.from({ length: rows }, () => Array.from({ length: cols }, () => false)))
 	const [viewState, setViewState] = useState(Array.from({ length: rows }, () => Array.from({ length: cols }, () => false)))
@@ -152,6 +152,7 @@ const Grid = ({ rows, cols, updateGridData, mode }) => {
 													mode={mode}
 													rowIndex={rowIndex}
 													columnIndex={columnIndex}
+													isPlayComplete={isPlayComplete}
 													isBlur={isElExistInArray([rowIndex, columnIndex], blur) ? true : false}
 													isActive={mode !== "edit" ?
 														(newState[rowIndex] ? (newState[rowIndex][columnIndex]) : false) :
