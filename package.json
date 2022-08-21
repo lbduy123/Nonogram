@@ -19,7 +19,8 @@
     "express-async-handler": "^1.2.0",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.3.0",
-    "nonogram-grid": "^1.0.13"
+    "nonogram-grid": "^1.0.13",
+    "react-icons": "^4.4.0"
   },
   "devDependencies": {
     "concurrently": "^7.1.0",

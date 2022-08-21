@@ -43,9 +43,22 @@ const Cell = (props) => {
 		(isActive ? "cell-correct" :
 			(props.isBlur ? "cell-blur" :
 				"cell-modifiable"))
+	const handleHint = () => {
 
+		document.querySelector(`#colHint-${props.columnIndex}`).classList.add('blur');
+		document.querySelector(`#rowHint-${props.rowIndex}`).classList.add('blur');
+
+		// console.log('cell address (x-y)', props.rowIndex+"-"+props.columnIndex)
+	}
+
+	const removeBlur = () => {
+		document.querySelector(`#colHint-${props.columnIndex}`).classList.remove('blur');
+		document.querySelector(`#rowHint-${props.rowIndex}`).classList.remove('blur');
+	}
 	return (
 		<td
+			onMouseEnter={handleHint}
+			onMouseOut={removeBlur}
 			id={props.rowIndex + "-" + props.columnIndex}
 			className={className}
 			onClick={handleClick}

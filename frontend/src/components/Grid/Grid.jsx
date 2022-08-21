@@ -6,6 +6,8 @@ import "./Grid.css";
 import Cell from "../Cell/Cell"
 import RowHints from "../Hints/RowHints";
 import ColumnHints from "../Hints/ColumnHints";
+
+
 const Grid = ({ rows, cols, updateGridData, mode }) => {
 
 	const [newState, setNewState] = useState(Array.from({ length: rows }, () => Array.from({ length: cols }, () => false)))
@@ -124,7 +126,13 @@ const Grid = ({ rows, cols, updateGridData, mode }) => {
 				(rows === 20 ? 'nonogram-20' : ''))
 
 	return (
-		<div className={className}>
+		<div style={mode === "play"?{
+			marginTop:'50px',
+			marginBottom:'50px',
+			paddingRight:'0px',
+			paddingLeft:'10px',
+
+		}:{}} className={className}>
 			<ColumnHints gridData={mode === "new" ?
 				newState : (mode === "edit" ? viewState : nonogram.gridData)} />
 

@@ -58,7 +58,7 @@ function ColumnHints({ gridData }) {
               margin: '0 1px', 
               height:`calc(30px*${maxHints})`,
               
-              border:'1px solid rgba(0,0,0,0.)',
+              border:'1px solid rgba(0,0,0,0)',
               borderRadius:'8px'
             }}
             key={colIndex}
