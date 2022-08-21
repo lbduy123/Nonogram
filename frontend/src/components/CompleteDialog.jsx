@@ -26,7 +26,7 @@ const customStyles = {
 Modal.setAppElement('#root');
 let subtitle;
 
-function CompleteDialog({ modalIsOpen, handleCloseDialog, gridId }) {
+function CompleteDialog({ modalIsOpen, handleCloseDialog, gridId, timeResult }) {
   const { user } = useSelector((state) => state.auth);
   const [isOpen, setIsOpen] = useState(modalIsOpen);
 
@@ -50,6 +50,7 @@ function CompleteDialog({ modalIsOpen, handleCloseDialog, gridId }) {
   const returnHome = () => {
     navigate('/')
   }
+
   return (
     <Modal
       isOpen={isOpen}
@@ -61,6 +62,7 @@ function CompleteDialog({ modalIsOpen, handleCloseDialog, gridId }) {
       contentLabel="Complete dialog"
     >
       <h1 ref={(_subtitle) => (subtitle = _subtitle)}>Complete</h1>
+      <p>{timeResult?.hours}:{timeResult?.minutes}:{timeResult?.seconds}</p>
       <div style={{ fontSize: 50 }}>
         <AiFillStar /><AiFillStar /><AiOutlineStar />
       </div>

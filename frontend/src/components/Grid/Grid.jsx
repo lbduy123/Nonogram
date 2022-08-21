@@ -7,7 +7,6 @@ import Cell from "../Cell/Cell"
 import RowHints from "../Hints/RowHints";
 import ColumnHints from "../Hints/ColumnHints";
 const Grid = ({ rows, cols, updateGridData, mode, isPlayComplete }) => {
-
 	const [newState, setNewState] = useState(Array.from({ length: rows }, () => Array.from({ length: cols }, () => false)))
 	const [viewState, setViewState] = useState(Array.from({ length: rows }, () => Array.from({ length: cols }, () => false)))
 	const [blur, setBlur] = useState([])
@@ -118,13 +117,22 @@ const Grid = ({ rows, cols, updateGridData, mode, isPlayComplete }) => {
 		)) ? true : false)
 	}
 
+
+
+
 	const className =
 		rows === 10 ? 'nonogram-10' :
 			(rows === 15 ? 'nonogram-15' :
 				(rows === 20 ? 'nonogram-20' : ''))
 
 	return (
-		<div className={className}>
+		<div style={mode === "play" ? {
+			marginTop: '50px',
+			marginBottom: '50px',
+			paddingRight: '0px',
+			paddingLeft: '10px',
+
+		} : {}} className={className}>
 			<ColumnHints gridData={mode === "new" ?
 				newState : (mode === "edit" ? viewState : nonogram.gridData)} />
 

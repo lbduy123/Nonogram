@@ -1,11 +1,14 @@
-import { useState, useEffect, useCallback, useMemo } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { toast } from 'react-toastify'
-import { getNonogram, updateNonogramVotes } from '../../features/nonograms/nonogramSlice'
+import { getNonogram } from '../../features/nonograms/nonogramSlice'
 import Grid from '../../components/Grid/Grid'
 import Spinner from '../../components/Spinner'
 import CompleteDialog from '../../components/CompleteDialog'
+import Timer from '../../components/Timmer/Timer'
+import { FcIdea } from 'react-icons/fc'
+var timeBegin;
 
 function Play() {
   const location = useLocation()
@@ -24,9 +27,19 @@ function Play() {
   const [rows, setRows] = useState(5)
   const [cols, setCols] = useState(5)
   const [isPlayComplete, setIsPlayComplete] = useState(false)
+  const [timeResult, setTimeResult] = useState({
+    hours: 0,
+    minutes: 0,
+    seconds: 0
+  })
 
   const navigate = useNavigate()
   const dispatch = useDispatch()
+
+  useEffect(() => {
+    timeBegin = new Date();
+    console.log('render play...')
+  }, [])
 
   useEffect(() => {
     if (isError) {
@@ -73,13 +86,18 @@ function Play() {
   }
 
   return (
-    <>
+    <div style={{
+      maxWidth: '680px',
+      margin: '0 auto',
+      border: '10px solid rgb(136, 128, 152)',
+    }}>
       <CompleteDialog
         modalIsOpen={modalIsOpen}
         handleCloseDialog={handleCloseDialog}
         gridId={gridId}
+        timeResult={timeResult}
       />
-
+      <Timer getTimeResult={setTimeResult} timeBegin={timeBegin} check={isPlayComplete} />
       <Grid
         rows={rows}
         cols={cols}
@@ -87,7 +105,62 @@ function Play() {
         updateGridData={updateGridData}
         isPlayComplete={isPlayComplete}
       />
-    </>
+
+      {/* Action */}
+      <div style={{
+        display: 'flex',
+        justifyContent: 'end',
+        alignItems: 'center',
+        marginBottom: '50px',
+        paddingRight: '150px'
+      }}>
+        <div style={{
+          display: 'flex',
+          justifyContent: 'center',
+          marginRight: '70px',
+        }}>
+          <div style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            width: '50px',
+            height: '50px',
+            backgroundColor: '#e7edf6',
+            marginRight: '10px',
+            borderRadius: '50%',
+            fontSize: 'xx-large',
+            color: '#b3b9c3'
+          }}>X</div>
+
+
+          <div style={{
+            width: '50px',
+            height: '50px',
+            backgroundColor: '#324963',
+            borderRadius: '50%',
+          }}></div>
+        </div>
+        <p style={{
+          height: '50px',
+          width: '50px',
+          borderRadius: '50%',
+          border: 'solid 1px rgba(0,0,0,0.4)',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          boxShadow: '-.5px 1px #888888',
+          position: 'relative',
+          cursor: 'pointer',
+        }}>
+          <span style={{ fontSize: '30px' }}><FcIdea /></span>
+
+        </p>
+
+      </div>
+
+
+
+    </div>
   )
 }
 

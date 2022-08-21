@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import "./Hint.css"
 
 function ColumnHints({ gridData }) {
 
@@ -45,17 +46,34 @@ function ColumnHints({ gridData }) {
         return (
           <div
             id={`colHint-${colIndex}`}
+            className="colHint"
             style={{
-              display: "grid",
-              gridTemplateRows: `repeat(${col.length}, auto)`,
-              justifyItems: "center",
-              width: "60px",
+              display: "flex",
+              flexDirection: "column",
+              // gridTemplateRows: `repeat(${col.length}, auto)`,
+              justifyContent: "end",
+              // ---------------------Properties changing------------------
+              alignItems: "center",
+              width: "58px",
+              margin: '0 1px', 
+              height:`calc(30px*${maxHints})`,
+              
+              border:'1px solid rgba(0,0,0,0)',
+              borderRadius:'8px'
             }}
             key={colIndex}
           >
             {[...col].map((hint, idx) => {
               return (
-                <label key={idx} >{hint}</label>
+                <div style={{
+                  display: 'flex',
+                  justifyContent: "center",
+                  alignItems:'center',
+                  width:'100%',
+                  color:'#625e84',
+                  fontWeight:'600',
+
+                }} key={idx} >{hint}</div>
               )
             })}
           </div>

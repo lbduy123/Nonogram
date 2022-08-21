@@ -1,0 +1,22 @@
+.rowHint {
+    /* background-color: #e7edf6 */
+}
+
+.colHint {
+    /* background-color: #e7edf6 */
+}
+
+
+.row-hint-blur {
+    opacity: 0.5;
+    
+}
+
+.col-hint-blur {
+    opacity: 0.5;
+    
+}
+
+.blur {
+    background-color: #dee1e4
+}
