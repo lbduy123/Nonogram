@@ -77,14 +77,14 @@ const updateNonogramVotes = async (nonogramId, token) => {
 }
 
 // Update Nonogram played
-const updateNonogramPlayed = async (nonogramId, token) => {
+const updateNonogramPlayed = async (data, token) => {
   const config = {
     headers: {
       Authorization: `Bearer ${token}`,
     },
   }
 
-  const response = await axios.put(API_URL + nonogramId + "/played", null, config)
+  const response = await axios.put(API_URL + data.nonogramId + "/played", { bestTime: data.bestTime }, config)
   return response.data
 }
 

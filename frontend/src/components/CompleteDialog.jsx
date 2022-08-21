@@ -37,6 +37,7 @@ function CompleteDialog({ modalIsOpen, handleCloseDialog, gridId, timeResult }) 
 
   function afterOpenModal() {
     // references are now sync'd and can be accessed.
+    nonogramService.updateNonogramPlayed({ nonogramId: gridId, bestTime: timeResult.seconds }, user.token);
     subtitle.style.color = '#000';
   }
 

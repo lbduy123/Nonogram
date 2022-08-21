@@ -38,7 +38,6 @@ function Play() {
 
   useEffect(() => {
     timeBegin = new Date();
-    console.log('render play...')
   }, [])
 
   useEffect(() => {

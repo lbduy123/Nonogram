@@ -141,9 +141,23 @@ const updateNonogramPlayed = asyncHandler(async (req, res) => {
 		throw new Error('User not found')
 	}
 
-	let playedBy = nonogram.meta.played.by
-	if (!playedBy.includes(req.user.id)) {
-		playedBy.push(req.user.id)
+	let playedBy = nonogram.meta.played.by;
+	if (playedBy.findIndex((user) => user.id.toString() === req.user.id) === -1) {
+		let playData = {
+			id: req.user.id,
+			bestTime: req.body.bestTime,
+		}
+		playedBy.push(playData)
+	} else {
+		let bestTime = playedBy.find((user) => user.id.toString() === req.user.id).bestTime
+		if (req.body.bestTime < bestTime) {
+			playedBy = playedBy.filter((user) => user.id.toString() !== req.user.id)
+			let playData = {
+				id: req.user.id,
+				bestTime: req.body.bestTime,
+			}
+			playedBy.push(playData)
+		}
 	}
 
 	const updatedNonogram = await Nonogram.findByIdAndUpdate(

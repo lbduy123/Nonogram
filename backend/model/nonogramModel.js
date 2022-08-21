@@ -2,6 +2,17 @@ const mongoose = require('mongoose')
 const { Schema } = mongoose;
 Mixed = Schema.Types.Mixed
 
+const playedBySchema = mongoose.Schema(
+	{
+		id: {
+			type: mongoose.Schema.Types.ObjectId,
+		},
+		bestTime: {
+			type: Number,
+		}
+	}, { _id: false }
+)
+
 const nonogramSchema = mongoose.Schema(
 	{
 		author: {
@@ -32,10 +43,7 @@ const nonogramSchema = mongoose.Schema(
 					type: Number,
 					default: 0,
 				},
-				by: {
-					type: [],
-					default: [],
-				}
+				by: [playedBySchema]
 			}
 		}
 	},
