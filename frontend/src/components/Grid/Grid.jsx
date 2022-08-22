@@ -6,7 +6,10 @@ import "./Grid.css";
 import Cell from "../Cell/Cell"
 import RowHints from "../Hints/RowHints";
 import ColumnHints from "../Hints/ColumnHints";
+import { AiOutlineConsoleSql } from "react-icons/ai";
+import { memo } from "react";
 
+var resultArray = []
 
 const Grid = ({ rows, cols, updateGridData, mode }) => {
 
@@ -18,7 +21,7 @@ const Grid = ({ rows, cols, updateGridData, mode }) => {
 	const { nonogram } = useSelector(
 		(state) => state.nonograms
 	)
-
+	
 	// Clear grid when changing rows or cols
 	useEffect(() => {
 		if (mode !== "edit") {
@@ -50,7 +53,7 @@ const Grid = ({ rows, cols, updateGridData, mode }) => {
 			// Update new grid in play & new mode
 			let newGrid = [...newState]
 			newGrid[props.rowIndex][props.columnIndex] = isActive
-
+			
 			if (mode === "play") {
 				// Check if row is correct & blur rowHints
 				let rowCorrect = true;
@@ -119,6 +122,9 @@ const Grid = ({ rows, cols, updateGridData, mode }) => {
 				r.every((value, index) => el[index] === value)
 		)) ? true : false)
 	}
+
+
+
 
 	const className =
 		rows === 10 ? 'nonogram-10' :

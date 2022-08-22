@@ -38,6 +38,7 @@ function Play() {
 
   useEffect(() => {
     timeBegin = new Date();
+    console.log('render play...')
   },[])
 
   useEffect(() => {
@@ -80,10 +81,10 @@ function Play() {
     }
   }
 
-  const getTimeResult = (time)=>{
-    setTimeResult(time);
-    
-  }
+ 
+
+  
+
 
   if (isLoading) {
     return <Spinner />
@@ -101,13 +102,15 @@ function Play() {
         handleCloseDialog={handleCloseDialog}
         timeResult={timeResult}
       />
-      <Timer getTimeResult={getTimeResult} timeBegin={timeBegin} check={finish} />
+      <Timer getTimeResult={setTimeResult} timeBegin={timeBegin} check={finish} />
       <Grid
         rows={rows}
         cols={cols}
         mode="play"
         updateGridData={updateGridData}
       />
+
+      {/* Action */}
       <div style={{
         display: 'flex',
         justifyContent: 'end',
@@ -115,6 +118,32 @@ function Play() {
         marginBottom:'50px',
         paddingRight: '150px'
       }}>
+         <div style={{
+        display:'flex',
+        justifyContent: 'center',
+        marginRight: '70px',
+      }}>
+        <div style={{
+          display:'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          width: '50px', 
+          height: '50px',
+          backgroundColor:'#e7edf6',
+          marginRight:'10px',
+          borderRadius:'50%',
+          fontSize:'xx-large',
+          color:'#b3b9c3'
+        }}>X</div>
+
+
+        <div style={{
+          width: '50px', 
+          height: '50px',
+          backgroundColor:'#324963',
+          borderRadius:'50%',
+        }}></div>
+      </div>
         <p style={{
           height:'50px',
           width:'50px',
@@ -132,6 +161,9 @@ function Play() {
         </p>
 
       </div>
+
+
+
     </div>
 
   )
