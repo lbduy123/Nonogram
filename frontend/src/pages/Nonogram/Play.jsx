@@ -102,7 +102,9 @@ function Play() {
         handleCloseDialog={handleCloseDialog}
         timeResult={timeResult}
       />
-      <Timer getTimeResult={setTimeResult} timeBegin={timeBegin} check={finish} />
+      <Timer getTimeResult={(time)=>{
+        setTimeResult(time);
+      }} timeBegin={timeBegin} check={finish} />
       <Grid
         rows={rows}
         cols={cols}

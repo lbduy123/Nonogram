@@ -34,13 +34,17 @@ export default function Timer({check=false,timeBegin, getTimeResult}) {
             },1000)
         }
         else{
+            getTimeResult(time);
             clearInterval(timer)
         }
-        return ()=>clearInterval(timer);
-    })
-    if(check){
-        getTimeResult(time);
-    }
+        return ()=>{
+            
+                clearInterval(timer)
+
+            
+        };
+    },[check])
+    
    
   return (
     <div style={{

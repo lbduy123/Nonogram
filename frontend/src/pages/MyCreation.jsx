@@ -42,7 +42,7 @@ function MyCreation() {
 	return (
 		<>
 			<section className="heading">
-				<h1>{user.name}'s Creation</h1>
+				<h1>{user?.name}'s Creation</h1>
 			</section>
 
 			<section className="content">

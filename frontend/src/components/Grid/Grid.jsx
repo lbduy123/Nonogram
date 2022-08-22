@@ -22,6 +22,10 @@ const Grid = ({ rows, cols, updateGridData, mode }) => {
 		(state) => state.nonograms
 	)
 	
+	useEffect(()=>{
+	
+	},[])
+
 	// Clear grid when changing rows or cols
 	useEffect(() => {
 		if (mode !== "edit") {
