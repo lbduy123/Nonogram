@@ -11,7 +11,6 @@ const createNonogram = async (nonogramData, token) => {
   }
 
   const response = await axios.post(API_URL, nonogramData, config)
-
   return response.data
 }
 
@@ -50,7 +49,6 @@ const getNonogram = async (nonogramId, token) => {
   }
 
   const response = await axios.get(API_URL + nonogramId, config)
-
   return response.data
 }
 
@@ -66,6 +64,30 @@ const updateNonogram = async (nonogramId, nonogramData, token) => {
   return response.data
 }
 
+// Update Nonogram votes
+const updateNonogramVotes = async (nonogramId, token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }
+
+  const response = await axios.put(API_URL + nonogramId + "/votes", null, config)
+  return response.data
+}
+
+// Update Nonogram played
+const updateNonogramPlayed = async (data, token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }
+
+  const response = await axios.put(API_URL + data.nonogramId + "/played", { bestTime: data.bestTime }, config)
+  return response.data
+}
+
 // Delete user Nonogram
 const deleteNonogram = async (nonogramId, token) => {
   const config = {
@@ -75,7 +97,6 @@ const deleteNonogram = async (nonogramId, token) => {
   }
 
   const response = await axios.delete(API_URL + nonogramId, config)
-
   return response.data
 }
 
@@ -85,6 +106,8 @@ const nonogramService = {
   getNonograms,
   getNonogram,
   updateNonogram,
+  updateNonogramVotes,
+  updateNonogramPlayed,
   deleteNonogram
 }
 

@@ -6,18 +6,19 @@ import { getNonogram } from '../../features/nonograms/nonogramSlice'
 import Grid from '../../components/Grid/Grid'
 import Spinner from '../../components/Spinner'
 import CompleteDialog from '../../components/CompleteDialog'
-import Timer from '../../components/Timmer/Timer'
+import Timer from '../../components/Timer/Timer'
 import { FcIdea } from 'react-icons/fc'
+import { useMemo } from 'react'
 var timeBegin;
 
 function Play() {
+  const location = useLocation()
+  const gridId = location.pathname.substring(3)
+
   const [modalIsOpen, setIsOpen] = useState(false);
 
   const handleCloseDialog = useCallback(() => setIsOpen(false), []);
-  const handleOpenDialog = useCallback(() => setIsOpen(true), []);
-
-  const location = useLocation()
-  const gridId = location.pathname.substring(3)
+  const handleOpenDialog = () => setIsOpen(true);
 
   const { user } = useSelector((state) => state.auth)
   const { nonogram, isLoading, isError, message } = useSelector(
@@ -26,21 +27,39 @@ function Play() {
 
   const [rows, setRows] = useState(5)
   const [cols, setCols] = useState(5)
-  const [finish, setFinish] = useState(false)
+  const [isPlayComplete, setIsPlayComplete] = useState(false)
   const [timeResult, setTimeResult] = useState({
-    hours:0,
-    minutes:0,
-    seconds:0
+    hours: 0,
+    minutes: 0,
+    seconds: 0
   })
+  const [hint,isShowHint] = useState(1)
 
   const navigate = useNavigate()
   const dispatch = useDispatch()
 
   useEffect(() => {
     timeBegin = new Date();
-    console.log('render play...')
-  },[])
+  }, [])
+ 
+  
+  const resultArray = useMemo(()=>{
+    let array = []
+    nonogram?.gridData?.forEach((dataX,rowIndex)=>{
+      dataX.forEach((dataY,colIndedx)=>{
+        if(dataY==true){
+          array.push({
+            row:rowIndex,
+            col:colIndedx
+          })
+        }
+        
+      })
+    })
 
+    return array
+  },[nonogram.gridData])
+ 
   useEffect(() => {
     if (isError) {
       console.log(message)
@@ -53,8 +72,8 @@ function Play() {
     }
 
     dispatch(getNonogram(gridId))
-    setRows(nonogram.rows)
-    setCols(nonogram.cols)
+    // setRows(nonogram.rows)
+    // setCols(nonogram.cols)
 
   }, [user, navigate, isError, message, dispatch, gridId, nonogram.rows, nonogram.cols])
 
@@ -62,7 +81,7 @@ function Play() {
   const resultGridData = (nonogram.gridData ?
     nonogram.gridData.map(Object.values) :
     Array.from({ length: rows }, () => Array.from({ length: cols }, () => false)))
-
+  
   const compareGridData = (grid1, grid2) => {
     if (grid1.length !== grid2.length) return false;
     for (var i = 0, len = grid1.length; i < len; i++) {
@@ -74,17 +93,13 @@ function Play() {
   }
 
   const updateGridData = (gridData) => {
+    
     updatedGridData = gridData
     if (compareGridData(updatedGridData, resultGridData)) {
-      setFinish(true)
+      setIsPlayComplete(true)
       handleOpenDialog()
     }
   }
-
- 
-
-  
-
 
   if (isLoading) {
     return <Spinner />
@@ -92,24 +107,26 @@ function Play() {
 
   return (
     <div style={{
-      maxWidth:'680px',
-      margin:'0 auto',
-      border:'10px solid rgb(136, 128, 152)',
-     
+      maxWidth: '680px',
+      margin: '0 auto',
+      border: '10px solid rgb(136, 128, 152)',
     }}>
       <CompleteDialog
         modalIsOpen={modalIsOpen}
         handleCloseDialog={handleCloseDialog}
+        gridId={gridId}
         timeResult={timeResult}
       />
-      <Timer getTimeResult={(time)=>{
-        setTimeResult(time);
-      }} timeBegin={timeBegin} check={finish} />
+
+      <Timer getTimeResult={setTimeResult} timeBegin={timeBegin} check={isPlayComplete} />
+
       <Grid
         rows={rows}
         cols={cols}
         mode="play"
         updateGridData={updateGridData}
+        isPlayComplete={isPlayComplete}
+        resultArray={resultArray}
       />
 
       {/* Action */}
@@ -117,49 +134,49 @@ function Play() {
         display: 'flex',
         justifyContent: 'end',
         alignItems: 'center',
-        marginBottom:'50px',
+        marginBottom: '50px',
         paddingRight: '150px'
       }}>
-         <div style={{
-        display:'flex',
-        justifyContent: 'center',
-        marginRight: '70px',
-      }}>
         <div style={{
-          display:'flex',
+          display: 'flex',
+          justifyContent: 'center',
+          marginRight: '70px',
+        }}>
+          <div style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            width: '50px',
+            height: '50px',
+            backgroundColor: '#e7edf6',
+            marginRight: '10px',
+            borderRadius: '50%',
+            fontSize: 'xx-large',
+            color: '#b3b9c3'
+          }}>X</div>
+
+
+          <div style={{
+            width: '50px',
+            height: '50px',
+            backgroundColor: '#324963',
+            borderRadius: '50%',
+          }}></div>
+        </div>
+        <p style={{
+          height: '50px',
+          width: '50px',
+          borderRadius: '50%',
+          border: 'solid 1px rgba(0,0,0,0.4)',
+          display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
-          width: '50px', 
-          height: '50px',
-          backgroundColor:'#e7edf6',
-          marginRight:'10px',
-          borderRadius:'50%',
-          fontSize:'xx-large',
-          color:'#b3b9c3'
-        }}>X</div>
-
-
-        <div style={{
-          width: '50px', 
-          height: '50px',
-          backgroundColor:'#324963',
-          borderRadius:'50%',
-        }}></div>
-      </div>
-        <p style={{
-          height:'50px',
-          width:'50px',
-          borderRadius:'50%',
-          border:'solid 1px rgba(0,0,0,0.4)',
-          display: 'flex',
-          justifyContent: 'center', 
-          alignItems: 'center', 
-          boxShadow:'-.5px 1px #888888',
-          position:'relative',
+          boxShadow: '-.5px 1px #888888',
+          position: 'relative',
           cursor: 'pointer',
         }}>
-          <span style={{fontSize:'30px'}}><FcIdea/></span>
-          
+          <span style={{ fontSize: '30px' }}><FcIdea /></span>
+
         </p>
 
       </div>
@@ -167,7 +184,6 @@ function Play() {
 
 
     </div>
-
   )
 }
 

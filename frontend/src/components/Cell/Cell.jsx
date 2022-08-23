@@ -21,7 +21,7 @@ const Cell = (props) => {
 			setIsActive(!isActive);
 			props.handleCellClick(props, !isActive);
 		} else {
-			if (!isActive && !props.isBlur) {
+			if (!isActive && !props.isBlur && !props.isPlayComplete) {
 				if (nonogram.gridData[props.rowIndex][props.columnIndex] === false) {
 					setIsWrong(true)
 				} else {
@@ -38,17 +38,14 @@ const Cell = (props) => {
 		}
 	}
 
-	const className = (isWrong) ?
-		"cell-invalid" :
+	const className = (isWrong) ? "cell-invalid" :
 		(isActive ? "cell-correct" :
 			(props.isBlur ? "cell-blur" :
-				"cell-modifiable"))
+				(!props.isPlayComplete ? "cell-modifiable"
+					: "")))
 	const handleHint = () => {
-
 		document.querySelector(`#colHint-${props.columnIndex}`).classList.add('blur');
 		document.querySelector(`#rowHint-${props.rowIndex}`).classList.add('blur');
-
-		// console.log('cell address (x-y)', props.rowIndex+"-"+props.columnIndex)
 	}
 
 	const removeBlur = () => {

@@ -6,13 +6,7 @@ import "./Grid.css";
 import Cell from "../Cell/Cell"
 import RowHints from "../Hints/RowHints";
 import ColumnHints from "../Hints/ColumnHints";
-import { AiOutlineConsoleSql } from "react-icons/ai";
-import { memo } from "react";
-
-var resultArray = []
-
-const Grid = ({ rows, cols, updateGridData, mode }) => {
-
+const Grid = ({ rows, cols, updateGridData, mode, isPlayComplete,resultArray }) => {
 	const [newState, setNewState] = useState(Array.from({ length: rows }, () => Array.from({ length: cols }, () => false)))
 	const [viewState, setViewState] = useState(Array.from({ length: rows }, () => Array.from({ length: cols }, () => false)))
 	const [blur, setBlur] = useState([])
@@ -22,9 +16,6 @@ const Grid = ({ rows, cols, updateGridData, mode }) => {
 		(state) => state.nonograms
 	)
 	
-	useEffect(()=>{
-	
-	},[])
 
 	// Clear grid when changing rows or cols
 	useEffect(() => {
@@ -51,7 +42,7 @@ const Grid = ({ rows, cols, updateGridData, mode }) => {
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [mode, nonogram.gridData])
-
+	
 	const handleCellClick = (props, isActive) => {
 		if (mode !== "edit") {
 			// Update new grid in play & new mode
@@ -136,13 +127,13 @@ const Grid = ({ rows, cols, updateGridData, mode }) => {
 				(rows === 20 ? 'nonogram-20' : ''))
 
 	return (
-		<div style={mode === "play"?{
-			marginTop:'50px',
-			marginBottom:'50px',
-			paddingRight:'0px',
-			paddingLeft:'10px',
+		<div style={mode === "play" ? {
+			marginTop: '50px',
+			marginBottom: '50px',
+			paddingRight: '0px',
+			paddingLeft: '10px',
 
-		}:{}} className={className}>
+		} : {}} className={className}>
 			<ColumnHints gridData={mode === "new" ?
 				newState : (mode === "edit" ? viewState : nonogram.gridData)} />
 
@@ -170,6 +161,7 @@ const Grid = ({ rows, cols, updateGridData, mode }) => {
 													mode={mode}
 													rowIndex={rowIndex}
 													columnIndex={columnIndex}
+													isPlayComplete={isPlayComplete}
 													isBlur={isElExistInArray([rowIndex, columnIndex], blur) ? true : false}
 													isActive={mode !== "edit" ?
 														(newState[rowIndex] ? (newState[rowIndex][columnIndex]) : false) :
