@@ -1,12 +1,11 @@
 import React from 'react'
-import { useEffect } from 'react';
-import { useState } from 'react'
+import { useEffect, useState } from 'react';
 
-export default function Timer({ check = false, timeBegin, getTimeResult }) {
+export default React.memo(function Timer({ check = false, timeBegin, getTimeResult }) {
     const [time, setTime] = useState({
-        hours: 0,
         minutes: 0,
-        seconds: 0
+        seconds: 0,
+        miliseconds:0
     })
 
     useEffect(() => {
@@ -14,18 +13,18 @@ export default function Timer({ check = false, timeBegin, getTimeResult }) {
         if (!check) {
             timer = setInterval(() => {
                 let timePresent = Date.now() - timeBegin
-                let hours = Math.floor((timePresent % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
                 let minutes = Math.floor((timePresent % (1000 * 60 * 60)) / (1000 * 60));
                 let seconds = Math.floor((timePresent % (1000 * 60)) / 1000);
+                let miliseconds = Math.floor(timePresent % 1000);
                 setTime(prev => {
                     return {
                         ...prev,
-                        hours: hours,
                         minutes: minutes,
-                        seconds: seconds
+                        seconds: seconds,
+                        miliseconds:miliseconds
                     }
                 })
-            }, 1000)
+            }, 0)
         }
         else {
             getTimeResult(time);
@@ -38,12 +37,12 @@ export default function Timer({ check = false, timeBegin, getTimeResult }) {
     return (
         <div style={{
             backgroundColor: 'black',
-            paddingLeft: '20px'
+            paddingLeft: '20px' 
         }}>
             <h1 style={{
                 textAlign: 'left',
                 color: '#fff'
-            }}>{time.hours}:{time.minutes}:{time.seconds}</h1>
+            }}>{time.minutes}:{time.seconds}:{time.miliseconds}</h1>
         </div>
     )
-}
+})

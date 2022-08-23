@@ -63,7 +63,7 @@ function CompleteDialog({ modalIsOpen, handleCloseDialog, gridId, timeResult }) 
       contentLabel="Complete dialog"
     >
       <h1 ref={(_subtitle) => (subtitle = _subtitle)}>Complete</h1>
-      <p>{timeResult?.hours}:{timeResult?.minutes}:{timeResult?.seconds}</p>
+      <p>{timeResult?.minutes}:{timeResult?.seconds}:{timeResult?.miliseconds}</p>
       <div style={{ fontSize: 50 }}>
         <AiFillStar /><AiFillStar /><AiOutlineStar />
       </div>

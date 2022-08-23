@@ -27,39 +27,38 @@ function Play() {
 
   const [rows, setRows] = useState(5)
   const [cols, setCols] = useState(5)
+  const [showedHints, setShowedHints] = useState(0)
   const [isPlayComplete, setIsPlayComplete] = useState(false)
   const [timeResult, setTimeResult] = useState({
-    hours: 0,
     minutes: 0,
-    seconds: 0
+    seconds: 0,
+    miliseconds: 0
   })
-  const [hint,isShowHint] = useState(1)
-
   const navigate = useNavigate()
   const dispatch = useDispatch()
 
   useEffect(() => {
     timeBegin = new Date();
   }, [])
- 
-  
-  const resultArray = useMemo(()=>{
+
+
+  const resultArray = useMemo(() => {
     let array = []
-    nonogram?.gridData?.forEach((dataX,rowIndex)=>{
-      dataX.forEach((dataY,colIndedx)=>{
-        if(dataY==true){
+    nonogram?.gridData?.forEach((dataX, rowIndex) => {
+      dataX.forEach((dataY, colIndedx) => {
+        if (dataY == true) {
           array.push({
-            row:rowIndex,
-            col:colIndedx
+            row: rowIndex,
+            col: colIndedx
           })
         }
-        
+
       })
     })
 
     return array
-  },[nonogram.gridData])
- 
+  }, [nonogram.gridData])
+
   useEffect(() => {
     if (isError) {
       console.log(message)
@@ -81,7 +80,7 @@ function Play() {
   const resultGridData = (nonogram.gridData ?
     nonogram.gridData.map(Object.values) :
     Array.from({ length: rows }, () => Array.from({ length: cols }, () => false)))
-  
+
   const compareGridData = (grid1, grid2) => {
     if (grid1.length !== grid2.length) return false;
     for (var i = 0, len = grid1.length; i < len; i++) {
@@ -93,12 +92,16 @@ function Play() {
   }
 
   const updateGridData = (gridData) => {
-    
+
     updatedGridData = gridData
     if (compareGridData(updatedGridData, resultGridData)) {
       setIsPlayComplete(true)
       handleOpenDialog()
     }
+  }
+
+  const handleShowHint = () => {
+    setShowedHints(prevState => prevState + 1)
   }
 
   if (isLoading) {
@@ -119,14 +122,14 @@ function Play() {
       />
 
       <Timer getTimeResult={setTimeResult} timeBegin={timeBegin} check={isPlayComplete} />
-
       <Grid
         rows={rows}
         cols={cols}
         mode="play"
+        showedHints={showedHints}
         updateGridData={updateGridData}
         isPlayComplete={isPlayComplete}
-        resultArray={resultArray}
+
       />
 
       {/* Action */}
@@ -173,10 +176,9 @@ function Play() {
           alignItems: 'center',
           boxShadow: '-.5px 1px #888888',
           position: 'relative',
-          cursor: 'pointer',
+          cursor: isPlayComplete ? '' : 'pointer',
         }}>
-          <span style={{ fontSize: '30px' }}><FcIdea /></span>
-
+          <span style={{ fontSize: '30px' }}><FcIdea onClick={!isPlayComplete ? handleShowHint : undefined} /></span>
         </p>
 
       </div>
