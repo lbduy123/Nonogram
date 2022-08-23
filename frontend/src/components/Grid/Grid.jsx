@@ -6,7 +6,7 @@ import "./Grid.css";
 import Cell from "../Cell/Cell"
 import RowHints from "../Hints/RowHints";
 import ColumnHints from "../Hints/ColumnHints";
-const Grid = ({ rows, cols, updateGridData, mode, isPlayComplete }) => {
+const Grid = ({ rows, cols, updateGridData, mode, isPlayComplete, showedHints }) => {
 	const [newState, setNewState] = useState(Array.from({ length: rows }, () => Array.from({ length: cols }, () => false)))
 	const [viewState, setViewState] = useState(Array.from({ length: rows }, () => Array.from({ length: cols }, () => false)))
 	const [blur, setBlur] = useState([])
@@ -29,8 +29,8 @@ const Grid = ({ rows, cols, updateGridData, mode, isPlayComplete }) => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [rows, cols, mode])
 
-	// Load grid from store
 	useEffect(() => {
+		// Load grid from store
 		if (mode === "edit") {
 			const viewGrid = (nonogram.gridData ?
 				nonogram.gridData.map(Object.values) :
@@ -39,8 +39,29 @@ const Grid = ({ rows, cols, updateGridData, mode, isPlayComplete }) => {
 			setViewState(viewGrid)
 			setIsLoaded(true)
 		}
+
+		// Show ramdomized cell hint 
+		if (mode === "play") {
+			const gridData = (nonogram.gridData ?
+				nonogram.gridData.map(Object.values) :
+				Array.from({ length: rows }, () => Array.from({ length: cols }, () => false)))
+
+			let remainingTrueCells = []
+			for (let i = 0; i < rows; i++) {
+				for (let j = 0; j < cols; j++) {
+					if (newState[i][j] === false &&
+						gridData[i][j] === true &&
+						showedHints !== 0) {
+						remainingTrueCells.push({ rowIndex: i, columnIndex: j })
+					}
+				}
+			}
+			if (showedHints !== 0 && remainingTrueCells.length > 0) {
+				handleCellClick(remainingTrueCells[Math.floor(Math.random() * remainingTrueCells.length)], true)
+			}
+		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [mode, nonogram.gridData])
+	}, [mode, nonogram.gridData, showedHints])
 
 	const handleCellClick = (props, isActive) => {
 		if (mode !== "edit") {
@@ -116,9 +137,6 @@ const Grid = ({ rows, cols, updateGridData, mode, isPlayComplete }) => {
 				r.every((value, index) => el[index] === value)
 		)) ? true : false)
 	}
-
-
-
 
 	const className =
 		rows === 10 ? 'nonogram-10' :

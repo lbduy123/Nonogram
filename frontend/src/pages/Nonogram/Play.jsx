@@ -26,6 +26,7 @@ function Play() {
 
   const [rows, setRows] = useState(5)
   const [cols, setCols] = useState(5)
+  const [showedHints, setShowedHints] = useState(0)
   const [isPlayComplete, setIsPlayComplete] = useState(false)
   const [timeResult, setTimeResult] = useState({
     hours: 0,
@@ -80,6 +81,10 @@ function Play() {
     }
   }
 
+  const handleShowHint = () => {
+    setShowedHints(prevState => prevState + 1)
+  }
+
   if (isLoading) {
     return <Spinner />
   }
@@ -101,6 +106,7 @@ function Play() {
         rows={rows}
         cols={cols}
         mode="play"
+        showedHints={showedHints}
         updateGridData={updateGridData}
         isPlayComplete={isPlayComplete}
       />
@@ -149,10 +155,9 @@ function Play() {
           alignItems: 'center',
           boxShadow: '-.5px 1px #888888',
           position: 'relative',
-          cursor: 'pointer',
+          cursor: isPlayComplete ? '' : 'pointer',
         }}>
-          <span style={{ fontSize: '30px' }}><FcIdea /></span>
-
+          <span style={{ fontSize: '30px' }}><FcIdea onClick={!isPlayComplete ? handleShowHint : undefined} /></span>
         </p>
 
       </div>

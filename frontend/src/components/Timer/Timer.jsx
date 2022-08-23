@@ -1,8 +1,7 @@
 import React from 'react'
-import { useEffect } from 'react';
-import { useState } from 'react'
+import { useEffect, useState } from 'react';
 
-export default function Timer({ check = false, timeBegin, getTimeResult }) {
+export default React.memo(function Timer({ check = false, timeBegin, getTimeResult }) {
     const [time, setTime] = useState({
         hours: 0,
         minutes: 0,
@@ -46,4 +45,4 @@ export default function Timer({ check = false, timeBegin, getTimeResult }) {
             }}>{time.hours}:{time.minutes}:{time.seconds}</h1>
         </div>
     )
-}
+})
