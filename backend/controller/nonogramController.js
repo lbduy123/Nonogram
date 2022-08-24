@@ -142,27 +142,29 @@ const updateNonogramPlayed = asyncHandler(async (req, res) => {
 	}
 
 	let playedBy = nonogram.meta.played.by;
-	if (playedBy.findIndex((user) => user.id.toString() === req.user.id) === -1) {
-		let playData = {
-			id: req.user.id,
-			bestTime: req.body.bestTime,
-		}
-		playedBy.push(playData)
-	} else {
-		let bestTime = playedBy.find((user) => user.id.toString() === req.user.id).bestTime
-		if (req.body.bestTime < bestTime) {
-			playedBy = playedBy.filter((user) => user.id.toString() !== req.user.id)
-			let playData = {
-				id: req.user.id,
-				bestTime: req.body.bestTime,
-			}
+	let playData = {
+		id: req.user.id,
+		bestTime: req.body.bestTime,
+	}
+	if (playedBy.findIndex((user) => user.id.toString() === playData.id) !== -1) {
+		let bestUserTime = playedBy.find((user) => user.id.toString() === playData.id).bestTime
+		if (playData.bestTime < bestUserTime) {
+			playedBy = playedBy.filter((user) => user.id.toString() !== playData.id)
 			playedBy.push(playData)
 		}
+	} else {
+		playedBy.push(playData)
 	}
+	let bestPlayTimeValue = nonogram.meta.bestPlayTime.value ? nonogram.meta.bestPlayTime.value : playData.bestTime
+	if (playData.bestTime < bestPlayTimeValue) bestPlayTimeValue = playData.bestTime
 
 	const updatedNonogram = await Nonogram.findByIdAndUpdate(
 		req.params.id,
-		{ "meta.played.by": playedBy, $inc: { "meta.played.quantity": 1 } },
+		{
+			"meta.bestPlayTime": { id: playData.id, value: bestPlayTimeValue },
+			"meta.played.by": playedBy,
+			$inc: { "meta.played.quantity": 1 }
+		},
 		{ new: true, }
 	)
 
