@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import Modal from 'react-modal';
 import { useState } from 'react'
 import { AiFillStar, AiTwotoneCrown, AiOutlineLike, AiOutlineClockCircle, AiOutlineHome } from 'react-icons/ai'
-import { RiArrowGoBackLine } from 'react-icons/ri'
+import { MdRestartAlt } from 'react-icons/md'
 
 
 import { useSelector, useDispatch } from 'react-redux';
@@ -48,14 +48,15 @@ function CompleteDialog({ modalIsOpen, handleCloseDialog, gridId, timeResult,isL
   }, [modalIsOpen])
   const navigate = useNavigate()
   const dispatch = useDispatch()
+  
   function afterOpenModal() {
+    const timeResultConvert =timeResult.minutes*60 + timeResult.seconds + timeResult.miliseconds/1000 
     // references are now sync'd and can be accessed.
-    nonogramService.updateNonogramPlayed({ nonogramId: gridId, bestTime: timeResult.seconds }, user.token);
+    nonogramService.updateNonogramPlayed({ nonogramId: gridId, bestTime: timeResultConvert }, user.token);
     // subtitle.style.color = '#000';
   }
 
   const closeModal = () => {
-   
     handleCloseDialog();
   }
 
@@ -125,7 +126,7 @@ function CompleteDialog({ modalIsOpen, handleCloseDialog, gridId, timeResult,isL
           color:`${isLike?'red':''}`
         }} className={styles['likeIcon']} /></span>
         <span onClick={returnHome} className={styles['backToHome']}><AiOutlineHome/></span>
-        <span onClick={tryAgain} className={styles['returnIcon']}><RiArrowGoBackLine/></span>
+        <span onClick={tryAgain} className={styles['returnIcon']}><MdRestartAlt/></span>
       </div>
 
     </Modal>

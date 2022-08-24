@@ -8,6 +8,7 @@ import Spinner from '../../components/Spinner'
 import CompleteDialog from '../../components/CompleteDialog'
 import Timer from '../../components/Timer/Timer'
 import { FaLightbulb } from 'react-icons/fa'
+import { GiTrophy } from 'react-icons/gi'
 import { useMemo } from 'react'
 var timeBegin;
 
@@ -30,7 +31,7 @@ function Play() {
   const [showedHints, setShowedHints] = useState(0)
   const [isPlayComplete, setIsPlayComplete] = useState(false)
   const [isLose, setIsLose] = useState(false)
-  const [health,setHealth] = useState(4)
+  const [health, setHealth] = useState(4)
   const [timeResult, setTimeResult] = useState({
     minutes: 0,
     seconds: 0,
@@ -57,14 +58,14 @@ function Play() {
     dispatch(getNonogram(gridId))
     setRows(nonogram.rows)
     setCols(nonogram.cols)
-    
+
   }, [user, navigate, isError, message, dispatch, gridId, nonogram.rows, nonogram.cols])
-  useEffect(()=>{
-    if(health<1){
+  useEffect(() => {
+    if (health < 1) {
       setIsLose(true)
       handleOpenDialog()
     }
-  },[health])
+  }, [health])
   let updatedGridData
   const resultGridData = (nonogram.gridData ?
     nonogram.gridData.map(Object.values) :
@@ -92,7 +93,7 @@ function Play() {
   const handleShowHint = () => {
     setShowedHints(prevState => prevState + 1)
   }
-  const handleRestart = ()=>{
+  const handleRestart = () => {
     setIsPlayComplete(false);
     setIsLose(false);
     setHealth(4);
@@ -103,13 +104,14 @@ function Play() {
   if (isLoading) {
     return <Spinner />
   }
-
+console.log(nonogram)
   return (
     <div style={{
       maxWidth: `calc(90px + 2*60px*${cols})`,
       margin: '0 auto',
       border: '10px solid rgb(136, 128, 152)',
       overflowX: `scroll`,
+      positon: 'relative'
     }}>
       <CompleteDialog
         modalIsOpen={modalIsOpen}
@@ -121,6 +123,21 @@ function Play() {
       />
 
       <Timer getTimeResult={setTimeResult} timeBegin={timeBegin} isLose={isLose} check={isPlayComplete} />
+      <div style={{
+        textAlign: 'left',
+        display: 'flex',
+        alignItems: 'center',
+      }}>
+        <GiTrophy style={{
+          fontSize: '30px',
+          color: '#fede00',  
+        }} />
+        <span style={{
+          fontSize: '20px',
+          fontWeight: 'bold',
+          color:'green'
+        }}>BEST TIME: {nonogram?.meta?.bestPlayTime?.value}s</span>
+      </div>
       <Grid
         rows={rows}
         cols={cols}
@@ -139,14 +156,14 @@ function Play() {
         marginBottom: '50px',
 
       }}>
-       
-       
+
+
         <p style={{
           height: '70px',
           width: '70px',
           borderRadius: '50%',
           border: 'solid 1px rgba(0,0,0,0.1)',
-          backgroundColor:'#f65ac3',
+          backgroundColor: '#f65ac3',
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
@@ -155,26 +172,26 @@ function Play() {
           cursor: isPlayComplete ? '' : 'pointer',
         }}>
           <FaLightbulb style={{
-            color:'#fede00',
-            fontSize:'30px',
-            transform:'rotate(-20deg)'
-          }} onClick={(isPlayComplete||(5-showedHints)==0 )? undefined:handleShowHint} />
+            color: '#fede00',
+            fontSize: '30px',
+            transform: 'rotate(-20deg)'
+          }} onClick={(isPlayComplete || (5 - showedHints) == 0) ? undefined : handleShowHint} />
           <span style={{
             position: 'absolute',
             width: '30px',
             height: '30px',
             borderRadius: '50%',
-            backgroundColor:'#700f4c',
-           
+            backgroundColor: '#700f4c',
+
             // boxShadow: 'inset -2px 13px 93px -9px rgba(250,0,250,1)',
-            top:'0',
-            right:'0',
-            color:'white'
-          }}>{5-showedHints}</span>
+            top: '0',
+            right: '0',
+            color: 'white'
+          }}>{5 - showedHints}</span>
         </p>
 
-       
-        
+
+
       </div>
 
 
