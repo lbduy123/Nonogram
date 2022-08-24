@@ -2,10 +2,14 @@ import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import Modal from 'react-modal';
 import { useState } from 'react'
-import { AiFillStar, AiOutlineStar, AiTwotoneCrown, AiOutlineLike, AiOutlineClockCircle } from 'react-icons/ai'
-import { useSelector } from 'react-redux';
+import { AiFillStar, AiTwotoneCrown, AiOutlineLike, AiOutlineClockCircle, AiOutlineHome } from 'react-icons/ai'
+import { RiArrowGoBackLine } from 'react-icons/ri'
+
+
+import { useSelector, useDispatch } from 'react-redux';
 import nonogramService from '../features/nonograms/nonogramService';
 import styles from './CompleteDialog.module.css'
+import { getNonograms } from '../features/nonograms/nonogramSlice';
 
 
 const customStyles = {
@@ -27,37 +31,50 @@ const customStyles = {
     boxShadow: ' 0 8px 32px 0 rgba( 31, 38, 135, 0.37 )',
     backdropFilter: 'blur( 4px )',
     borderRadius: '10px',
-    border: '1px solid rgba( 255, 255, 255, 0.18 )'
+    border: '1px solid rgba( 255, 255, 255, 0.18 )',
+    position:'relative'
   },
 };
 
 Modal.setAppElement('#root');
 let subtitle;
 
-function CompleteDialog({ modalIsOpen, handleCloseDialog, gridId, timeResult }) {
+function CompleteDialog({ modalIsOpen, handleCloseDialog, gridId, timeResult,isLose, handleRestart }) {
   const { user } = useSelector((state) => state.auth);
   const [isOpen, setIsOpen] = useState(modalIsOpen);
-
+  const [isLike, setIsLike] = useState(false)
   React.useEffect(() => {
     setIsOpen(modalIsOpen)
   }, [modalIsOpen])
   const navigate = useNavigate()
-
+  const dispatch = useDispatch()
   function afterOpenModal() {
     // references are now sync'd and can be accessed.
     nonogramService.updateNonogramPlayed({ nonogramId: gridId, bestTime: timeResult.seconds }, user.token);
-    subtitle.style.color = '#000';
+    // subtitle.style.color = '#000';
   }
 
   const closeModal = () => {
+   
+    handleCloseDialog();
+  }
+
+  const handleLike = ()=>{
     if (user) {
       nonogramService.updateNonogramVotes(gridId, user.token)
+      setIsLike(!isLike)
     }
-    handleCloseDialog();
+    
   }
 
   const returnHome = () => {
     navigate('/')
+  }
+
+  const tryAgain = ()=>{
+    dispatch(getNonograms(gridId));
+    handleRestart()
+    handleCloseDialog();
   }
 
   return (
@@ -79,9 +96,10 @@ function CompleteDialog({ modalIsOpen, handleCloseDialog, gridId, timeResult }) 
         <button className="btn btn-primary" onClick={closeModal}>Close</button>
         <button className="btn btn-primary" onClick={returnHome}>Homepage</button>
       </div> */}
+      <span className={styles['closeButton']} onClick={closeModal} >x</span>
       <h1 style={{
         marginBottom:'0'
-      }}>Complete</h1>
+      }}>{isLose?'Loser':'Winner'}</h1>
       <div className={styles['scoreRating']}>
         <AiFillStar className={styles['starIcon--active']} />
         <AiFillStar style={{ transform: 'translateY(-12px)' }} className={styles['starIcon--active']} />
@@ -103,8 +121,11 @@ function CompleteDialog({ modalIsOpen, handleCloseDialog, gridId, timeResult }) 
 
       </div>
       <div className={styles['actionInner']}>
-        <span  onClick={closeModal} className={styles['vote']}><AiOutlineLike className={styles['likeIcon']} /></span>
-        <span  onClick={returnHome} className={styles['backToHome']}>BACK TO HOME</span>
+        <span onClick={handleLike} className={styles['vote']}><AiOutlineLike style={{
+          color:`${isLike?'red':''}`
+        }} className={styles['likeIcon']} /></span>
+        <span onClick={returnHome} className={styles['backToHome']}><AiOutlineHome/></span>
+        <span onClick={tryAgain} className={styles['returnIcon']}><RiArrowGoBackLine/></span>
       </div>
 
     </Modal>

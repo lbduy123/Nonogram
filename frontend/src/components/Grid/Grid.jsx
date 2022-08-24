@@ -7,7 +7,7 @@ import Cell from "../Cell/Cell"
 import RowHints from "../Hints/RowHints";
 import ColumnHints from "../Hints/ColumnHints";
 
-const Grid = ({ rows, cols, updateGridData, mode, isPlayComplete, showedHints }) => {
+const Grid = ({ rows, cols, updateGridData, mode, isPlayComplete, showedHints, handleHealth }) => {
 
 	const [newState, setNewState] = useState(Array.from({ length: rows }, () => Array.from({ length: cols }, () => false)))
 	const [viewState, setViewState] = useState(Array.from({ length: rows }, () => Array.from({ length: cols }, () => false)))
@@ -123,7 +123,11 @@ const Grid = ({ rows, cols, updateGridData, mode, isPlayComplete, showedHints })
 					})
 				}
 			}
-
+			
+			if(!isActive){
+				handleHealth(prev=>prev-1)
+			}
+			
 			setNewState(newGrid)
 			updateGridData(newGrid);
 		} else {

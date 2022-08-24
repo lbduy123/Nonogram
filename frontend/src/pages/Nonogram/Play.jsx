@@ -7,7 +7,7 @@ import Grid from '../../components/Grid/Grid'
 import Spinner from '../../components/Spinner'
 import CompleteDialog from '../../components/CompleteDialog'
 import Timer from '../../components/Timer/Timer'
-import { FcIdea } from 'react-icons/fc'
+import { FaLightbulb } from 'react-icons/fa'
 import { useMemo } from 'react'
 var timeBegin;
 
@@ -29,6 +29,8 @@ function Play() {
   const [cols, setCols] = useState(5)
   const [showedHints, setShowedHints] = useState(0)
   const [isPlayComplete, setIsPlayComplete] = useState(false)
+  const [isLose, setIsLose] = useState(false)
+  const [health,setHealth] = useState(4)
   const [timeResult, setTimeResult] = useState({
     minutes: 0,
     seconds: 0,
@@ -40,24 +42,6 @@ function Play() {
   useEffect(() => {
     timeBegin = new Date();
   }, [])
-
-
-  const resultArray = useMemo(() => {
-    let array = []
-    nonogram?.gridData?.forEach((dataX, rowIndex) => {
-      dataX.forEach((dataY, colIndedx) => {
-        if (dataY == true) {
-          array.push({
-            row: rowIndex,
-            col: colIndedx
-          })
-        }
-
-      })
-    })
-
-    return array
-  }, [nonogram.gridData])
 
   useEffect(() => {
     if (isError) {
@@ -73,9 +57,14 @@ function Play() {
     dispatch(getNonogram(gridId))
     setRows(nonogram.rows)
     setCols(nonogram.cols)
-
+    
   }, [user, navigate, isError, message, dispatch, gridId, nonogram.rows, nonogram.cols])
-
+  useEffect(()=>{
+    if(health<1){
+      setIsLose(true)
+      handleOpenDialog()
+    }
+  },[health])
   let updatedGridData
   const resultGridData = (nonogram.gridData ?
     nonogram.gridData.map(Object.values) :
@@ -103,6 +92,13 @@ function Play() {
   const handleShowHint = () => {
     setShowedHints(prevState => prevState + 1)
   }
+  const handleRestart = ()=>{
+    setIsPlayComplete(false);
+    setIsLose(false);
+    setHealth(4);
+    setShowedHints(0);
+    timeBegin = new Date();
+  }
 
   if (isLoading) {
     return <Spinner />
@@ -120,9 +116,11 @@ function Play() {
         handleCloseDialog={handleCloseDialog}
         gridId={gridId}
         timeResult={timeResult}
+        isLose={isLose}
+        handleRestart={handleRestart}
       />
 
-      <Timer getTimeResult={setTimeResult} timeBegin={timeBegin} check={isPlayComplete} />
+      <Timer getTimeResult={setTimeResult} timeBegin={timeBegin} isLose={isLose} check={isPlayComplete} />
       <Grid
         rows={rows}
         cols={cols}
@@ -130,58 +128,53 @@ function Play() {
         showedHints={showedHints}
         updateGridData={updateGridData}
         isPlayComplete={isPlayComplete}
-
+        handleHealth={setHealth}
       />
 
       {/* Action */}
       <div style={{
         display: 'flex',
-        justifyContent: 'end',
+        justifyContent: 'center',
         alignItems: 'center',
         marginBottom: '50px',
-        paddingRight: '150px'
+
       }}>
-        <div style={{
-          display: 'flex',
-          justifyContent: 'center',
-          marginRight: '70px',
-        }}>
-          <div style={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            width: '50px',
-            height: '50px',
-            backgroundColor: '#e7edf6',
-            marginRight: '10px',
-            borderRadius: '50%',
-            fontSize: 'xx-large',
-            color: '#b3b9c3'
-          }}>X</div>
-
-
-          <div style={{
-            width: '50px',
-            height: '50px',
-            backgroundColor: '#324963',
-            borderRadius: '50%',
-          }}></div>
-        </div>
+       
+       
         <p style={{
-          height: '50px',
-          width: '50px',
+          height: '70px',
+          width: '70px',
           borderRadius: '50%',
-          border: 'solid 1px rgba(0,0,0,0.4)',
+          border: 'solid 1px rgba(0,0,0,0.1)',
+          backgroundColor:'#f65ac3',
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
-          boxShadow: '-.5px 1px #888888',
+          boxShadow: '0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)',
           position: 'relative',
           cursor: isPlayComplete ? '' : 'pointer',
         }}>
-          <span style={{ fontSize: '30px' }}><FcIdea onClick={!isPlayComplete ? handleShowHint : undefined} /></span>
+          <FaLightbulb style={{
+            color:'#fede00',
+            fontSize:'30px',
+            transform:'rotate(-20deg)'
+          }} onClick={(isPlayComplete||(5-showedHints)==0 )? undefined:handleShowHint} />
+          <span style={{
+            position: 'absolute',
+            width: '30px',
+            height: '30px',
+            borderRadius: '50%',
+            backgroundColor:'#700f4c',
+           
+            // boxShadow: 'inset -2px 13px 93px -9px rgba(250,0,250,1)',
+            top:'0',
+            right:'0',
+            color:'white'
+          }}>{5-showedHints}</span>
         </p>
 
+       
+        
       </div>
 
 
