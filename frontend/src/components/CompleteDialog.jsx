@@ -39,7 +39,7 @@ const customStyles = {
 Modal.setAppElement('#root');
 let subtitle;
 
-function CompleteDialog({ modalIsOpen, handleCloseDialog, gridId, timeResult,isLose, handleRestart }) {
+function CompleteDialog({ modalIsOpen, handleCloseDialog, gridId, timeResult,isLose, handleRestart,yourBestTime }) {
   const { user } = useSelector((state) => state.auth);
   const [isOpen, setIsOpen] = useState(modalIsOpen);
   const [isLike, setIsLike] = useState(false)
@@ -50,7 +50,7 @@ function CompleteDialog({ modalIsOpen, handleCloseDialog, gridId, timeResult,isL
   const dispatch = useDispatch()
   
   function afterOpenModal() {
-    const timeResultConvert =timeResult.minutes*60 + timeResult.seconds + timeResult.miliseconds/1000 
+    const timeResultConvert =timeResult.minutes*60*1000 + timeResult.seconds*1000 + timeResult.miliseconds 
     // references are now sync'd and can be accessed.
     nonogramService.updateNonogramPlayed({ nonogramId: gridId, bestTime: timeResultConvert }, user.token);
     // subtitle.style.color = '#000';
@@ -73,11 +73,11 @@ function CompleteDialog({ modalIsOpen, handleCloseDialog, gridId, timeResult,isL
   }
 
   const tryAgain = ()=>{
-    dispatch(getNonograms(gridId));
     handleRestart()
     handleCloseDialog();
   }
 
+ 
   return (
     <Modal
       isOpen={isOpen}
@@ -114,13 +114,13 @@ function CompleteDialog({ modalIsOpen, handleCloseDialog, gridId, timeResult,isL
         </div>
         <h1>{timeResult?.minutes}:{timeResult?.seconds}:{timeResult?.miliseconds}</h1>
       </div>
-
-      <div className={styles['yourBestTimeInner']}>
+      
+      {isNaN(yourBestTime)?"":<div className={styles['yourBestTimeInner']}>
         <h3>YOUR BEST TIME</h3>
-        <p >0:1:980</p>
+        <p >{Math.floor((yourBestTime % (1000 * 60 * 60)) / (1000 * 60))}:{Math.floor((yourBestTime % (1000 * 60)) / 1000)}:{yourBestTime%1000}</p>
         <AiTwotoneCrown className={styles['CrownIcon']} />
 
-      </div>
+      </div>}
       <div className={styles['actionInner']}>
         <span onClick={handleLike} className={styles['vote']}><AiOutlineLike style={{
           color:`${isLike?'red':''}`

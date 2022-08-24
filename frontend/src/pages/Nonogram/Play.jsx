@@ -32,6 +32,7 @@ function Play() {
   const [isPlayComplete, setIsPlayComplete] = useState(false)
   const [isLose, setIsLose] = useState(false)
   const [health, setHealth] = useState(4)
+  const [isRestart, setIsRestart]=useState(false)
   const [timeResult, setTimeResult] = useState({
     minutes: 0,
     seconds: 0,
@@ -54,12 +55,12 @@ function Play() {
     if (!user) {
       navigate('/login')
     }
-
+    
     dispatch(getNonogram(gridId))
     setRows(nonogram.rows)
     setCols(nonogram.cols)
 
-  }, [user, navigate, isError, message, dispatch, gridId, nonogram.rows, nonogram.cols])
+  }, [user, navigate, isError, message, dispatch, gridId, nonogram.rows, nonogram.cols,isRestart])
   useEffect(() => {
     if (health < 1) {
       setIsLose(true)
@@ -98,13 +99,17 @@ function Play() {
     setIsLose(false);
     setHealth(4);
     setShowedHints(0);
+    setIsRestart(true);
     timeBegin = new Date();
   }
 
   if (isLoading) {
     return <Spinner />
   }
-console.log(nonogram)
+  
+  const yourBestTime = nonogram?.meta?.played?.by.find((player)=>player.id==user._id)?.bestTime
+  const matchBestTime = nonogram?.meta?.bestPlayTime?.value
+  console.log(yourBestTime,matchBestTime)
   return (
     <div style={{
       maxWidth: `calc(90px + 2*60px*${cols})`,
@@ -120,6 +125,7 @@ console.log(nonogram)
         timeResult={timeResult}
         isLose={isLose}
         handleRestart={handleRestart}
+        yourBestTime={yourBestTime}
       />
 
       <Timer getTimeResult={setTimeResult} timeBegin={timeBegin} isLose={isLose} check={isPlayComplete} />
@@ -128,15 +134,15 @@ console.log(nonogram)
         display: 'flex',
         alignItems: 'center',
       }}>
-        <GiTrophy style={{
+      {matchBestTime!==undefined?<GiTrophy style={{
           fontSize: '30px',
           color: '#fede00',  
-        }} />
-        <span style={{
+        }} />:""}
+        {matchBestTime!=undefined?<span style={{
           fontSize: '20px',
           fontWeight: 'bold',
           color:'green'
-        }}>BEST TIME: {nonogram?.meta?.bestPlayTime?.value}s</span>
+        }}>BEST TIME: {Math.floor((matchBestTime % (1000 * 60 * 60)) / (1000 * 60))}:{Math.floor((matchBestTime % (1000 * 60)) / 1000)}:{matchBestTime%1000}</span>:""}
       </div>
       <Grid
         rows={rows}

@@ -75,6 +75,9 @@ const Grid = ({ rows, cols, updateGridData, mode, isPlayComplete, showedHints, h
 			newGrid[props.rowIndex][props.columnIndex] = isActive
 			
 			if (mode === "play") {
+				if(!isActive){
+					handleHealth(prev=>prev-1)
+				}
 				// Check if row is correct & blur rowHints
 				let rowCorrect = true;
 				for (let i = 0; i < cols; i++) {
@@ -124,9 +127,7 @@ const Grid = ({ rows, cols, updateGridData, mode, isPlayComplete, showedHints, h
 				}
 			}
 			
-			if(!isActive){
-				handleHealth(prev=>prev-1)
-			}
+			
 			
 			setNewState(newGrid)
 			updateGridData(newGrid);
