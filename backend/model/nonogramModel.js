@@ -44,6 +44,14 @@ const nonogramSchema = mongoose.Schema(
 					default: 0,
 				},
 				by: [playedBySchema]
+			},
+			bestPlayTime: {
+				id: {
+					type: mongoose.Schema.Types.ObjectId,
+				},
+				value: {
+					type: Number,
+				}
 			}
 		}
 	},
