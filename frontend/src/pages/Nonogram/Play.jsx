@@ -71,8 +71,8 @@ function Play() {
     }
 
     dispatch(getNonogram(gridId))
-    // setRows(nonogram.rows)
-    // setCols(nonogram.cols)
+    setRows(nonogram.rows)
+    setCols(nonogram.cols)
 
   }, [user, navigate, isError, message, dispatch, gridId, nonogram.rows, nonogram.cols])
 
@@ -110,9 +110,10 @@ function Play() {
 
   return (
     <div style={{
-      maxWidth: '680px',
+      maxWidth: `calc(90px + 2*60px*${cols})`,
       margin: '0 auto',
       border: '10px solid rgb(136, 128, 152)',
+      overflowX: `scroll`,
     }}>
       <CompleteDialog
         modalIsOpen={modalIsOpen}

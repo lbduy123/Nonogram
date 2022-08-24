@@ -26,11 +26,12 @@ function RowHints({ gridData, hidden }) {
           }
         }
       }
-      setMaxHints(Math.round(gridData.length / 2))
+      setMaxHints(Math.round(gridData[0].length / 2))
       setRowHints(rowHintsData)
+      
     }
   }, [gridData])
-
+  
   return (
     <div style={{
       margin: "0px 20px",

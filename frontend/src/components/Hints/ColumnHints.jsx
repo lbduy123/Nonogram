@@ -54,8 +54,8 @@ function ColumnHints({ gridData }) {
               justifyContent: "end",
               // ---------------------Properties changing------------------
               alignItems: "center",
-              width: "58px",
-              margin: '0 1px', 
+              width: "60px",
+              // margin: '0 1px', 
               height:`calc(30px*${maxHints})`,
               
               border:'1px solid rgba(0,0,0,0)',

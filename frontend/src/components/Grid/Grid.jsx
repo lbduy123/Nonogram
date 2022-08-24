@@ -18,7 +18,7 @@ const Grid = ({ rows, cols, updateGridData, mode, isPlayComplete, showedHints })
 		(state) => state.nonograms
 	)
 	
-
+	
 	// Clear grid when changing rows or cols
 	useEffect(() => {
 		if (mode !== "edit") {
@@ -174,6 +174,7 @@ const Grid = ({ rows, cols, updateGridData, mode, isPlayComplete, showedHints })
 					<table className="grid-table">
 						<tbody>
 							{[...Array(rows)].map((row, rowIndex) => {
+								
 								return (
 									<tr className="row" key={rowIndex}>
 										{[...Array(cols)].map((cell, columnIndex) => {

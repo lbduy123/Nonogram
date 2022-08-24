@@ -1,0 +1,101 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 240px;
+    height: 320px;
+    border-radius:12px;
+    border-color:rgb(243 244 246);
+    background-color: rgb(248 250 252);
+    opacity: 0.9;
+    box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1) ;
+    padding: 8px 0px;
+    position: relative;
+}
+
+.title {
+    margin-bottom: 16px;
+}
+
+.title h3 {
+    color: rgb(107 114 128);
+    font-weight: 700;
+    font-size: 20px;
+}
+
+.title h4 {
+    color: rgb(107 114 128);
+}
+.matchingPicture {
+    padding: 4px;
+    box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+}
+
+.matchingPicture svg {
+    width: 80px;
+    height: 80px;
+}
+
+.socialIcon {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-top: 16px;
+}
+
+.socialIcon .play {
+    display: block;
+    margin: auto auto;
+    font-size: 18px;
+}
+
+.socialIcon .like {
+    display: block;
+    margin: auto auto;
+    font-size: 18px;
+    opacity: 0.1;
+    margin-left:30px;
+    margin-right:5px;
+}
+
+.socialIcon .like--active {
+    display: block;
+    margin: auto auto;
+    font-size: 18px;
+    margin-left:30px;
+    margin-right:5px;
+    color: rgb(239 68 68);
+    opacity: 1;
+}
+
+
+
+.action {
+    margin-top:20px;
+}
+
+.action .playButton {
+    padding: 8px 20px;
+    border-radius: 8px;
+    box-shadow:0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+    cursor:pointer;
+
+    transition-property: all;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 150ms;
+} 
+
+.action .playButton:hover {
+    background-color: rgb(226 232 240);
+} 
+
+.action .removeButton {
+    position: absolute;
+    top: 0;
+    right:2px;
+    font-size: 20px;
+    cursor: pointer;
+    font-weight: 700;
+    color: gray;
+    
+}

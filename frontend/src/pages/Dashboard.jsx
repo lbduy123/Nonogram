@@ -45,7 +45,7 @@ function Dashboard() {
         {allNonograms.length > 0 ? (
           <div className="goals">
             {allNonograms.map((nonogram) => (
-              <NonogramItem key={nonogram._id} nonogram={nonogram} isEditShown={false} />
+              <NonogramItem userId={user._id} key={nonogram._id} nonogram={nonogram} isEditShown={false} />
             ))}
           </div>
         ) : (<h3>Not available</h3>)}

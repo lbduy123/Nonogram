@@ -1,7 +1,7 @@
 import React from 'react'
 import { useEffect, useState } from 'react';
 
-export default React.memo(function Timer({ check = false, timeBegin, getTimeResult }) {
+export default React.memo(function Timer({ check = false, timeBegin=null, getTimeResult }) {
     const [time, setTime] = useState({
         minutes: 0,
         seconds: 0,
@@ -10,7 +10,7 @@ export default React.memo(function Timer({ check = false, timeBegin, getTimeResu
 
     useEffect(() => {
         let timer
-        if (!check) {
+        if (!check && timeBegin !=null) {
             timer = setInterval(() => {
                 let timePresent = Date.now() - timeBegin
                 let minutes = Math.floor((timePresent % (1000 * 60 * 60)) / (1000 * 60));
@@ -37,7 +37,8 @@ export default React.memo(function Timer({ check = false, timeBegin, getTimeResu
     return (
         <div style={{
             backgroundColor: 'black',
-            paddingLeft: '20px' 
+            paddingLeft: '20px',
+            width: '100%'
         }}>
             <h1 style={{
                 textAlign: 'left',
