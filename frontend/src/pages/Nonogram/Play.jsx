@@ -109,7 +109,6 @@ function Play() {
   
   const yourBestTime = nonogram?.meta?.played?.by.find((player)=>player.id==user._id)?.bestTime
   const matchBestTime = nonogram?.meta?.bestPlayTime?.value
-  console.log(yourBestTime,matchBestTime)
   return (
     <div style={{
       maxWidth: `calc(90px + 2*60px*${cols})`,
