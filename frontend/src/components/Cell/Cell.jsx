@@ -4,14 +4,11 @@ import { useState, useEffect } from "react"
 import { useSelector } from 'react-redux'
 
 const Cell = (props) => {
-
 	const { nonogram } = useSelector(
 		(state) => state.nonograms
 	)
-
 	const [isActive, setIsActive] = useState(props.isActive)
 	const [isWrong, setIsWrong] = useState(false)
-
 	useEffect(() => {
 		setIsActive(props.isActive)
 	}, [props.isActive])
@@ -21,7 +18,7 @@ const Cell = (props) => {
 			setIsActive(!isActive);
 			props.handleCellClick(props, !isActive);
 		} else {
-			if (!isActive && !props.isBlur && !props.isPlayComplete) {
+			if (!isActive && !props.isBlur && !props.isPlayComplete && !props.isLose) {
 				if (nonogram.gridData[props.rowIndex][props.columnIndex] === false) {			
 					setIsWrong(true)
 					setIsActive(true)
@@ -35,7 +32,8 @@ const Cell = (props) => {
 	}
 
 	const handleDrag = (event) => {
-		if (event.ctrlKey) {
+		
+		if (event?.ctrlKey) {
 			handleClick(this)
 		}
 	}
@@ -62,6 +60,7 @@ const Cell = (props) => {
 			className={className}
 			onClick={handleClick}
 			onMouseOver={handleDrag}
+			
 		>
 			{className === "cell-invalid" ? <label className="cell-wrong">x</label> :
 				className === "cell-blur" ? <label className="cell-blur">x</label> : <></>}

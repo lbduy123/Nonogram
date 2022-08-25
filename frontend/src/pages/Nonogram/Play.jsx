@@ -151,6 +151,7 @@ function Play() {
         showedHints={showedHints}
         updateGridData={updateGridData}
         isPlayComplete={isPlayComplete}
+        isLose={isLose}
         handleHealth={setHealth}
       />
 

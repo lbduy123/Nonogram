@@ -7,7 +7,7 @@ import Cell from "../Cell/Cell"
 import RowHints from "../Hints/RowHints";
 import ColumnHints from "../Hints/ColumnHints";
 
-const Grid = ({ rows, cols, updateGridData, mode, isPlayComplete, showedHints, handleHealth }) => {
+const Grid = ({ rows, cols, updateGridData, mode, isPlayComplete, showedHints, handleHealth, isLose }) => {
 
 	const [newState, setNewState] = useState(Array.from({ length: rows }, () => Array.from({ length: cols }, () => false)))
 	const [viewState, setViewState] = useState(Array.from({ length: rows }, () => Array.from({ length: cols }, () => false)))
@@ -190,6 +190,7 @@ const Grid = ({ rows, cols, updateGridData, mode, isPlayComplete, showedHints, h
 													rowIndex={rowIndex}
 													columnIndex={columnIndex}
 													isPlayComplete={isPlayComplete}
+													isLose={isLose}
 													isBlur={isElExistInArray([rowIndex, columnIndex], blur) ? true : false}
 													isActive={mode !== "edit" ?
 														(newState[rowIndex] ? (newState[rowIndex][columnIndex]) : false) :
