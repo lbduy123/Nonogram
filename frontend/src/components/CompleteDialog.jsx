@@ -50,10 +50,13 @@ function CompleteDialog({ modalIsOpen, handleCloseDialog, gridId, timeResult,isL
   const dispatch = useDispatch()
   
   function afterOpenModal() {
-    const timeResultConvert =timeResult.minutes*60*1000 + timeResult.seconds*1000 + timeResult.miliseconds 
-    // references are now sync'd and can be accessed.
-    nonogramService.updateNonogramPlayed({ nonogramId: gridId, bestTime: timeResultConvert }, user.token);
-    // subtitle.style.color = '#000';
+    if(isLose == false){
+      const timeResultConvert =timeResult.minutes*60*1000 + timeResult.seconds*1000 + timeResult.miliseconds 
+      // references are now sync'd and can be accessed.
+      nonogramService.updateNonogramPlayed({ nonogramId: gridId, bestTime: timeResultConvert }, user.token);
+      // subtitle.style.color = '#000';
+
+    }
   }
 
   const closeModal = () => {

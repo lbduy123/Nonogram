@@ -60,6 +60,7 @@ function Play() {
     setRows(nonogram.rows)
     setCols(nonogram.cols)
 
+
   }, [user, navigate, isError, message, dispatch, gridId, nonogram.rows, nonogram.cols,isRestart])
   useEffect(() => {
     if (health < 1) {
@@ -99,7 +100,7 @@ function Play() {
     setIsLose(false);
     setHealth(4);
     setShowedHints(0);
-    setIsRestart(true);
+    setIsRestart(!isRestart);
     timeBegin = new Date();
   }
 
