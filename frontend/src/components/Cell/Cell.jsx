@@ -19,7 +19,8 @@ const Cell = (props) => {
 			props.handleCellClick(props, !isActive);
 		} else {
 			if (!isActive && !props.isBlur && !props.isPlayComplete && !props.isLose) {
-				if (nonogram.gridData[props.rowIndex][props.columnIndex] === false) {			
+				if (nonogram.gridData[props.rowIndex][props.columnIndex] === false) {		
+					console.log("wrong")	
 					setIsWrong(true)
 					setIsActive(true)
 					props.handleCellClick(props, false)
@@ -31,10 +32,21 @@ const Cell = (props) => {
 		}
 	}
 
+	const handleDown = (e)=>{
+		if(e.ctrlKey){
+			window.removeEventListener("keydown",handleDown)
+			handleClick()
+		}
+	}
+	
 	const handleDrag = (event) => {
 		
+		
 		if (event?.ctrlKey) {
+
 			handleClick(this)
+		}else{
+			window.addEventListener("keydown",handleDown)
 		}
 	}
 
@@ -49,6 +61,7 @@ const Cell = (props) => {
 	}
 
 	const removeBlur = () => {
+		window.removeEventListener("keydown",handleDown)
 		document.querySelector(`#colHint-${props.columnIndex}`).classList.remove('blur');
 		document.querySelector(`#rowHint-${props.rowIndex}`).classList.remove('blur');
 	}
