@@ -9,7 +9,6 @@ import CompleteDialog from '../../components/CompleteDialog'
 import Timer from '../../components/Timer/Timer'
 import { FaLightbulb } from 'react-icons/fa'
 import { GiTrophy } from 'react-icons/gi'
-import { useMemo } from 'react'
 var timeBegin;
 
 function Play() {
@@ -32,7 +31,7 @@ function Play() {
   const [isPlayComplete, setIsPlayComplete] = useState(false)
   const [isLose, setIsLose] = useState(false)
   const [health, setHealth] = useState(4)
-  const [isRestart, setIsRestart]=useState(false)
+  const [isRestart, setIsRestart] = useState(false)
   const [timeResult, setTimeResult] = useState({
     minutes: 0,
     seconds: 0,
@@ -55,13 +54,13 @@ function Play() {
     if (!user) {
       navigate('/login')
     }
-    
+
     dispatch(getNonogram(gridId))
     setRows(nonogram.rows)
     setCols(nonogram.cols)
 
 
-  }, [user, navigate, isError, message, dispatch, gridId, nonogram.rows, nonogram.cols,isRestart])
+  }, [user, navigate, isError, message, dispatch, gridId, nonogram.rows, nonogram.cols, isRestart])
   useEffect(() => {
     if (health < 1) {
       setIsLose(true)
@@ -107,8 +106,8 @@ function Play() {
   if (isLoading) {
     return <Spinner />
   }
-  
-  const yourBestTime = nonogram?.meta?.played?.by.find((player)=>player.id==user._id)?.bestTime
+
+  const yourBestTime = nonogram?.meta?.played?.by.find((player) => player.id === user._id)?.bestTime
   const matchBestTime = nonogram?.meta?.bestPlayTime?.value
   return (
     <div style={{
@@ -134,15 +133,15 @@ function Play() {
         display: 'flex',
         alignItems: 'center',
       }}>
-      {matchBestTime!==undefined?<GiTrophy style={{
+        {matchBestTime !== undefined ? <GiTrophy style={{
           fontSize: '30px',
-          color: '#fede00',  
-        }} />:""}
-        {matchBestTime!=undefined?<span style={{
+          color: '#fede00',
+        }} /> : ""}
+        {matchBestTime !== undefined ? <span style={{
           fontSize: '20px',
           fontWeight: 'bold',
-          color:'green'
-        }}>BEST TIME: {Math.floor((matchBestTime % (1000 * 60 * 60)) / (1000 * 60))}:{Math.floor((matchBestTime % (1000 * 60)) / 1000)}:{matchBestTime%1000}</span>:""}
+          color: 'green'
+        }}>BEST TIME: {Math.floor((matchBestTime % (1000 * 60 * 60)) / (1000 * 60))}:{Math.floor((matchBestTime % (1000 * 60)) / 1000)}:{matchBestTime % 1000}</span> : ""}
       </div>
       <Grid
         rows={rows}
@@ -181,7 +180,7 @@ function Play() {
             color: '#fede00',
             fontSize: '30px',
             transform: 'rotate(-20deg)'
-          }} onClick={(isPlayComplete || (5 - showedHints) == 0) ? undefined : handleShowHint} />
+          }} onClick={(isPlayComplete || (5 - showedHints) === 0) ? undefined : handleShowHint} />
           <span style={{
             position: 'absolute',
             width: '30px',

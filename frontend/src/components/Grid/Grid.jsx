@@ -17,8 +17,8 @@ const Grid = ({ rows, cols, updateGridData, mode, isPlayComplete, showedHints, h
 	const { nonogram } = useSelector(
 		(state) => state.nonograms
 	)
-	
-	
+
+
 	// Clear grid when changing rows or cols
 	useEffect(() => {
 		if (mode !== "edit") {
@@ -64,7 +64,6 @@ const Grid = ({ rows, cols, updateGridData, mode, isPlayComplete, showedHints, h
 			}
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-
 	}, [mode, nonogram.gridData, showedHints])
 
 
@@ -73,10 +72,10 @@ const Grid = ({ rows, cols, updateGridData, mode, isPlayComplete, showedHints, h
 			// Update new grid in play & new mode
 			let newGrid = [...newState]
 			newGrid[props.rowIndex][props.columnIndex] = isActive
-			
+
 			if (mode === "play") {
-				if(!isActive){
-					handleHealth(prev=>prev-1)
+				if (!isActive) {
+					handleHealth(prev => prev - 1)
 				}
 				// Check if row is correct & blur rowHints
 				let rowCorrect = true;
@@ -86,7 +85,7 @@ const Grid = ({ rows, cols, updateGridData, mode, isPlayComplete, showedHints, h
 						break;
 					}
 				}
-				if (rowCorrect === true) {
+				if (rowCorrect === true && isActive) {
 					// Make rowHints blur
 					document.getElementById(`rowHint-${props.rowIndex}`).classList.add("row-hint-blur");
 
@@ -110,7 +109,7 @@ const Grid = ({ rows, cols, updateGridData, mode, isPlayComplete, showedHints, h
 						break;
 					}
 				}
-				if (colCorrect === true) {
+				if (colCorrect === true && isActive) {
 					// Make columnHints blur
 					document.getElementById(`colHint-${props.columnIndex}`).classList.add("col-hint-blur");
 
@@ -126,9 +125,9 @@ const Grid = ({ rows, cols, updateGridData, mode, isPlayComplete, showedHints, h
 					})
 				}
 			}
-			
-			
-			
+
+
+
 			setNewState(newGrid)
 			updateGridData(newGrid);
 		} else {
@@ -148,19 +147,13 @@ const Grid = ({ rows, cols, updateGridData, mode, isPlayComplete, showedHints, h
 		)) ? true : false)
 	}
 
-	const className =
-		rows === 10 ? 'nonogram-10' :
-			(rows === 15 ? 'nonogram-15' :
-				(rows === 20 ? 'nonogram-20' : ''))
-
 	return (
 		<div style={mode === "play" ? {
 			marginTop: '50px',
 			marginBottom: '50px',
 			paddingRight: '0px',
 			paddingLeft: '10px',
-
-		} : {}} className={className}>
+		} : {}}>
 			<ColumnHints gridData={mode === "new" ?
 				newState : (mode === "edit" ? viewState : nonogram.gridData)} />
 
@@ -179,7 +172,7 @@ const Grid = ({ rows, cols, updateGridData, mode, isPlayComplete, showedHints, h
 					<table className="grid-table">
 						<tbody>
 							{[...Array(rows)].map((row, rowIndex) => {
-								
+
 								return (
 									<tr className="row" key={rowIndex}>
 										{[...Array(cols)].map((cell, columnIndex) => {
