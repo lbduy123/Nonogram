@@ -18,8 +18,8 @@ const Cell = (props) => {
 			setIsActive(!isActive);
 			props.handleCellClick(props, !isActive);
 		} else {
-			if (!isActive && !props.isBlur && !props.isPlayComplete && !props.isLose) {
-				if (nonogram.gridData[props.rowIndex][props.columnIndex] === false) {			
+			if (!isActive && !props.isBlur && !props.isPlayComplete) {
+				if (nonogram.gridData[props.rowIndex][props.columnIndex] === false) {
 					setIsWrong(true)
 					setIsActive(true)
 					props.handleCellClick(props, false)
@@ -32,17 +32,11 @@ const Cell = (props) => {
 	}
 
 	const handleDrag = (event) => {
-		
-		if (event?.ctrlKey) {
+		if (event.buttons === 1) {
 			handleClick(this)
 		}
 	}
 
-	const className = (isWrong) ? "cell-invalid" :
-		(isActive ? "cell-correct" :
-			(props.isBlur ? "cell-blur" :
-				(!props.isPlayComplete ? "cell-modifiable"
-					: "")))
 	const handleHint = () => {
 		document.querySelector(`#colHint-${props.columnIndex}`).classList.add('blur');
 		document.querySelector(`#rowHint-${props.rowIndex}`).classList.add('blur');
@@ -52,6 +46,13 @@ const Cell = (props) => {
 		document.querySelector(`#colHint-${props.columnIndex}`).classList.remove('blur');
 		document.querySelector(`#rowHint-${props.rowIndex}`).classList.remove('blur');
 	}
+
+	const className = (isWrong) ? "cell-invalid" :
+		(isActive ? "cell-correct" :
+			(props.isBlur ? "cell-blur" :
+				(!props.isPlayComplete ? "cell-modifiable"
+					: "")))
+
 	return (
 		<td
 			onMouseEnter={handleHint}
@@ -59,6 +60,7 @@ const Cell = (props) => {
 			id={props.rowIndex + "-" + props.columnIndex}
 			className={className}
 			onClick={handleClick}
+			onMouseDown={handleClick}
 			onMouseOver={handleDrag}
 			
 		>

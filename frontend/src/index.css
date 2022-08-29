@@ -95,27 +95,6 @@ h3 {
   color: #828282;
 }
 
-/* .nonogram-10 {
-  --scale: 0.9;
-  transform: scale(var(--scale));
-  transform-origin: top;
-  margin-bottom: calc((var(--scale) - 1) * 100%);
-}
-
-.nonogram-15 {
-  --scale: 0.5;
-  transform: scale(var(--scale));
-  transform-origin: top;
-  margin-bottom: calc((var(--scale) - 1) * 100%);
-}
-
-.nonogram-20 {
-  --scale: 0.3;
-  transform: scale(var(--scale));
-  transform-origin: top;
-  margin-bottom: calc((var(--scale) - 1) * 100%);
-} */
-
 .goals {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
