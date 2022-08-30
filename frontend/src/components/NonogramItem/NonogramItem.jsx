@@ -1,5 +1,5 @@
 import { useDispatch } from 'react-redux'
-import { deleteNonogram, updateNonogramPlayed } from '../features/nonograms/nonogramSlice'
+import { deleteNonogram, updateNonogramPlayed } from '../../features/nonograms/nonogramSlice';
 import { useNavigate } from 'react-router-dom'
 import styles from './NonogramItem.module.css'
 import { MdPlayArrow } from "react-icons/md";
@@ -21,7 +21,7 @@ function NonogramItem({ isEditShown, nonogram, userId }) {
 		navigate('/p/' + nonogram._id)
 	}
 
-	
+
 	return (
 		<div className="goal">
 			{/* <div>
@@ -39,7 +39,7 @@ function NonogramItem({ isEditShown, nonogram, userId }) {
 				<div className={`${styles['title']}`}>
 					<h3>{nonogram.rows}x{nonogram.cols}</h3>
 					<hr />
-					<h4>{(nonogram.rows>5||nonogram.cols>5)?((nonogram.rows>10||nonogram.cols>10)?((nonogram.rows>15||nonogram.cols>15)?"Super Hard":"Hard"):"Normal"):"Easy"}</h4>
+					<h4>{(nonogram.rows > 5 || nonogram.cols > 5) ? ((nonogram.rows > 10 || nonogram.cols > 10) ? ((nonogram.rows > 15 || nonogram.cols > 15) ? "Super Hard" : "Hard") : "Normal") : "Easy"}</h4>
 					<hr />
 					<h4>Social Mode</h4>
 				</div>
@@ -49,7 +49,7 @@ function NonogramItem({ isEditShown, nonogram, userId }) {
 				</div>
 				<div className={`${styles['socialIcon']}`}>
 					<MdPlayArrow className={`${styles['play']}`} /> <span>{nonogram.meta.played.quantity}</span>
-					<AiFillLike className={nonogram.meta.votes.includes(userId)?`${styles['like--active']}`:`${styles['like']}`} /> <span>{nonogram.meta.votes.length}</span>
+					<AiFillLike className={nonogram.meta.votes.includes(userId) ? `${styles['like--active']}` : `${styles['like']}`} /> <span>{nonogram.meta.votes.length}</span>
 				</div>
 				<div className={`${styles['action']}`}>
 					{window.location.pathname !== '/' ?

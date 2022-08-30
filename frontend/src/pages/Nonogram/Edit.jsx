@@ -4,7 +4,7 @@ import { useNavigate, useLocation } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { getNonogram, updateNonogram } from '../../features/nonograms/nonogramSlice'
 import Grid from '../../components/Grid/Grid'
-import Spinner from '../../components/Spinner'
+import Spinner from '../../components/Spinner/Spinner'
 
 function Edit() {
   const location = useLocation()
