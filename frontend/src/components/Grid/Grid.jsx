@@ -98,13 +98,11 @@ const Grid = ({ rows, cols, updateGridData, mode, isPlayComplete, showedHints, h
 				}
 
 				// Check if row is correct & blur false cells of the row
-				let rowBlur = getRowBlur(newState, nonogram.gridData, cols, props.rowIndex, blur, isCellCorrect)
-				let rowCellsToBlur = rowBlur.rowCellsToBlur
+				let rowCellsToBlur = getRowBlur(newState, nonogram.gridData, cols, props.rowIndex, blur, isCellCorrect)
 				if (rowCellsToBlur) rowCellsToBlur.forEach((value) => setBlur((prevState) => ([...prevState, value])))
 
 				// Check if column is correct & blur false cells of the column
-				let colBlur = getColBlur(newState, nonogram.gridData, rows, props.columnIndex, blur, isCellCorrect)
-				let colCellsToBlur = colBlur.colCellsToBlur
+				let colCellsToBlur = getColBlur(newState, nonogram.gridData, rows, props.columnIndex, blur, isCellCorrect)
 				if (colCellsToBlur) colCellsToBlur.forEach((value) => setBlur((prevState) => ([...prevState, value])))
 			}
 

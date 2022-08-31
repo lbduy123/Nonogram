@@ -34,11 +34,8 @@ const getRowBlur = (playingGrid, gridData, cols, rowIdx, blurArr, isActive) => {
     }
   }
 
-  let isRowBlur = false
   let rowCellsToBlur = []
-  if (rowCorrect === true && isActive) {
-    isRowBlur = true
-
+  if (rowCorrect && isActive) {
     // Add false row cells to array
     playingGrid[rowIdx].forEach((value, colIdx) => {
       if (playingGrid[rowIdx][colIdx] === false &&
@@ -49,7 +46,7 @@ const getRowBlur = (playingGrid, gridData, cols, rowIdx, blurArr, isActive) => {
     })
   }
 
-  return { isRowBlur: isRowBlur, rowCellsToBlur: rowCellsToBlur }
+  return rowCellsToBlur
 }
 
 const getColBlur = (playingGrid, gridData, rows, colIdx, blurArr, isActive) => {
@@ -62,11 +59,8 @@ const getColBlur = (playingGrid, gridData, rows, colIdx, blurArr, isActive) => {
     }
   }
 
-  let isColBlur = false
   let colCellsToBlur = []
-  if (colCorrect === true && isActive) {
-    isColBlur = true
-
+  if (colCorrect && isActive) {
     // Add false column cells to array
     playingGrid.forEach((value, rowIdx) => {
       if (playingGrid[rowIdx][colIdx] === false &&
@@ -77,7 +71,7 @@ const getColBlur = (playingGrid, gridData, rows, colIdx, blurArr, isActive) => {
     })
   }
 
-  return ({ isColBlur: isColBlur, colCellsToBlur: colCellsToBlur })
+  return colCellsToBlur
 }
 
 const compareGridData = (grid1, grid2) => {
