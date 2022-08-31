@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { createNonogram } from '../../features/nonograms/nonogramSlice'
 import Grid from '../../components/Grid/Grid'
+import { compareGridData, new2dArray } from '../../components/Grid/GridHelper'
 
 function New() {
   const [rows, setRows] = useState(5)
@@ -29,17 +30,22 @@ function New() {
   const onSubmit = (e) => {
     e.preventDefault()
 
-    const nonogramData = {
-      rows,
-      cols,
-      gridData: updatedGridData
-    }
+    const blankGrid = new2dArray(rows, cols, false)
+    if (compareGridData(updatedGridData, blankGrid)) {
+      toast.error("Nonogram cannot be empty")
+    } else {
+      const nonogramData = {
+        rows,
+        cols,
+        gridData: updatedGridData
+      }
 
-    dispatch(createNonogram(nonogramData))
-    toast.success("Create successfully")
-    setRows(5)
-    setCols(5)
-    navigate('/creation')
+      dispatch(createNonogram(nonogramData))
+      toast.success("Create successfully")
+      setRows(5)
+      setCols(5)
+      navigate('/creation')
+    }
   }
 
   return (

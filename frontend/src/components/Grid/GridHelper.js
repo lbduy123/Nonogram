@@ -20,8 +20,8 @@ const getRemainingTrueCells = (rows, cols, playingGrid, gridData, showedHints) =
   return remainingTrueCells
 }
 
-const new2dArray = (rows, cols) => {
-  return Array.from({ length: rows }, () => Array.from({ length: cols }, () => false))
+const new2dArray = (rows, cols, initiateValue) => {
+  return Array.from({ length: rows }, () => Array.from({ length: cols }, () => initiateValue))
 }
 
 const getRowBlur = (playingGrid, gridData, cols, rowIdx, blurArr, isActive) => {

@@ -62,16 +62,18 @@ function Play() {
     setCols(nonogram.cols)
 
   }, [user, navigate, isError, message, dispatch, gridId, nonogram.rows, nonogram.cols, isRestart])
+
   useEffect(() => {
     if (health < 1) {
       setIsLose(true)
       handleOpenDialog()
     }
   }, [health])
+
   let updatedGridData
   const resultGridData = (nonogram.gridData ?
     nonogram.gridData.map(Object.values) :
-    new2dArray(rows, cols))
+    new2dArray(rows, cols, false))
 
   const updateGridData = (gridData) => {
     updatedGridData = gridData
