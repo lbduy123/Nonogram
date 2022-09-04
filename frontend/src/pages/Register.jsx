@@ -10,11 +10,12 @@ function Register() {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
+    username: '',
     password: '',
     password2: '',
   })
 
-  const { name, email, password, password2 } = formData
+  const { name, email, username, password, password2 } = formData
 
   const navigate = useNavigate()
   const dispatch = useDispatch()
@@ -52,6 +53,7 @@ function Register() {
       const userData = {
         name,
         email,
+        username,
         password,
       }
 
@@ -93,6 +95,18 @@ function Register() {
             name="email"
             value={email}
             placeholder="Enter your email"
+            onChange={onChange}
+          />
+        </div>
+
+        <div className="form-group">
+          <input
+            type="text"
+            className="form-control"
+            id="username"
+            name="username"
+            value={username}
+            placeholder="Enter your username"
             onChange={onChange}
           />
         </div>
