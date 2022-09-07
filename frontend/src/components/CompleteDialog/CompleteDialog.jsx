@@ -7,6 +7,7 @@ import { MdRestartAlt } from 'react-icons/md'
 import { useSelector } from 'react-redux';
 import nonogramService from '../../features/nonograms/nonogramService';
 import styles from './CompleteDialog.module.css'
+import { convertTime } from '../Timer/TimeHelper';
 
 const customStyles = {
   content: {
@@ -108,7 +109,7 @@ function CompleteDialog({ modalIsOpen, handleCloseDialog, gridId, timeResult, is
 
       {isNaN(yourBestTime) ? "" : <div className={styles['yourBestTimeInner']}>
         <h3>YOUR BEST TIME</h3>
-        <p >{Math.floor((yourBestTime % (1000 * 60 * 60)) / (1000 * 60))}:{Math.floor((yourBestTime % (1000 * 60)) / 1000)}:{yourBestTime % 1000}</p>
+        <p >{convertTime('minute',yourBestTime)}:{convertTime('second',yourBestTime)}:{convertTime('milisecond',yourBestTime)}</p>
         <AiTwotoneCrown className={styles['CrownIcon']} />
 
       </div>}

@@ -27,6 +27,8 @@
     color: rgb(107 114 128);
 }
 .matchingPicture {
+    width: 88px;
+    height:95px;
     padding: 4px;
     box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
 }
@@ -36,6 +38,10 @@
     height: 80px;
 }
 
+.bestTime  {
+    font-weight:700;
+    color: orange;
+}
 .socialIcon {
     display: flex;
     flex-direction: row;
@@ -90,12 +96,25 @@
 } 
 
 .action .removeButton {
+    display: flex;
+    justify-content:center;
+    align-items:center;
+
     position: absolute;
-    top: 0;
-    right:2px;
+    top: 10px;
+    right:10px;
+    
     font-size: 20px;
     cursor: pointer;
     font-weight: 700;
-    color: gray;
-    
+    color: gray; 
+    width:30px;
+    height:30px;
+}
+
+.action .removeButton:hover {
+    background-color: rgb(0,0,0,0.05);
+    opacity:0.7;
+    cursor:pointer;
+    border-radius:50%;
 }

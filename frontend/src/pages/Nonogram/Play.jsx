@@ -9,10 +9,12 @@ import CompleteDialog from '../../components/CompleteDialog/CompleteDialog'
 import Timer from '../../components/Timer/Timer'
 import { FaLightbulb } from 'react-icons/fa'
 import { GiTrophy } from 'react-icons/gi'
+import { MdRestartAlt } from 'react-icons/md'
 import { compareGridData, new2dArray } from '../../components/Grid/GridHelper'
-
+import { convertTime } from '../../components/Timer/TimeHelper'
+import styles from './Play.module.css'
 let timeBegin;
-
+const MAXIMUM_HINTS = 5
 function Play() {
   const location = useLocation()
   const gridId = location.pathname.substring(3)
@@ -23,10 +25,10 @@ function Play() {
   const handleOpenDialog = () => setIsOpen(true);
 
   const { user } = useSelector((state) => state.auth)
-  const { nonogram, isLoading, isError, message } = useSelector(
+  const { nonogram, isLoading, isError, message, isSuccess } = useSelector(
     (state) => state.nonograms
   )
-
+  
   const [rows, setRows] = useState(5)
   const [cols, setCols] = useState(5)
   const [showedHints, setShowedHints] = useState(0)
@@ -43,8 +45,11 @@ function Play() {
   const dispatch = useDispatch()
 
   useEffect(() => {
-    timeBegin = new Date();
-  }, [])
+    if(isSuccess){
+      timeBegin = new Date();
+    }
+   
+  }, [isSuccess])
 
   useEffect(() => {
     if (isError) {
@@ -95,22 +100,20 @@ function Play() {
     setIsRestart(!isRestart);
     timeBegin = new Date();
   }
-
   if (isLoading) {
     return <Spinner />
   }
 
   const yourBestTime = nonogram?.meta?.played?.by.find((player) => player.id === user._id)?.bestTime
   const matchBestTime = nonogram?.meta?.bestPlayTime?.value
-
+  const isDisableShowHint = isPlayComplete || isLose || MAXIMUM_HINTS - showedHints === 0
+  const hindRemain = MAXIMUM_HINTS - showedHints
   return (
     <div style={{
       maxWidth: `calc(90px + 2*60px*${cols})`,
-      margin: '0 auto',
-      border: '10px solid rgb(136, 128, 152)',
-      overflowX: `scroll`,
-      positon: 'relative'
-    }}>
+    }}
+      className={styles['playSection']}
+    >
       <CompleteDialog
         modalIsOpen={modalIsOpen}
         handleCloseDialog={handleCloseDialog}
@@ -121,22 +124,11 @@ function Play() {
         yourBestTime={yourBestTime}
       />
 
-      <Timer getTimeResult={setTimeResult} timeBegin={timeBegin} isLose={isLose} check={isPlayComplete} />
+      <Timer isStart={isSuccess} getTimeResult={setTimeResult} timeBegin={timeBegin} isLose={isLose} check={isPlayComplete} />
 
-      <div style={{
-        textAlign: 'left',
-        display: 'flex',
-        alignItems: 'center',
-      }}>
-        {matchBestTime !== undefined ? <GiTrophy style={{
-          fontSize: '30px',
-          color: '#fede00',
-        }} /> : ""}
-        {matchBestTime !== undefined ? <span style={{
-          fontSize: '20px',
-          fontWeight: 'bold',
-          color: 'green'
-        }}>BEST TIME: {Math.floor((matchBestTime % (1000 * 60 * 60)) / (1000 * 60))}:{Math.floor((matchBestTime % (1000 * 60)) / 1000)}:{matchBestTime % 1000}</span> : ""}
+      <div className={styles['bestTimeWrapper']}>
+        {matchBestTime !== undefined ? <GiTrophy className={styles['bestTimeIcon']} /> : ""}
+        {matchBestTime !== undefined ? <span className={styles['bestTimeNumber']}>BEST TIME: {convertTime('minute', matchBestTime)}:{convertTime('second', matchBestTime)}:{convertTime('milisecond', matchBestTime)}</span> : ""}
       </div>
 
       <Grid
@@ -151,43 +143,20 @@ function Play() {
       />
 
       {/* Action */}
-      <div style={{
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginBottom: '50px',
-      }}>
-
-        <p style={{
-          height: '70px',
-          width: '70px',
-          borderRadius: '50%',
-          border: 'solid 1px rgba(0,0,0,0.1)',
-          backgroundColor: '#f65ac3',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          boxShadow: '0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)',
-          position: 'relative',
-          cursor: isPlayComplete ? '' : 'pointer',
-        }}>
-          <FaLightbulb style={{
-            color: '#fede00',
-            fontSize: '30px',
-            transform: 'rotate(-20deg)'
-          }} onClick={(isPlayComplete || (5 - showedHints) === 0) ? undefined : handleShowHint} />
-          <span style={{
-            position: 'absolute',
-            width: '30px',
-            height: '30px',
-            borderRadius: '50%',
-            backgroundColor: '#700f4c',
-            // boxShadow: 'inset -2px 13px 93px -9px rgba(250,0,250,1)',
-            top: '0',
-            right: '0',
-            color: 'white'
-          }}>{5 - showedHints}</span>
+      <div className={styles['actionWrapper']}>
+        <p
+          style={{
+            opacity: isDisableShowHint ? '0.8' : '1',
+            cursor: isDisableShowHint ? '' : 'pointer',
+          }}
+          className={styles['innerAction']}>
+          <FaLightbulb className={styles['showHintIcon']} onClick={isDisableShowHint ? undefined : handleShowHint} />
+          <span className={styles['hintNumber']}>{hindRemain}</span>
         </p>
+        <p className={styles['innerAction']}>
+          <MdRestartAlt className={styles['restarIcon']} onClick={handleRestart} />
+        </p>
+        
       </div>
     </div>
   )

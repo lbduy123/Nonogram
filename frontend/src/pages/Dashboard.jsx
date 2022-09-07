@@ -5,6 +5,15 @@ import NonogramItem from '../components/NonogramItem/NonogramItem'
 import Spinner from '../components/Spinner/Spinner'
 import { getAllNonograms, reset } from '../features/nonograms/nonogramSlice'
 
+function checkItemwithUser(nonogram, userId) {
+  const result = nonogram?.meta?.played?.by.find((info) => info.id === userId)
+  if (result !== undefined) {
+    return { isPlayed: true, bestTime: result.bestTime }
+  } else {
+    return { isPlayed: false, bestTime: 0 }
+  }
+}
+
 function Dashboard() {
   const navigate = useNavigate()
   const dispatch = useDispatch()
@@ -33,7 +42,8 @@ function Dashboard() {
   if (isLoading) {
     return <Spinner />
   }
-
+  console.log(allNonograms)
+  console.log(user)
   return (
     <>
       <section className="heading">
@@ -44,9 +54,10 @@ function Dashboard() {
       <section className="content">
         {allNonograms.length > 0 ? (
           <div className="goals">
-            {allNonograms.map((nonogram) => (
-              <NonogramItem userId={user?._id} key={nonogram?._id} nonogram={nonogram} isEditShown={false} />
-            ))}
+            {allNonograms.map((nonogram) => {
+              const { isPlayed, bestTime }=checkItemwithUser(nonogram, user?._id)
+              return <NonogramItem isPlayed={isPlayed} bestTime={bestTime} userId={user?._id} key={nonogram?._id} nonogram={nonogram} isEditShown={false} />
+            })}
           </div>
         ) : (<h3>Not available</h3>)}
       </section>
@@ -55,3 +66,5 @@ function Dashboard() {
 }
 
 export default Dashboard
+
+

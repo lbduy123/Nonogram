@@ -2,22 +2,18 @@ import React from "react";
 import "./Cell.css";
 import { useState, useEffect } from "react"
 import { useSelector } from 'react-redux'
-var mouseStatus = "click"
-var detectMouseStatus
+
 const Cell = (props) => {
-<<<<<<< HEAD
-=======
 
 	const [isFirstCellToDrag, setIsFirstCellToDrag] = useState(false)
 	const [isCancelClick, setIsCancelClick] = useState(false)
 
->>>>>>> b234656a9604e5bb3f7e3cf3846acfe4b07d2c41
 	const { nonogram } = useSelector(
 		(state) => state.nonograms
 	)
 	const [isActive, setIsActive] = useState(props.isActive)
 	const [isWrong, setIsWrong] = useState(false)
-	const [isMouseDown,setIsMouseDown] = useState(false);
+	
 	useEffect(() => {
 		setIsActive(props.isActive)
 	}, [props.isActive])
@@ -30,7 +26,7 @@ const Cell = (props) => {
 			setIsActive(!isActive);
 			props.handleCellClick(props, !isActive);
 		} else {
-			if (!isActive && !props.isBlur && !props.isPlayComplete) {
+			if (!isActive && !props.isBlur && !props.isPlayComplete &&!props.isLose) {
 				if (nonogram.gridData[props.rowIndex][props.columnIndex] === false) {
 					setIsWrong(true)
 					setIsActive(true)
@@ -46,12 +42,7 @@ const Cell = (props) => {
 	const handleDrag = (event) => {
 		
 		if (event.buttons === 1) {
-<<<<<<< HEAD
-			
-			handleClick(this)
-=======
 			handleClick(event)
->>>>>>> b234656a9604e5bb3f7e3cf3846acfe4b07d2c41
 		}
 	}
 
@@ -98,32 +89,12 @@ const Cell = (props) => {
 			id={props.rowIndex + "-" + props.columnIndex}
 			className={className}
 			onClick={handleClick}
-<<<<<<< HEAD
-			onMouseDown={(e)=>{
 
-				if(!isMouseDown){
-					detectMouseStatus = setTimeout(()=>{
-						handleClick()
-				   },200)
-				   setIsMouseDown(true);
-				}
-
-				   
-				   
-				
-			}}
-			onMouseUp={()=>{
-				clearTimeout(detectMouseStatus);
-				setIsMouseDown(false);
-			}}
-			onMouseOver={handleDrag}
-			
-=======
 			onMouseDown={handleMouseDown}
 			onMouseUp={handleMouseUp}
 			onMouseOver={handleDrag}
 			onMouseLeave={handleMouseLeave}
->>>>>>> b234656a9604e5bb3f7e3cf3846acfe4b07d2c41
+
 		>
 			{className === "cell-invalid" ? <label className="cell-wrong">x</label> :
 				className === "cell-blur" ? <label className="cell-blur">x</label> : <></>}
