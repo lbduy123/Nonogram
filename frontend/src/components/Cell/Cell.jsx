@@ -2,13 +2,15 @@ import React from "react";
 import "./Cell.css";
 import { useState, useEffect } from "react"
 import { useSelector } from 'react-redux'
-
+var mouseStatus = "click"
+var detectMouseStatus
 const Cell = (props) => {
 	const { nonogram } = useSelector(
 		(state) => state.nonograms
 	)
 	const [isActive, setIsActive] = useState(props.isActive)
 	const [isWrong, setIsWrong] = useState(false)
+	const [isMouseDown,setIsMouseDown] = useState(false);
 	useEffect(() => {
 		setIsActive(props.isActive)
 	}, [props.isActive])
@@ -32,7 +34,9 @@ const Cell = (props) => {
 	}
 
 	const handleDrag = (event) => {
+		
 		if (event.buttons === 1) {
+			
 			handleClick(this)
 		}
 	}
@@ -60,7 +64,23 @@ const Cell = (props) => {
 			id={props.rowIndex + "-" + props.columnIndex}
 			className={className}
 			onClick={handleClick}
-			onMouseDown={handleClick}
+			onMouseDown={(e)=>{
+
+				if(!isMouseDown){
+					detectMouseStatus = setTimeout(()=>{
+						handleClick()
+				   },200)
+				   setIsMouseDown(true);
+				}
+
+				   
+				   
+				
+			}}
+			onMouseUp={()=>{
+				clearTimeout(detectMouseStatus);
+				setIsMouseDown(false);
+			}}
 			onMouseOver={handleDrag}
 			
 		>
