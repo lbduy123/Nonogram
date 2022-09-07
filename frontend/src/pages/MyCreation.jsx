@@ -1,9 +1,9 @@
 import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
-import Spinner from '../components/Spinner'
+import Spinner from '../components/Spinner/Spinner'
 import { getNonograms, reset } from '../features/nonograms/nonogramSlice'
-import NonogramItem from '../components/NonogramItem'
+import NonogramItem from '../components/NonogramItem/NonogramItem'
 
 function MyCreation() {
 	const navigate = useNavigate()

@@ -4,12 +4,14 @@ import { useNavigate, useLocation } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { getNonogram } from '../../features/nonograms/nonogramSlice'
 import Grid from '../../components/Grid/Grid'
-import Spinner from '../../components/Spinner'
-import CompleteDialog from '../../components/CompleteDialog'
+import Spinner from '../../components/Spinner/Spinner'
+import CompleteDialog from '../../components/CompleteDialog/CompleteDialog'
 import Timer from '../../components/Timer/Timer'
 import { FaLightbulb } from 'react-icons/fa'
 import { GiTrophy } from 'react-icons/gi'
-var timeBegin;
+import { compareGridData, new2dArray } from '../../components/Grid/GridHelper'
+
+let timeBegin;
 
 function Play() {
   const location = useLocation()
@@ -59,31 +61,21 @@ function Play() {
     setRows(nonogram.rows)
     setCols(nonogram.cols)
 
-
   }, [user, navigate, isError, message, dispatch, gridId, nonogram.rows, nonogram.cols, isRestart])
+
   useEffect(() => {
     if (health < 1) {
       setIsLose(true)
       handleOpenDialog()
     }
   }, [health])
+
   let updatedGridData
   const resultGridData = (nonogram.gridData ?
     nonogram.gridData.map(Object.values) :
-    Array.from({ length: rows }, () => Array.from({ length: cols }, () => false)))
-
-  const compareGridData = (grid1, grid2) => {
-    if (grid1.length !== grid2.length) return false;
-    for (var i = 0, len = grid1.length; i < len; i++) {
-      if (JSON.stringify(grid1[i]) !== JSON.stringify(grid2[i])) {
-        return false;
-      }
-    }
-    return true;
-  }
+    new2dArray(rows, cols, false))
 
   const updateGridData = (gridData) => {
-
     updatedGridData = gridData
     if (compareGridData(updatedGridData, resultGridData)) {
       setIsPlayComplete(true)
@@ -94,6 +86,7 @@ function Play() {
   const handleShowHint = () => {
     setShowedHints(prevState => prevState + 1)
   }
+
   const handleRestart = () => {
     setIsPlayComplete(false);
     setIsLose(false);
@@ -109,6 +102,7 @@ function Play() {
 
   const yourBestTime = nonogram?.meta?.played?.by.find((player) => player.id === user._id)?.bestTime
   const matchBestTime = nonogram?.meta?.bestPlayTime?.value
+
   return (
     <div style={{
       maxWidth: `calc(90px + 2*60px*${cols})`,
@@ -128,6 +122,7 @@ function Play() {
       />
 
       <Timer getTimeResult={setTimeResult} timeBegin={timeBegin} isLose={isLose} check={isPlayComplete} />
+
       <div style={{
         textAlign: 'left',
         display: 'flex',
@@ -143,6 +138,7 @@ function Play() {
           color: 'green'
         }}>BEST TIME: {Math.floor((matchBestTime % (1000 * 60 * 60)) / (1000 * 60))}:{Math.floor((matchBestTime % (1000 * 60)) / 1000)}:{matchBestTime % 1000}</span> : ""}
       </div>
+
       <Grid
         rows={rows}
         cols={cols}
@@ -160,9 +156,7 @@ function Play() {
         justifyContent: 'center',
         alignItems: 'center',
         marginBottom: '50px',
-
       }}>
-
 
         <p style={{
           height: '70px',
@@ -188,20 +182,13 @@ function Play() {
             height: '30px',
             borderRadius: '50%',
             backgroundColor: '#700f4c',
-
             // boxShadow: 'inset -2px 13px 93px -9px rgba(250,0,250,1)',
             top: '0',
             right: '0',
             color: 'white'
           }}>{5 - showedHints}</span>
         </p>
-
-
-
       </div>
-
-
-
     </div>
   )
 }

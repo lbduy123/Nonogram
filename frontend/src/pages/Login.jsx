@@ -4,20 +4,20 @@ import { useSelector, useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { login, reset } from '../features/auth/authSlice'
-import Spinner from '../components/Spinner'
+import Spinner from '../components/Spinner/Spinner'
 
 function Login() {
   const [formData, setFormData] = useState({
-    email: '', 
+    username: '',
     password: '',
   })
 
-  const { email, password } = formData
+  const { username, password } = formData
 
   const navigate = useNavigate()
   const dispatch = useDispatch()
 
-  const {user, isLoading, isError, isSuccess, message} = useSelector(
+  const { user, isLoading, isError, isSuccess, message } = useSelector(
     (state) => state.auth
   )
 
@@ -45,7 +45,7 @@ function Login() {
     e.preventDefault()
 
     const userData = {
-      email, 
+      username,
       password,
     }
 
@@ -61,32 +61,32 @@ function Login() {
       <h1>
         <FaSignInAlt /> Login
       </h1>
-      <p>Login and start setting goals</p>
+      <p>Login and start playing nonograms</p>
     </section>
 
     <section className="form">
       <form onSubmit={onSubmit}>
 
         <div className="form-group">
-          <input 
-            type="email" 
-            className="form-control" 
-            id="email" 
-            name="email" 
-            value={email} 
-            placeholder="Enter your email" 
+          <input
+            type="text"
+            className="form-control"
+            id="username"
+            name="username"
+            value={username}
+            placeholder="Enter your username"
             onChange={onChange}
           />
         </div>
 
         <div className="form-group">
-          <input 
-            type="password" 
-            className="form-control" 
-            id="password" 
-            name="password" 
-            value={password} 
-            placeholder="Enter your password" 
+          <input
+            type="password"
+            className="form-control"
+            id="password"
+            name="password"
+            value={password}
+            placeholder="Enter your password"
             onChange={onChange}
           />
         </div>

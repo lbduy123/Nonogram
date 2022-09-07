@@ -4,7 +4,8 @@ import { useNavigate, useLocation } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { getNonogram, updateNonogram } from '../../features/nonograms/nonogramSlice'
 import Grid from '../../components/Grid/Grid'
-import Spinner from '../../components/Spinner'
+import Spinner from '../../components/Spinner/Spinner'
+import { compareGridData, new2dArray } from '../../components/Grid/GridHelper'
 
 function Edit() {
   const location = useLocation()
@@ -69,15 +70,20 @@ function Edit() {
   const onSubmit = (e) => {
     e.preventDefault()
 
-    const nonogramData = {
-      rows: rows,
-      cols: cols,
-      gridData: updatedGridData
-    }
+    const blankGrid = new2dArray(rows, cols, false)
+    if (compareGridData(updatedGridData, blankGrid)) {
+      toast.error("Nonogram cannot be empty")
+    } else {
+      const nonogramData = {
+        rows: rows,
+        cols: cols,
+        gridData: updatedGridData
+      }
 
-    dispatch(updateNonogram({ id: gridId, nonogramData: nonogramData }))
-    toast.success("Save successfully")
-    navigate('/creation')
+      dispatch(updateNonogram({ id: gridId, nonogramData: nonogramData }))
+      toast.success("Save successfully")
+      navigate('/creation')
+    }
   }
 
   return (

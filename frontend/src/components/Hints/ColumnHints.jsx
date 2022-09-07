@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import "./Hint.css"
+import { getHints } from './HintsHelper'
 
 function ColumnHints({ gridData }) {
 
@@ -8,29 +9,10 @@ function ColumnHints({ gridData }) {
 
   useEffect(() => {
     if (gridData && gridData.length) {
-      let colHintsData = []
-      let colHintsCount = 0
-      let convertedGrid = gridData.map(Object.values)
-
-      for (let i = 0; i < convertedGrid[0].length; i++) {
-        colHintsData.push([])
-        for (let j = 0; j < convertedGrid.length; j++) {
-          if (convertedGrid[j][i] === true) {
-            colHintsCount++
-            if (j + 1 === convertedGrid.length) {
-              colHintsData[i].push(colHintsCount)
-              colHintsCount = 0;
-            }
-          } else if (colHintsCount !== 0) {
-            colHintsData[i].push(colHintsCount)
-            colHintsCount = 0;
-          }
-        }
-      }
+      let colHintsData = getHints(gridData).colData
       setMaxHints(Math.round(gridData.length / 2))
       setColHints(colHintsData)
     }
-
   }, [gridData])
 
   return (
@@ -56,24 +38,27 @@ function ColumnHints({ gridData }) {
               alignItems: "center",
               width: "60px",
               // margin: '0 1px', 
-              height:`calc(30px*${maxHints})`,
-              
-              border:'1px solid rgba(0,0,0,0)',
-              borderRadius:'8px'
+              height: `calc(30px*${maxHints})`,
+
+              border: '1px solid rgba(0,0,0,0)',
+              borderRadius: '8px'
             }}
             key={colIndex}
           >
             {[...col].map((hint, idx) => {
               return (
-                <div style={{
-                  display: 'flex',
-                  justifyContent: "center",
-                  alignItems:'center',
-                  width:'100%',
-                  color:'#625e84',
-                  fontWeight:'600',
-
-                }} key={idx} >{hint}</div>
+                <div
+                  id={`colHint-${colIndex}-${idx}`}
+                  style={{
+                    display: 'flex',
+                    justifyContent: "center",
+                    alignItems: 'center',
+                    width: '100%',
+                    color: '#625e84',
+                    fontWeight: '600',
+                  }}
+                  key={idx} >{hint}
+                </div>
               )
             })}
           </div>

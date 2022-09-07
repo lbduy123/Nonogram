@@ -5,6 +5,13 @@ import { useSelector } from 'react-redux'
 var mouseStatus = "click"
 var detectMouseStatus
 const Cell = (props) => {
+<<<<<<< HEAD
+=======
+
+	const [isFirstCellToDrag, setIsFirstCellToDrag] = useState(false)
+	const [isCancelClick, setIsCancelClick] = useState(false)
+
+>>>>>>> b234656a9604e5bb3f7e3cf3846acfe4b07d2c41
 	const { nonogram } = useSelector(
 		(state) => state.nonograms
 	)
@@ -15,7 +22,10 @@ const Cell = (props) => {
 		setIsActive(props.isActive)
 	}, [props.isActive])
 
-	const handleClick = () => {
+	const handleClick = (event) => {
+		// Prevent 'onClick' event triggered when it is dragged over 'the first cell to drag' again
+		if (event.type === "click" && isCancelClick) return
+
 		if (props.mode !== "play") {
 			setIsActive(!isActive);
 			props.handleCellClick(props, !isActive);
@@ -36,9 +46,33 @@ const Cell = (props) => {
 	const handleDrag = (event) => {
 		
 		if (event.buttons === 1) {
+<<<<<<< HEAD
 			
 			handleClick(this)
+=======
+			handleClick(event)
+>>>>>>> b234656a9604e5bb3f7e3cf3846acfe4b07d2c41
 		}
+	}
+
+	const handleMouseDown = (event) => {
+		setIsFirstCellToDrag(true)
+		handleClick(event)
+	}
+
+	const handleMouseUp = (event) => {
+		// Set the cell is not first cell to drag when its a single click or dragged over again
+		setIsFirstCellToDrag(false)
+
+		// Only let mouseUp event to click cell when its a single click
+		if (isFirstCellToDrag && !isCancelClick) {
+			handleClick(event)
+		}
+	}
+
+	const handleMouseLeave = () => {
+		// Set cell cannot be triggered by 'onClick' JS event when it is dragging
+		if (isFirstCellToDrag) setIsCancelClick(true)
 	}
 
 	const handleHint = () => {
@@ -64,6 +98,7 @@ const Cell = (props) => {
 			id={props.rowIndex + "-" + props.columnIndex}
 			className={className}
 			onClick={handleClick}
+<<<<<<< HEAD
 			onMouseDown={(e)=>{
 
 				if(!isMouseDown){
@@ -83,6 +118,12 @@ const Cell = (props) => {
 			}}
 			onMouseOver={handleDrag}
 			
+=======
+			onMouseDown={handleMouseDown}
+			onMouseUp={handleMouseUp}
+			onMouseOver={handleDrag}
+			onMouseLeave={handleMouseLeave}
+>>>>>>> b234656a9604e5bb3f7e3cf3846acfe4b07d2c41
 		>
 			{className === "cell-invalid" ? <label className="cell-wrong">x</label> :
 				className === "cell-blur" ? <label className="cell-blur">x</label> : <></>}

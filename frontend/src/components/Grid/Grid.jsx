@@ -6,26 +6,33 @@ import "./Grid.css";
 import Cell from "../Cell/Cell"
 import RowHints from "../Hints/RowHints";
 import ColumnHints from "../Hints/ColumnHints";
+import { getColBlur, getRemainingTrueCells, getRowBlur, isElExistInArray, new2dArray } from "./GridHelper";
+import { getHints } from "../Hints/HintsHelper";
 
 const Grid = ({ rows, cols, updateGridData, mode, isPlayComplete, showedHints, handleHealth, isLose }) => {
 
-	const [newState, setNewState] = useState(Array.from({ length: rows }, () => Array.from({ length: cols }, () => false)))
-	const [viewState, setViewState] = useState(Array.from({ length: rows }, () => Array.from({ length: cols }, () => false)))
-	const [blur, setBlur] = useState([])
-	const [isLoaded, setIsLoaded] = useState(false)
+	const [newState, setNewState] = useState(new2dArray(rows, cols, false))	// Modifiable grid in Play & New mode
+	const [viewState, setViewState] = useState(new2dArray(rows, cols, false))	// Modifiable grid in Edit mode
+
+	// Row & Column hints from loaded gridData
+	const [hint, setHint] = useState()
+	const [rowHintsData, setRowHintsData] = useState(Array.from({ length: rows }, () => []))
+	const [colHintsData, setColHintsData] = useState(Array.from({ length: cols }, () => []))
+
+	const [blur, setBlur] = useState([])	// 'Cells to blur' array
+	const [isLoaded, setIsLoaded] = useState(false)	// State check whether gridData is loaded in Edit mode or not
 
 	const { nonogram } = useSelector(
 		(state) => state.nonograms
 	)
 
-
 	// Clear grid when changing rows or cols
 	useEffect(() => {
 		if (mode !== "edit") {
-			const newGrid = Array.from({ length: rows }, () => Array.from({ length: cols }, () => false))
+			const newGrid = new2dArray(rows, cols, false)
 			setNewState(newGrid)
 		} else if (isLoaded) {
-			const viewGrid = Array.from({ length: rows }, () => Array.from({ length: cols }, () => false))
+			const viewGrid = new2dArray(rows, cols, false)
 			setViewState(viewGrid)
 			updateGridData(viewGrid)
 		}
@@ -34,31 +41,19 @@ const Grid = ({ rows, cols, updateGridData, mode, isPlayComplete, showedHints, h
 
 	useEffect(() => {
 		// Load grid from store
+		const gridData = (nonogram.gridData ?
+			nonogram.gridData.map(Object.values) :
+			new2dArray(rows, cols, false))
+
 		if (mode === "edit") {
-			const viewGrid = (nonogram.gridData ?
-				nonogram.gridData.map(Object.values) :
-				Array.from({ length: rows }, () => Array.from({ length: cols }, () => false)))
-			updateGridData(viewGrid)
-			setViewState(viewGrid)
+			updateGridData(gridData)
+			setViewState(gridData)
 			setIsLoaded(true)
 		}
 
 		// Show ramdomized cell hint 
 		if (mode === "play") {
-			const gridData = (nonogram.gridData ?
-				nonogram.gridData.map(Object.values) :
-				Array.from({ length: rows }, () => Array.from({ length: cols }, () => false)))
-
-			let remainingTrueCells = []
-			for (let i = 0; i < rows; i++) {
-				for (let j = 0; j < cols; j++) {
-					if (newState[i][j] === false &&
-						gridData[i][j] === true &&
-						showedHints !== 0) {
-						remainingTrueCells.push({ rowIndex: i, columnIndex: j })
-					}
-				}
-			}
+			let remainingTrueCells = getRemainingTrueCells(rows, cols, newState, gridData, showedHints)
 			if (showedHints !== 0 && remainingTrueCells.length > 0) {
 				handleCellClick(remainingTrueCells[Math.floor(Math.random() * remainingTrueCells.length)], true)
 			}
@@ -66,85 +61,60 @@ const Grid = ({ rows, cols, updateGridData, mode, isPlayComplete, showedHints, h
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [mode, nonogram.gridData, showedHints])
 
+	// Get Hints once when nonogram is loaded
+	useEffect(() => {
+		let _hint = nonogram.gridData ? getHints(nonogram.gridData) : { rowData: [], colData: [] }
+		setHint(_hint)
+		setRowHintsData(_hint.rowData)
+		setColHintsData(_hint.colData)
+	}, [nonogram.gridData])
 
-	const handleCellClick = (props, isActive) => {
+	const handleCellClick = (props, isCellCorrect) => {
 		if (mode !== "edit") {
 			// Update new grid in play & new mode
 			let newGrid = [...newState]
-			newGrid[props.rowIndex][props.columnIndex] = isActive
+			newGrid[props.rowIndex][props.columnIndex] = isCellCorrect
 
 			if (mode === "play") {
-				if (!isActive) {
+				if (!isCellCorrect) {
 					handleHealth(prev => prev - 1)
-				}
-				// Check if row is correct & blur rowHints
-				let rowCorrect = true;
-				for (let i = 0; i < cols; i++) {
-					if (newGrid[props.rowIndex][i] !== nonogram.gridData[props.rowIndex][i]) {
-						rowCorrect = false
-						break;
-					}
-				}
-				if (rowCorrect === true && isActive) {
-					// Make rowHints blur
-					document.getElementById(`rowHint-${props.rowIndex}`).classList.add("row-hint-blur");
+				} else {
+					const rowHintIndex = hint.rowIndex[props.rowIndex][props.columnIndex]
+					const colHintIndex = hint.colIndex[props.rowIndex][props.columnIndex]
 
-					// Blur false row cells
-					newGrid[props.rowIndex].forEach((value, colIdx) => {
-						if (newGrid[props.rowIndex][colIdx] === false &&
-							!isElExistInArray([props.rowIndex, colIdx], blur) &&
-							(document.getElementById(`${props.rowIndex}-${colIdx}`)).className !== 'cell-invalid') {
-							setBlur((prevState) => (
-								[...prevState, [props.rowIndex, colIdx]]
-							))
-						}
-					})
+					let rowHint = [...rowHintsData]
+					let colHint = [...colHintsData]
+
+					rowHint[props.rowIndex][rowHintIndex]--
+					colHint[props.columnIndex][colHintIndex]--
+
+					if (rowHint[props.rowIndex][rowHintIndex] === 0)
+						document.getElementById(`rowHint-${props.rowIndex}-${rowHintIndex}`).classList.add("row-hint-blur");
+					if (colHint[props.columnIndex][colHintIndex] === 0)
+						document.getElementById(`colHint-${props.columnIndex}-${colHintIndex}`).classList.add("col-hint-blur");
+
+					setRowHintsData((prevState) => ([...prevState, rowHint]))
+					setColHintsData((prevState) => ([...prevState, colHint]))
 				}
 
-				// Check if column is correct & blur columnHints
-				let colCorrect = true;
-				for (let i = 0; i < rows; i++) {
-					if (newGrid[i][props.columnIndex] !== nonogram.gridData[i][props.columnIndex]) {
-						colCorrect = false
-						break;
-					}
-				}
-				if (colCorrect === true && isActive) {
-					// Make columnHints blur
-					document.getElementById(`colHint-${props.columnIndex}`).classList.add("col-hint-blur");
+				// Check if row is correct & blur false cells of the row
+				let rowCellsToBlur = getRowBlur(newState, nonogram.gridData, cols, props.rowIndex, blur, isCellCorrect)
+				if (rowCellsToBlur) rowCellsToBlur.forEach((value) => setBlur((prevState) => ([...prevState, value])))
 
-					// Blur false column cells
-					newGrid.forEach((value, rowIdx) => {
-						if (newGrid[rowIdx][props.columnIndex] === false &&
-							!isElExistInArray([rowIdx, props.columnIndex], blur) &&
-							(document.getElementById(`${rowIdx}-${props.columnIndex}`)).className !== 'cell-invalid') {
-							setBlur((prevState) => (
-								[...prevState, [rowIdx, props.columnIndex]]
-							))
-						}
-					})
-				}
+				// Check if column is correct & blur false cells of the column
+				let colCellsToBlur = getColBlur(newState, nonogram.gridData, rows, props.columnIndex, blur, isCellCorrect)
+				if (colCellsToBlur) colCellsToBlur.forEach((value) => setBlur((prevState) => ([...prevState, value])))
 			}
-
-
 
 			setNewState(newGrid)
 			updateGridData(newGrid);
 		} else {
 			// Update new grid in edit mode
 			let viewGrid = [...viewState]
-			viewGrid[props.rowIndex][props.columnIndex] = isActive
+			viewGrid[props.rowIndex][props.columnIndex] = isCellCorrect
 			setViewState(viewGrid)
 			updateGridData(viewGrid);
 		}
-	}
-
-	// Check if an array element is in 2d array
-	const isElExistInArray = (el, array) => {
-		return ((array.some(
-			r => r.length === el.length &&
-				r.every((value, index) => el[index] === value)
-		)) ? true : false)
 	}
 
 	return (

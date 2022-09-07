@@ -1,8 +1,8 @@
 import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
-import NonogramItem from '../components/NonogramItem'
-import Spinner from '../components/Spinner'
+import NonogramItem from '../components/NonogramItem/NonogramItem'
+import Spinner from '../components/Spinner/Spinner'
 import { getAllNonograms, reset } from '../features/nonograms/nonogramSlice'
 
 function Dashboard() {
@@ -45,7 +45,7 @@ function Dashboard() {
         {allNonograms.length > 0 ? (
           <div className="goals">
             {allNonograms.map((nonogram) => (
-              <NonogramItem userId={user._id} key={nonogram._id} nonogram={nonogram} isEditShown={false} />
+              <NonogramItem userId={user?._id} key={nonogram?._id} nonogram={nonogram} isEditShown={false} />
             ))}
           </div>
         ) : (<h3>Not available</h3>)}
