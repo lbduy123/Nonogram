@@ -11,7 +11,7 @@ import { FaLightbulb } from 'react-icons/fa'
 import { GiTrophy } from 'react-icons/gi'
 import { MdRestartAlt } from 'react-icons/md'
 import { compareGridData, new2dArray } from '../../components/Grid/GridHelper'
-import { convertTime } from '../../components/Timer/TimeHelper'
+import { convertTimeToMSM } from '../../components/Timer/TimeHelper'
 import styles from './Play.module.css'
 let timeBegin;
 const MAXIMUM_HINTS = 5
@@ -100,14 +100,14 @@ function Play() {
     setIsRestart(!isRestart);
     timeBegin = new Date();
   }
-  if (isLoading) {
-    return <Spinner />
-  }
+
 
   const yourBestTime = nonogram?.meta?.played?.by.find((player) => player.id === user._id)?.bestTime
   const matchBestTime = nonogram?.meta?.bestPlayTime?.value
   const isDisableShowHint = isPlayComplete || isLose || MAXIMUM_HINTS - showedHints === 0
   const hindRemain = MAXIMUM_HINTS - showedHints
+  const isLiked = nonogram?.meta?.votes.includes(user._id)
+
   return (
     <div style={{
       maxWidth: `calc(90px + 2*60px*${cols})`,
@@ -120,6 +120,7 @@ function Play() {
         gridId={gridId}
         timeResult={timeResult}
         isLose={isLose}
+        isLiked ={isLiked}
         handleRestart={handleRestart}
         yourBestTime={yourBestTime}
       />
@@ -128,7 +129,7 @@ function Play() {
 
       <div className={styles['bestTimeWrapper']}>
         {matchBestTime !== undefined ? <GiTrophy className={styles['bestTimeIcon']} /> : ""}
-        {matchBestTime !== undefined ? <span className={styles['bestTimeNumber']}>BEST TIME: {convertTime('minute', matchBestTime)}:{convertTime('second', matchBestTime)}:{convertTime('milisecond', matchBestTime)}</span> : ""}
+        {matchBestTime !== undefined ? <span className={styles['bestTimeNumber']}>BEST TIME: {convertTimeToMSM('minute', matchBestTime)}:{convertTimeToMSM('second', matchBestTime)}:{convertTimeToMSM('milisecond', matchBestTime)}</span> : ""}
       </div>
 
       <Grid
@@ -139,6 +140,7 @@ function Play() {
         updateGridData={updateGridData}
         isPlayComplete={isPlayComplete}
         isLose={isLose}
+        isRestart={isRestart}
         handleHealth={setHealth}
       />
 

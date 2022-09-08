@@ -9,7 +9,7 @@ import ColumnHints from "../Hints/ColumnHints";
 import { getColBlur, getRemainingTrueCells, getRowBlur, isElExistInArray, new2dArray } from "./GridHelper";
 import { getHints } from "../Hints/HintsHelper";
 
-const Grid = ({ rows, cols, updateGridData, mode, isPlayComplete, showedHints, handleHealth, isLose }) => {
+const Grid = ({ rows, cols, updateGridData, mode, isPlayComplete, showedHints, handleHealth, isLose,isRestart }) => {
 
 	const [newState, setNewState] = useState(new2dArray(rows, cols, false))	// Modifiable grid in Play & New mode
 	const [viewState, setViewState] = useState(new2dArray(rows, cols, false))	// Modifiable grid in Edit mode
@@ -37,7 +37,7 @@ const Grid = ({ rows, cols, updateGridData, mode, isPlayComplete, showedHints, h
 			updateGridData(viewGrid)
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [rows, cols, mode])
+	}, [rows, cols, mode, isRestart])
 
 	useEffect(() => {
 		// Load grid from store
@@ -60,15 +60,28 @@ const Grid = ({ rows, cols, updateGridData, mode, isPlayComplete, showedHints, h
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [mode, nonogram.gridData, showedHints])
-
+	
 	// Get Hints once when nonogram is loaded
 	useEffect(() => {
 		let _hint = nonogram.gridData ? getHints(nonogram.gridData) : { rowData: [], colData: [] }
 		setHint(_hint)
 		setRowHintsData(_hint.rowData)
 		setColHintsData(_hint.colData)
-	}, [nonogram.gridData])
+	}, [nonogram.gridData,isRestart])
 
+	// handle remove blue when restarting
+	useEffect(() => {
+		const blurRowElements = document.querySelectorAll('.row-hint-blur');
+		const blurColElemnts = document.querySelectorAll('.col-hint-blur');
+
+		blurRowElements.forEach((element)=>{
+			element.classList.remove('row-hint-blur')
+		})
+		blurColElemnts.forEach((element)=>{
+
+			element.classList.remove('col-hint-blur')
+		})
+	},[isRestart])
 	const handleCellClick = (props, isCellCorrect) => {
 		if (mode !== "edit") {
 			// Update new grid in play & new mode
@@ -88,10 +101,12 @@ const Grid = ({ rows, cols, updateGridData, mode, isPlayComplete, showedHints, h
 					rowHint[props.rowIndex][rowHintIndex]--
 					colHint[props.columnIndex][colHintIndex]--
 
-					if (rowHint[props.rowIndex][rowHintIndex] === 0)
+					if (rowHint[props.rowIndex][rowHintIndex] === 0){
 						document.getElementById(`rowHint-${props.rowIndex}-${rowHintIndex}`).classList.add("row-hint-blur");
-					if (colHint[props.columnIndex][colHintIndex] === 0)
+					}
+					if (colHint[props.columnIndex][colHintIndex] === 0){
 						document.getElementById(`colHint-${props.columnIndex}-${colHintIndex}`).classList.add("col-hint-blur");
+					}
 
 					setRowHintsData((prevState) => ([...prevState, rowHint]))
 					setColHintsData((prevState) => ([...prevState, colHint]))
@@ -154,6 +169,7 @@ const Grid = ({ rows, cols, updateGridData, mode, isPlayComplete, showedHints, h
 													columnIndex={columnIndex}
 													isPlayComplete={isPlayComplete}
 													isLose={isLose}
+													isRestart={isRestart}
 													isBlur={isElExistInArray([rowIndex, columnIndex], blur) ? true : false}
 													isActive={mode !== "edit" ?
 														(newState[rowIndex] ? (newState[rowIndex][columnIndex]) : false) :
