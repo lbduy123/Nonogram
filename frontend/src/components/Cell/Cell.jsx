@@ -11,10 +11,8 @@ const Cell = (props) => {
 	const { nonogram } = useSelector(
 		(state) => state.nonograms
 	)
-
 	const [isActive, setIsActive] = useState(props.isActive)
 	const [isWrong, setIsWrong] = useState(false)
-
 	useEffect(() => {
 		setIsActive(props.isActive)
 	}, [props.isActive])
@@ -37,6 +35,13 @@ const Cell = (props) => {
 					props.handleCellClick(props, true)
 				}
 			}
+		}
+	}
+
+	const handleDown = (e) => {
+		if (e.ctrlKey) {
+			window.removeEventListener("keydown", handleDown)
+			handleClick()
 		}
 	}
 
@@ -72,6 +77,7 @@ const Cell = (props) => {
 	}
 
 	const removeBlur = () => {
+		window.removeEventListener("keydown", handleDown)
 		document.querySelector(`#colHint-${props.columnIndex}`).classList.remove('blur');
 		document.querySelector(`#rowHint-${props.rowIndex}`).classList.remove('blur');
 	}

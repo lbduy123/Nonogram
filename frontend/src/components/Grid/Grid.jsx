@@ -9,7 +9,7 @@ import ColumnHints from "../Hints/ColumnHints";
 import { getColBlur, getRemainingTrueCells, getRowBlur, isElExistInArray, new2dArray } from "./GridHelper";
 import { getHints } from "../Hints/HintsHelper";
 
-const Grid = ({ rows, cols, updateGridData, mode, isPlayComplete, showedHints, handleHealth }) => {
+const Grid = ({ rows, cols, updateGridData, mode, isPlayComplete, showedHints, handleHealth, isLose }) => {
 
 	const [newState, setNewState] = useState(new2dArray(rows, cols, false))	// Modifiable grid in Play & New mode
 	const [viewState, setViewState] = useState(new2dArray(rows, cols, false))	// Modifiable grid in Edit mode
@@ -153,6 +153,7 @@ const Grid = ({ rows, cols, updateGridData, mode, isPlayComplete, showedHints, h
 													rowIndex={rowIndex}
 													columnIndex={columnIndex}
 													isPlayComplete={isPlayComplete}
+													isLose={isLose}
 													isBlur={isElExistInArray([rowIndex, columnIndex], blur) ? true : false}
 													isActive={mode !== "edit" ?
 														(newState[rowIndex] ? (newState[rowIndex][columnIndex]) : false) :
