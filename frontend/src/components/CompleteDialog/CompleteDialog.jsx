@@ -2,11 +2,12 @@ import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import Modal from 'react-modal';
 import { useState } from 'react'
-import { AiFillStar, AiTwotoneCrown, AiOutlineLike, AiOutlineClockCircle, AiOutlineHome } from 'react-icons/ai'
+import { AiFillStar, AiTwotoneCrown, AiFillLike, AiOutlineClockCircle, AiOutlineHome } from 'react-icons/ai'
 import { MdRestartAlt } from 'react-icons/md'
 import { useSelector } from 'react-redux';
 import nonogramService from '../../features/nonograms/nonogramService';
 import styles from './CompleteDialog.module.css'
+import { convertTimeToMSM, convertToMiliSecond } from '../Timer/TimeHelper';
 
 const customStyles = {
   content: {
@@ -34,18 +35,20 @@ const customStyles = {
 
 Modal.setAppElement('#root');
 
-function CompleteDialog({ modalIsOpen, handleCloseDialog, gridId, timeResult, isLose, handleRestart, yourBestTime }) {
+function CompleteDialog({ modalIsOpen, handleCloseDialog, gridId, timeResult, isLose, handleRestart, yourBestTime, isLiked }) {
   const { user } = useSelector((state) => state.auth);
   const [isOpen, setIsOpen] = useState(modalIsOpen);
-  const [isLike, setIsLike] = useState(false)
+  const [isLike, setIsLike] = useState(isLiked)
   React.useEffect(() => {
     setIsOpen(modalIsOpen)
   }, [modalIsOpen])
+
+  React.useEffect(() => {setIsLike(isLiked)},[isLiked])
   const navigate = useNavigate()
 
   function afterOpenModal() {
     if (isLose === false) {
-      const timeResultConvert = timeResult.minutes * 60 * 1000 + timeResult.seconds * 1000 + timeResult.miliseconds
+      const timeResultConvert = convertToMiliSecond('minute',timeResult.minutes) + convertToMiliSecond('second',timeResult.seconds) + timeResult.miliseconds
       nonogramService.updateNonogramPlayed({ nonogramId: gridId, bestTime: timeResultConvert }, user.token);
     }
   }
@@ -80,15 +83,6 @@ function CompleteDialog({ modalIsOpen, handleCloseDialog, gridId, timeResult, is
       style={customStyles}
       contentLabel="Complete dialog"
     >
-      {/* <h1 ref={(_subtitle) => (subtitle = _subtitle)}>Complete</h1>
-      <p>{timeResult?.minutes}:{timeResult?.seconds}:{timeResult?.miliseconds}</p>
-      <div style={{ fontSize: 50 }}>
-        <AiFillStar /><AiFillStar /><AiOutlineStar />
-      </div>
-      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-        <button className="btn btn-primary" onClick={closeModal}>Close</button>
-        <button className="btn btn-primary" onClick={returnHome}>Homepage</button>
-      </div> */}
       <span className={styles['closeButton']} onClick={closeModal} >x</span>
       <h1 style={{
         marginBottom: '0'
@@ -108,14 +102,12 @@ function CompleteDialog({ modalIsOpen, handleCloseDialog, gridId, timeResult, is
 
       {isNaN(yourBestTime) ? "" : <div className={styles['yourBestTimeInner']}>
         <h3>YOUR BEST TIME</h3>
-        <p >{Math.floor((yourBestTime % (1000 * 60 * 60)) / (1000 * 60))}:{Math.floor((yourBestTime % (1000 * 60)) / 1000)}:{yourBestTime % 1000}</p>
+        <p >{convertTimeToMSM('minute',yourBestTime)}:{convertTimeToMSM('second',yourBestTime)}:{convertTimeToMSM('milisecond',yourBestTime)}</p>
         <AiTwotoneCrown className={styles['CrownIcon']} />
 
       </div>}
       <div className={styles['actionInner']}>
-        <span onClick={handleLike} className={styles['vote']}><AiOutlineLike style={{
-          color: `${isLike ? 'red' : ''}`
-        }} className={styles['likeIcon']} /></span>
+        <span onClick={handleLike} className={`${styles['vote']} ${isLike ? `${styles['active']}` : ``}`}><AiFillLike  className={styles['likeIcon']} /></span>
         <span onClick={returnHome} className={styles['backToHome']}><AiOutlineHome /></span>
         <span onClick={tryAgain} className={styles['returnIcon']}><MdRestartAlt /></span>
       </div>

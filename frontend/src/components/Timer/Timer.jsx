@@ -1,7 +1,8 @@
 import React from 'react'
 import { useEffect, useState } from 'react';
+import { convertTimeToMSM } from './TimeHelper';
 
-export default React.memo(function Timer({ check = false, timeBegin=null, getTimeResult, isLose=false }) {
+export default React.memo(function Timer({ check = false, timeBegin=null, getTimeResult, isLose=false, isStart=false }) {
     const [time, setTime] = useState({
         minutes: 0,
         seconds: 0,
@@ -10,12 +11,12 @@ export default React.memo(function Timer({ check = false, timeBegin=null, getTim
 
     useEffect(() => {
         let timer
-        if (!check && timeBegin !=null && !isLose) {
+        if (isStart && !check && timeBegin !=null && !isLose) {
             timer = setInterval(() => {
                 let timePresent = Date.now() - timeBegin
-                let minutes = Math.floor((timePresent % (1000 * 60 * 60)) / (1000 * 60));
-                let seconds = Math.floor((timePresent % (1000 * 60)) / 1000);
-                let miliseconds = Math.floor(timePresent % 1000);
+                let minutes = convertTimeToMSM('minute',timePresent)
+                let seconds = convertTimeToMSM('second',timePresent);
+                let miliseconds = convertTimeToMSM('milisecond',timePresent);
                 setTime(prev => {
                     return {
                         ...prev,

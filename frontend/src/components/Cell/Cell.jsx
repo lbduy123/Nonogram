@@ -11,12 +11,23 @@ const Cell = (props) => {
 	const { nonogram } = useSelector(
 		(state) => state.nonograms
 	)
-	const [isActive, setIsActive] = useState(props.isActive)
+	const [isActive, setIsActive] = useState(props.isActive);
+	const [isBlur, setIsBlur] = useState(props.isBlur);
 	const [isWrong, setIsWrong] = useState(false)
+
 	useEffect(() => {
 		setIsActive(props.isActive)
-	}, [props.isActive])
+		setIsBlur(props.isBlur)
+	}, [props.isActive, props.isBlur])
 
+
+	// handle Restart function
+	useEffect(() => {
+		setIsWrong(false)
+		setIsActive(false)
+		setIsBlur(false)
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [props.isRestart])
 	const handleClick = (event) => {
 		// Prevent 'onClick' event triggered when it is dragged over 'the first cell to drag' again
 		if (event.type === "click" && isCancelClick) return
@@ -25,7 +36,7 @@ const Cell = (props) => {
 			setIsActive(!isActive);
 			props.handleCellClick(props, !isActive);
 		} else {
-			if (!isActive && !props.isBlur && !props.isPlayComplete) {
+			if (!isActive && !props.isBlur && !props.isPlayComplete && !props.isLose) {
 				if (nonogram.gridData[props.rowIndex][props.columnIndex] === false) {
 					setIsWrong(true)
 					setIsActive(true)
@@ -35,13 +46,6 @@ const Cell = (props) => {
 					props.handleCellClick(props, true)
 				}
 			}
-		}
-	}
-
-	const handleDown = (e) => {
-		if (e.ctrlKey) {
-			window.removeEventListener("keydown", handleDown)
-			handleClick()
 		}
 	}
 
@@ -77,14 +81,13 @@ const Cell = (props) => {
 	}
 
 	const removeBlur = () => {
-		window.removeEventListener("keydown", handleDown)
 		document.querySelector(`#colHint-${props.columnIndex}`).classList.remove('blur');
 		document.querySelector(`#rowHint-${props.rowIndex}`).classList.remove('blur');
 	}
 
 	const className = (isWrong) ? "cell-invalid" :
 		(isActive ? "cell-correct" :
-			(props.isBlur ? "cell-blur" :
+			(isBlur ? "cell-blur" :
 				(!props.isPlayComplete ? "cell-modifiable"
 					: "")))
 
@@ -95,6 +98,7 @@ const Cell = (props) => {
 			id={props.rowIndex + "-" + props.columnIndex}
 			className={className}
 			onClick={handleClick}
+
 			onMouseDown={handleMouseDown}
 			onMouseUp={handleMouseUp}
 			onMouseOver={handleDrag}
