@@ -10,6 +10,20 @@ const getAllNonograms = asyncHandler(async (req, res) => {
 	res.status(200).json(nonograms)
 })
 
+// @route   GET /api/nonograms/allWorkshop
+// @access  Private
+const getAllWorkshopNonograms = asyncHandler(async (req, res) => {
+	const nonograms = await Nonogram.find({ type: 'workshop' })
+	res.status(200).json(nonograms)
+})
+
+// @route   GET /api/nonograms/allCasual
+// @access  Private
+const getAllCasualNonograms = asyncHandler(async (req, res) => {
+	const nonograms = await Nonogram.find({ type: 'casual' })
+	res.status(200).json(nonograms)
+})
+
 // @desc    Get user nonograms
 // @route   GET /api/nonograms
 // @access  Private
@@ -48,12 +62,14 @@ const getNonogram = asyncHandler(async (req, res) => {
 // @route   POST /api/nonograms
 // @access  Private
 const setNonogram = asyncHandler(async (req, res) => {
-	if (!req.body.rows || !req.body.cols || !req.body.gridData) {
+	if (!req.body.rows || !req.body.cols || !req.body.gridData || !req.body.name || !req.body.type) {
 		res.status(400)
 		throw new Error('Please add all fields')
 	}
 
 	const nonogram = await Nonogram.create({
+		name: req.body.name,
+		type: req.body.type,
 		rows: req.body.rows,
 		cols: req.body.cols,
 		gridData: req.body.gridData,
@@ -201,6 +217,8 @@ const deleteNonogram = asyncHandler(async (req, res) => {
 
 module.exports = {
 	getAllNonograms,
+	getAllWorkshopNonograms,
+	getAllCasualNonograms,
 	getNonograms,
 	getNonogram,
 	setNonogram,

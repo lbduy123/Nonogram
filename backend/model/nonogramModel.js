@@ -20,6 +20,16 @@ const nonogramSchema = mongoose.Schema(
 			required: true,
 			ref: 'User',
 		},
+		type: {
+			type: String,
+			required: true,
+			default: 'workshop'
+		},
+		name: {
+			type: String,
+			required: true,
+			unique: true
+		},
 		rows: {
 			type: Number,
 			required: [true, 'Please add row quantity'],

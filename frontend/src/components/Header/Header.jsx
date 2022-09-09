@@ -1,4 +1,4 @@
-import { FaSignInAlt, FaSignOutAlt, FaUser } from 'react-icons/fa'
+import { FaSignInAlt, FaSignOutAlt, FaUser, FaThLarge } from 'react-icons/fa'
 import { Link, useNavigate } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import { logout, reset } from '../../features/auth/authSlice'
@@ -25,6 +25,12 @@ function Header() {
 			{user ? (
 				<>
 					<ul className="btn-header-area" >
+						<li>
+							{user.roleLevel === 9 ?
+								<Link to='/admin'>
+									<FaThLarge /> Admin Dashboard
+								</Link> : <></>}
+						</li>
 						<li>
 							<button className="btn" onClick={onLogout}>
 								<FaSignOutAlt /> Logout

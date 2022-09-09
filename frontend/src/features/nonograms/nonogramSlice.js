@@ -3,6 +3,8 @@ import nonogramService from './nonogramService'
 
 const initialState = {
   allNonograms: [],
+  allWorkshopNonograms: [],
+  allCasualNonograms: [],
   nonograms: [],
   nonogram: {},
   isError: false,
@@ -48,6 +50,44 @@ export const getAllNonograms = createAsyncThunk(
     try {
       const token = thunkAPI.getState().auth.user.token
       return await nonogramService.getAllNonograms(token)
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString()
+      return thunkAPI.rejectWithValue(message)
+    }
+  }
+)
+
+// Get all casual Nonograms
+export const getAllCasualNonograms = createAsyncThunk(
+  'nonograms/getAllCasual',
+  async (_, thunkAPI) => {
+    try {
+      const token = thunkAPI.getState().auth.user.token
+      return await nonogramService.getAllCasualNonograms(token)
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString()
+      return thunkAPI.rejectWithValue(message)
+    }
+  }
+)
+
+// Get workshop Nonograms
+export const getAllWorkshopNonograms = createAsyncThunk(
+  'nonograms/getAllWorkshop',
+  async (_, thunkAPI) => {
+    try {
+      const token = thunkAPI.getState().auth.user.token
+      return await nonogramService.getAllWorkshopNonograms(token)
     } catch (error) {
       const message =
         (error.response &&
@@ -171,6 +211,36 @@ export const nonogramSlice = createSlice({
         state.allNonograms = action.payload
       })
       .addCase(getAllNonograms.rejected, (state, action) => {
+        state.isLoading = false
+        state.isError = true
+        state.message = action.payload
+      })
+
+      // Handle get all casual Nonograms
+      .addCase(getAllCasualNonograms.pending, (state) => {
+        state.isLoading = true
+      })
+      .addCase(getAllCasualNonograms.fulfilled, (state, action) => {
+        state.isLoading = false
+        state.isSuccess = true
+        state.allCasualNonograms = action.payload
+      })
+      .addCase(getAllCasualNonograms.rejected, (state, action) => {
+        state.isLoading = false
+        state.isError = true
+        state.message = action.payload
+      })
+
+      // Handle get all workshop Nonograms
+      .addCase(getAllWorkshopNonograms.pending, (state) => {
+        state.isLoading = true
+      })
+      .addCase(getAllWorkshopNonograms.fulfilled, (state, action) => {
+        state.isLoading = false
+        state.isSuccess = true
+        state.allWorkshopNonograms = action.payload
+      })
+      .addCase(getAllWorkshopNonograms.rejected, (state, action) => {
         state.isLoading = false
         state.isError = true
         state.message = action.payload

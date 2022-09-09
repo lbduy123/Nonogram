@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import AdminDashboard from './pages/AdminDashboard'
 import Dashboard from './pages/Dashboard'
 import Login from './pages/Login'
 import Register from './pages/Register'
@@ -24,6 +25,7 @@ function App() {
             <Route path="/new" element={<New />} />
             <Route path="/e/*" element={<Edit />} />
             <Route path="/p/*" element={<Play />} />
+            <Route path="/admin" element={<AdminDashboard />} />;
           </Routes>
         </div>
       </Router>

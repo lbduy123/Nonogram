@@ -27,6 +27,32 @@ const getAllNonograms = async (token) => {
   return response.data
 }
 
+// Get all workshop Nonograms
+const getAllWorkshopNonograms = async (token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }
+
+  const response = await axios.get(API_URL + "allWorkshop", config)
+
+  return response.data
+}
+
+// Get all casual Nonograms
+const getAllCasualNonograms = async (token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }
+
+  const response = await axios.get(API_URL + "allCasual", config)
+
+  return response.data
+}
+
 // Get user Nonograms
 const getNonograms = async (token) => {
   const config = {
@@ -103,6 +129,8 @@ const deleteNonogram = async (nonogramId, token) => {
 const nonogramService = {
   createNonogram,
   getAllNonograms,
+  getAllCasualNonograms,
+  getAllWorkshopNonograms,
   getNonograms,
   getNonogram,
   updateNonogram,

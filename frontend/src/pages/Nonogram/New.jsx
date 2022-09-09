@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { useEffect, useState } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { createNonogram } from '../../features/nonograms/nonogramSlice'
@@ -7,16 +7,20 @@ import Grid from '../../components/Grid/Grid'
 import { compareGridData, new2dArray } from '../../components/Grid/GridHelper'
 
 function New() {
+  const { user } = useSelector((state) => state.auth)
+
+  const [type, setType] = useState('workshop')
   const [rows, setRows] = useState(5)
   const [cols, setCols] = useState(5)
+  const [nonogramName, setNonogramName] = useState('')
 
-  let updatedGridData = Array.from({ length: rows }, () => Array.from({ length: cols }, () => false))
+  const [updatedGridData, setUpdatedGridData] = useState(Array.from({ length: rows }, () => Array.from({ length: cols }, () => false)))
 
   const navigate = useNavigate()
   const dispatch = useDispatch()
 
   const updateGridData = (gridData) => {
-    updatedGridData = gridData
+    setUpdatedGridData(gridData)
   }
 
   const handleChangeRows = (e) => {
@@ -27,6 +31,20 @@ function New() {
     setCols(parseInt(e.target.value))
   }
 
+  const handleChangeName = (e) => {
+    setNonogramName(e.target.value)
+  }
+
+  const handleChangeType = (e) => {
+    setType(e.target.value)
+  }
+
+  useEffect(() => {
+    if (!user) {
+      navigate('/login')
+    }
+  }, [user, navigate])
+
   const onSubmit = (e) => {
     e.preventDefault()
 
@@ -35,6 +53,8 @@ function New() {
       toast.error("Nonogram cannot be empty")
     } else {
       const nonogramData = {
+        name: nonogramName,
+        type,
         rows,
         cols,
         gridData: updatedGridData
@@ -52,6 +72,20 @@ function New() {
     <section className="form">
       <form onSubmit={onSubmit}>
         <div className="form-group">
+          <div className="form-input">
+            <input type="text"
+              className="form-control"
+              placeholder="name"
+              value={nonogramName}
+              onChange={handleChangeName} />
+            {user.roleLevel ?
+              <select value={type} onChange={handleChangeType}>
+                <option value={'workshop'}>Workshop</option>
+                <option value={'casual'}>Casual</option>
+              </select> :
+              <></>}
+          </div>
+
           <select value={rows} onChange={handleChangeRows}>
             <option value={5}>5</option>
             <option value={10}>10</option>
