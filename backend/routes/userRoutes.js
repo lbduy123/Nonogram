@@ -4,6 +4,7 @@ const {
     registerUser,
     loginUser,
     getMe,
+    getAllUser
 } = require('../controller/userController')
 const {
     protect,
@@ -12,5 +13,6 @@ const {
 router.post('/', registerUser)
 router.post('/login', loginUser)
 router.get('/me', protect, getMe)
+router.get('/all',protect,getAllUser)
 
 module.exports = router

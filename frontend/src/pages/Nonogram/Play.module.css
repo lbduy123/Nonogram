@@ -3,6 +3,7 @@
     border: 10px solid rgb(136, 128, 152);
     overflow-x: scroll;
     position: relative;
+    margin-top:88px;
 }
 
 .bestTimeWrapper {

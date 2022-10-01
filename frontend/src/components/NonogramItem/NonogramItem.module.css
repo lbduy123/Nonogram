@@ -2,6 +2,8 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
+    text-align: center;
     width: 240px;
     height: 320px;
     border-radius:12px;
@@ -11,6 +13,17 @@
     box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1) ;
     padding: 8px 0px;
     position: relative;
+    transition: all 0.2s ease-in-out;
+    cursor: pointer;
+    transform-style: preserve-3d;
+    
+    animation: rotate3D .5s linear;
+    
+}
+
+.container:hover{
+    
+    transform: scale(1.05);
 }
 
 .title {
@@ -22,9 +35,12 @@
     font-weight: 700;
     font-size: 20px;
 }
-
-.title h4 {
+.item__name {
+    color:rgb(22, 89, 90);
+}
+.item__mode {
     color: rgb(107 114 128);
+    opacity: 0.5;
 }
 .matchingPicture {
     width: 88px;
@@ -45,8 +61,26 @@
 .socialIcon {
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    justify-content: center;
+    gap: 10px;
     margin-top: 16px;
+}
+
+.iconWrapper{
+    display: flex;
+    align-items: center;
+    gap:5px;
+}
+
+.author__image {
+    width: 20px;
+    height: 20px;
+    border-radius:50%;
+}
+
+.iconWrapper p {
+    color:rgb(22, 89, 90);
+    font-size: 14px;
 }
 
 .socialIcon .play {
@@ -55,21 +89,19 @@
     font-size: 18px;
 }
 
+
+
 .socialIcon .like {
     display: block;
     margin: auto auto;
     font-size: 18px;
     opacity: 0.1;
-    margin-left:30px;
-    margin-right:5px;
 }
 
 .socialIcon .like--active {
     display: block;
     margin: auto auto;
     font-size: 18px;
-    margin-left:30px;
-    margin-right:5px;
     color: rgb(239 68 68);
     opacity: 1;
 }
@@ -118,3 +150,17 @@
     cursor:pointer;
     border-radius:50%;
 }
+
+@keyframes rotate3D {
+    0% {
+        transform: rotateY(180deg);
+        visibility:hidden;
+        opacity: 0;
+    }
+  
+    100% {
+        transform: rotateY(360deg);
+        visibility:visible;
+        opacity: 1;
+    }
+  }

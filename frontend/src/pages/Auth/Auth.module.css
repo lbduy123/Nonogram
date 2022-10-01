@@ -1,0 +1,144 @@
+.register {
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    min-width: 1024px;
+    box-sizing: border-box;
+    background: #000 url(https://st.deviantart.net/signinup/sisu_bg-min.png);
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center   
+}
+
+.container {
+    width: 856px;
+    height: 690px;
+    background: #fff;
+    display: flex;
+    box-shadow: 0 40pt 50pt 0 rgb(0 0 0 / 35%);
+}
+
+.content__left {
+    position: relative;
+    width: 416px;
+    height: 100%;
+    background-size: cover;
+    background-position: bottom;
+    background-repeat: no-repeat;
+    flex-grow: 0;
+    flex-shrink: 0;
+    display: flex;
+    overflow: hidden;
+    background-image: url(https://st.deviantart.net/eclipse/sisu/image-7-471131591.png);
+}
+
+.content__leftWrapper{
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 144px 56px 40px 56px;
+    text-align: center;
+}
+
+.content__leftHeader h1 {
+    color:#fff;
+    font-size:40px;
+    font-weight: 600;
+}
+
+.content__leftHeader p {
+    color:#fff;
+    font-size:14px;
+    font-weight: 600;
+    margin-bottom: 24px;
+}
+
+.content__leftHeader .subHeader {
+    color:#b7c136;
+}
+
+.author {
+    color: #fff;
+    font-size:14px;
+    font-weight:600px;
+}
+
+.content__right {
+    flex-grow: 1;
+    position: relative;
+    width: 440px;
+}
+
+.content__rightWrapper {
+    padding: 40px 48px;
+}
+
+.content__rightHeader {
+    text-align: center;
+}
+
+.content__rightHeader p:first-child {
+    color: rgb(236, 64, 122);
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 6px;
+}
+
+.content__rightHeader p:last-child {
+    color: rgb(236, 64, 122);
+    font-size: 14px;
+    margin-bottom: 24px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgb(236, 64, 122) ;
+}
+
+.form__group {
+    width: 100%;
+    margin-bottom: 24px;
+  
+}
+.form__control {
+    width: 100%;
+    padding: 15px;                                             
+    background: rgb(250, 250, 250);
+    
+}
+
+.form__buttonWrapper {
+    border-bottom: 1px;
+    border-bottom: 1px solid rgba(236, 64, 122,.2);
+    padding-bottom: 24px;
+}
+
+.form__button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    font-weight:700;
+    width: 100%;
+    color: rgb(255, 255, 255);
+    background-color: rgb(236, 64, 122);
+    padding: 8px 22px;
+    font-weight: 500;
+    border-radius: 8px; 
+    transition:all 0.1s linear;
+    cursor: pointer;
+}
+
+.form__button:hover {
+    background-color: rgb(245, 7, 86);
+}
+
+.content__footer {
+    text-align: center;
+    color: rgb(33, 33, 33);
+}
+
+.content__footer:hover{
+    cursor: pointer;
+    color:rgb(236, 64, 122);
+}

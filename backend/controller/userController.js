@@ -86,9 +86,18 @@ const generateToken = (id) => {
         expiresIn: '30d',
     })
 }
+// @desc    Get all Users
+// @route   GET /api/Users
+// @access  Private
+const getAllUser = async(async (req, res) => {
+    const AllUser = await User.find({})
+    res.status(200).json(AllUser)
+})
+
 
 module.exports = {
     registerUser,
     loginUser,
     getMe,
+    getAllUser
 }

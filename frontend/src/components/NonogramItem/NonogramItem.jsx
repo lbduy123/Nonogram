@@ -6,6 +6,8 @@ import { MdPlayArrow } from "react-icons/md";
 
 import { AiFillLike } from "react-icons/ai";
 import { convertTimeToMSM } from '../Timer/TimeHelper';
+import { memo } from 'react';
+import { renderGameMode } from '../../Util/Setting';
 
 function NonogramItem({ isEditShown, nonogram, userId, isPlayed, bestTime }) {
 	const dispatch = useDispatch()
@@ -20,28 +22,15 @@ function NonogramItem({ isEditShown, nonogram, userId, isPlayed, bestTime }) {
 		dispatch(updateNonogramPlayed(nonogram._id));
 		navigate('/p/' + nonogram._id)
 	}
-
-
 	return (
-		<div className="goal">
-			{/* <div>
-				{new Date(nonogram.createdAt).toLocaleString('en-US')}
-			</div>
-			<h2>{nonogram.rows}x{nonogram.cols}</h2>
-			<h3>Votes: {nonogram.meta.votes.length}</h3>
-			<h3>Played: {nonogram.meta.played.quantity}</h3>
-			{window.location.pathname !== '/' ?
-				<button onClick={() => dispatch(deleteNonogram(nonogram._id))} className="close">x</button> :
-				<></>}
-			{isEditShown ? <button onClick={handleEdit} className="edit">Edit</button> : <></>}
-			<button onClick={handlePlay} className="play">Play</button> */}
+		<>
 			<div className={`${styles['container']}`}>
 				<div className={`${styles['title']}`}>
 					<h3>{nonogram.rows}x{nonogram.cols}</h3>
 					<hr />
-					<h4>{(nonogram.rows > 5 || nonogram.cols > 5) ? ((nonogram.rows > 10 || nonogram.cols > 10) ? ((nonogram.rows > 15 || nonogram.cols > 15) ? "Super Hard" : "Hard") : "Normal") : "Easy"}</h4>
+					<h4 className={`${styles['item__name']}`}>{nonogram.name}</h4>
 					<hr />
-					<h4>Social Mode</h4>
+					<h4 className={`${styles['item__mode']}`}>{renderGameMode(nonogram.rows,nonogram.cols)}</h4>
 				</div>
 				<div className={`${styles['matchingPicture']}`}>
 					{!isPlayed ?
@@ -53,18 +42,31 @@ function NonogramItem({ isEditShown, nonogram, userId, isPlayed, bestTime }) {
 						</>}
 				</div>
 				<div className={`${styles['socialIcon']}`}>
-					<MdPlayArrow className={`${styles['play']}`} /> <span>{nonogram.meta.played.quantity}</span>
-					<AiFillLike className={nonogram.meta.votes.includes(userId) ? `${styles['like--active']}` : `${styles['like']}`} /> <span>{nonogram.meta.votes.length}</span>
+					{window.location.pathname !== '/' && window.location.pathname !== '/casual' ?
+						<div className={`${styles['iconWrapper']}`}>
+							<img className={`${styles['author__image']}`} src="https://i.pravatar.cc/150?u=12312" alt="author" />
+							<p>Author</p>
+						</div> :
+						""
+					}
+					<div className={`${styles['iconWrapper']}`}>
+						<MdPlayArrow className={`${styles['play']}`} />
+						<p>{nonogram.meta.played.quantity}</p>
+					</div>
+					<div className={`${styles['iconWrapper']}`}>
+						<AiFillLike className={nonogram.meta.votes.includes(userId) ? `${styles['like--active']}` : `${styles['like']}`} />
+						<p>{nonogram.meta.votes.length}</p>
+					</div>
 				</div>
 				<div className={`${styles['action']}`}>
-					{window.location.pathname !== '/' ?
+					{window.location.pathname !== '/' && window.location.pathname !== '/workshop' && window.location.pathname !== '/casual' ?
 						<span className={`${styles['removeButton']}`} onClick={() => dispatch(deleteNonogram(nonogram._id))} >x</span> :
 						<></>}
 					{isEditShown ? <span onClick={handleEdit} className={`${styles['playButton']}`}>Edit</span> : <span onClick={handlePlay} className={`${styles['playButton']}`}>Play</span>}
 				</div>
 			</div>
-		</div>
+		</>
 	)
 }
 
-export default NonogramItem
+export default memo(NonogramItem)

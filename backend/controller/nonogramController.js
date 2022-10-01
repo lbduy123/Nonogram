@@ -200,7 +200,7 @@ const deleteNonogram = asyncHandler(async (req, res) => {
 	}
 
 	// Make sure the logged in user matches the goal user
-	if (nonogram.author.toString() !== req.user.id) {
+	if (nonogram.author.toString() !== req.user.id && req.user.roleLevel !== '9' ) {
 		res.status(401)
 		throw new Error('User not authorized')
 	}

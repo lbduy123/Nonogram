@@ -3,12 +3,13 @@ import { useNavigate } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import NonogramItem from '../components/NonogramItem/NonogramItem'
 import Spinner from '../components/Spinner/Spinner'
-import { getAllCasualNonograms, reset } from '../features/nonograms/nonogramSlice'
+import { getAllWorkshopNonograms, getNonograms, reset } from '../features/nonograms/nonogramSlice'
 import styles from './Dashboard.module.css'
 import { AiOutlineSearch, AiFillFilter, AiFillCaretDown } from 'react-icons/ai'
 import { TiDelete } from 'react-icons/ti'
 import { handleFilterByMode, handleFilterBySearch, handleFilterBySort } from './PlayGroundHelper'
 import { MAX_ITEM_PER_PAGE, MODE_LIST, SORT_LIST } from '../Util/Setting'
+
 
 function checkItemwithUser(nonogram, userId) {
   const result = nonogram?.meta?.played?.by.find((info) => info.id === userId)
@@ -19,21 +20,22 @@ function checkItemwithUser(nonogram, userId) {
   }
 }
 
-function Dashboard() {
+function WorkShop() {
   const navigate = useNavigate()
   const dispatch = useDispatch()
 
   const { user } = useSelector((state) => state.auth)
-  const { allCasualNonograms, isLoading, isError, message } = useSelector(
+  const { allWorkshopNonograms, isLoading, isError, message } = useSelector(
     (state) => state.nonograms
   )
 
   const [sortByItem, setSortByItem] = useState(false);
   const [checked, setChecked] = useState([]);
   const [searchContent, setSearchContent] = useState("");
-  const [Nonogram, setNonogram] = useState(allCasualNonograms)
+  const [Nonogram, setNonogram] = useState(allWorkshopNonograms)
   const [pageIndex, setPageIndex] = useState(1);
-  const [pageNumbers,setPageNumbers] = useState([])
+  const [pageNumbers, setPageNumbers] = useState([])
+  const [isMyNonogram, setIsMynonogram] = useState(false)
 
 
   const typingTimeoutRef = useRef(null)
@@ -48,20 +50,21 @@ function Dashboard() {
       navigate('/login')
     }
 
-    dispatch(getAllCasualNonograms())
+    dispatch(getAllWorkshopNonograms());
+    dispatch(getNonograms());
 
     return () => {
       dispatch(reset())
     }
   }, [user, navigate, isError, message, dispatch])
   useEffect(() => {
-    setNonogram(allCasualNonograms);
-  }, [allCasualNonograms])
+    setNonogram(allWorkshopNonograms);
+  }, [allWorkshopNonograms])
 
   useEffect(() => {
     totalPage.current = Math.ceil(Nonogram.length / MAX_ITEM_PER_PAGE)
     let pageNumbers = [];
-    for(let i = 1; i<= (totalPage.current); i++) {
+    for (let i = 1; i <= (totalPage.current); i++) {
       pageNumbers.push(i);
     }
     setPageNumbers(pageNumbers)
@@ -99,11 +102,11 @@ function Dashboard() {
       else{
         Array =  ['all']
       }
-      handleFilter(searchContent, sortByItem,Array);
+      handleFilter(searchContent, sortByItem,Array,isMyNonogram);
   }
   const handleChangeSort = (sortItem) => {
     setSortByItem(sortItem)
-    handleFilter(searchContent, sortItem)
+    handleFilter(searchContent, sortItem,checked,isMyNonogram)
   }
   const handleChangeInput = (event) => {
     const value = event;
@@ -114,18 +117,30 @@ function Dashboard() {
 
     typingTimeoutRef.current = setTimeout(() => {
 
-      handleFilter(value, sortByItem,checked);
+      handleFilter(value, sortByItem,checked,isMyNonogram);
     }, 200)
   }
   const handleClearInPut = () => {
     setSearchContent("");
-    handleFilter("",sortByItem,checked);
+    handleFilter("",sortByItem,checked,checked, isMyNonogram);
   }
-  const handleFilter = (searchText, sortOption, CheckOption = []) => {
-    setPageIndex(1);
-    
-    let nonogramFilter = handleFilterBySearch(allCasualNonograms,searchText)
 
+  const handleActiveNonogramUser = (check)=>{
+    setIsMynonogram(!check);
+    handleFilter(searchContent, sortByItem,checked, !check)
+  }
+  const handleFilter = (searchText, sortOption,CheckOption = [], CheckUser=false) => {
+    setPageIndex(1);
+    let nonogramFilter = Nonogram;
+    console.log(CheckUser);
+    if(CheckUser) {
+      nonogramFilter = allWorkshopNonograms.filter((nonogram)=>nonogram.author === user._id)
+    }
+    else {
+      nonogramFilter = allWorkshopNonograms
+    }
+    nonogramFilter = handleFilterBySearch(nonogramFilter,searchText)
+    
     if(handleFilterBySort(nonogramFilter,sortOption)){
       nonogramFilter = handleFilterBySort(nonogramFilter,CheckOption)
     }
@@ -133,25 +148,29 @@ function Dashboard() {
     if(handleFilterByMode(nonogramFilter,CheckOption)){
       nonogramFilter = handleFilterByMode(nonogramFilter,CheckOption)
     }
-
     setNonogram(nonogramFilter);
   }
+
   const handleChangePage = (pageNumber) => {
+
     setPageIndex(pageNumber)
   }
+
   return (
     <section className={styles['playground']}>
       <div className={styles['container']}>
         <div className={styles['header']}>
-          <h1>Casual</h1>
+          <div>
+            <h1>WorkShop</h1>
+          </div>
           <div className={styles['playground__action']}>
             <div className={styles['playground__search']}>
               <span className={styles['playground__searchIcon']}><AiOutlineSearch /></span>
               <input value={searchContent} id="searchInput" onChange={(e) => handleChangeInput(e.target.value)} className={styles['playground__searchInput']} type="text" placeholder="Search your game" />
             </div>
-            <div className={styles['playground__filter']}>
+            <div onClick={() => handleActiveNonogramUser(isMyNonogram)}className={isMyNonogram? `${styles['playground__filterActive']}`: `${styles['playground__filter']}`}>
               <span className={styles['playground__filterIcon']}><AiFillFilter /></span>
-              <p>FIlter</p>
+              <p style={{marginLeft: '5px'}}> Your game</p>
             </div>
             <div className={styles['playground__sortBy']}>
               <div className={styles['sortBy__select']}>
@@ -210,24 +229,24 @@ function Dashboard() {
               }
 
             </div>
-            {allCasualNonograms.length > 0 ? (
+            {allWorkshopNonograms.length > 0 ? (
               <>
                 <div className={styles['content__game']}>
-                  {Nonogram.slice((pageIndex - 1) * MAX_ITEM_PER_PAGE,(pageIndex * MAX_ITEM_PER_PAGE)).map((nonogram) => {
+                  {Nonogram.slice((pageIndex - 1) * MAX_ITEM_PER_PAGE, (pageIndex * MAX_ITEM_PER_PAGE)).map((nonogram) => {
                     const { isPlayed, bestTime } = checkItemwithUser(nonogram, user?._id)
                     return <NonogramItem isPlayed={isPlayed} bestTime={bestTime} userId={user?._id} key={nonogram?._id} nonogram={nonogram} isEditShown={false} />
                   })}
                 </div>
                 <div className={styles['content__Pagination']}>
                   <span className={styles['Pagination__item']}>&laquo;</span>
-                  {pageNumbers.map((item,index)=>{
-                    return <span  onClick={()=> {handleChangePage(item)}} className={pageIndex !== item?`${styles['Pagination__item']}`:`${styles['Pagination__itemActive']}`} key={index}>{item}</span>
+                  {pageNumbers.map((item, index) => {
+                    return <span onClick={() => { handleChangePage(item) }} className={pageIndex !== item ? `${styles['Pagination__item']}` : `${styles['Pagination__itemActive']}`} key={index}>{item}</span>
                   })}
-                   <span className={styles['Pagination__item']}>&raquo;</span>
+                  <span className={styles['Pagination__item']}>&raquo;</span>
                 </div>
               </>
             ) : (<h3>Not available</h3>)}
-            
+
           </div>
           <div className={styles['content__filter']}>
             <div className={styles['fitler__mode']}>
@@ -260,6 +279,6 @@ function Dashboard() {
   )
 }
 
-export default Dashboard
+export default WorkShop
 
 

@@ -69,7 +69,7 @@ function New() {
   }
 
   return (
-    <section className="form">
+    <section className="form" style={{marginTop:'80px'}}>
       <form onSubmit={onSubmit}>
         <div className="form-group">
           <div className="form-input">

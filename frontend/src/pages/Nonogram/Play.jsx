@@ -25,12 +25,12 @@ function Play() {
   const handleOpenDialog = () => setIsOpen(true);
 
   const { user } = useSelector((state) => state.auth)
-  const { nonogram, isLoading, isError, message, isSuccess } = useSelector(
+  const { nonogram, isError, message, isSuccess } = useSelector(
     (state) => state.nonograms
   )
   
-  const [rows, setRows] = useState(5)
-  const [cols, setCols] = useState(5)
+  const [rows, setRows] = useState()
+  const [cols, setCols] = useState()
   const [showedHints, setShowedHints] = useState(0)
   const [isPlayComplete, setIsPlayComplete] = useState(false)
   const [isLose, setIsLose] = useState(false)
@@ -109,7 +109,8 @@ function Play() {
   const isLiked = nonogram?.meta?.votes.includes(user._id)
 
   return (
-    <div style={{
+    <>
+    {rows!==undefined && cols!==undefined?<div style={{
       maxWidth: `calc(90px + 2*60px*${cols})`,
     }}
       className={styles['playSection']}
@@ -125,7 +126,7 @@ function Play() {
         yourBestTime={yourBestTime}
       />
 
-      <Timer isStart={isSuccess} getTimeResult={setTimeResult} timeBegin={timeBegin} isLose={isLose} check={isPlayComplete} />
+      <Timer getTimeResult={setTimeResult} timeBegin={timeBegin} isLose={isLose} check={isPlayComplete} />
 
       <div className={styles['bestTimeWrapper']}>
         {matchBestTime !== undefined ? <GiTrophy className={styles['bestTimeIcon']} /> : ""}
@@ -160,7 +161,9 @@ function Play() {
         </p>
         
       </div>
-    </div>
+    </div>:<Spinner/> }
+    </>
+    
   )
 }
 

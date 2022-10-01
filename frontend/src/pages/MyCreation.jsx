@@ -4,6 +4,10 @@ import { useSelector, useDispatch } from 'react-redux'
 import Spinner from '../components/Spinner/Spinner'
 import { getNonograms, reset } from '../features/nonograms/nonogramSlice'
 import NonogramItem from '../components/NonogramItem/NonogramItem'
+import styles from './MyCreation.module.css'
+
+import { MdCreateNewFolder } from "react-icons/md";
+import { FaPlus } from "react-icons/fa";
 
 function MyCreation() {
 	const navigate = useNavigate()
@@ -40,25 +44,51 @@ function MyCreation() {
 	}
 
 	return (
-		<>
-			<section className="heading">
-				<h1>{user?.name}'s Creation</h1>
-			</section>
-
-			<section className="content">
-				{nonograms.length > 0 ? (
-					<div className="goals">
-						{nonograms.map((nonogram) => (
-							<NonogramItem key={nonogram._id} nonogram={nonogram} isEditShown={true} />
-						))}
+		<section className={styles['myCreation']}>
+			<div className={styles['container']}>
+				<div className={styles['header']}>
+					<div>
+						<img className={styles['header__avatar']} width="200" height="auto" src={`https://i.pravatar.cc/150?u=${user._id}`} alt="xin chào user" />
+						<p className={styles['header__name']}>{user.name}</p>
 					</div>
-				) : (<h3>Currently have no creation</h3>)}
-			</section>
+					<div className={styles['header__action']}>
+						<p onClick={handleCreate} className={styles['action__item']}>Create your game</p>
+						<p className={styles['action__item']}>Profile</p>
+					</div>
+					<div className={styles['header__analyzer']}>
+						<span>Game: </span>
+						<span>{nonograms.length}</span>
+					</div>
 
-			<div style={{ display: 'flex', justifyContent: 'center', marginTop: '50px' }}>
-				<button onClick={handleCreate} className="btn btn-primary">Create new nonogram</button>
+				</div>
+				<div className={styles['nonogram__list']}>
+					<div className={styles['nonogram__create']}>
+						<div className={styles['nonogram__createWrapper']}>
+							<p>Show off your best work. Get feedback, likes and be a part of a growing community.</p>
+						</div>
+
+											
+							<div onClick={handleCreate} className={styles['action__item']}>
+								<span><FaPlus className={styles['action__icon']} /></span>
+								<span>Create your game</span>
+							</div>
+						
+					</div>
+					{nonograms.length > 0 ? (
+						<>
+							{nonograms.map((nonogram) => (
+								<NonogramItem key={nonogram._id} nonogram={nonogram} isEditShown={true} />
+							))}
+						</>
+					) : (<h3>Currently have no creation</h3>)}
+				</div>
+
+
+
 			</div>
-		</>
+
+
+		</section>
 	)
 }
 

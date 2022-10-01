@@ -69,7 +69,7 @@ const Grid = ({ rows, cols, updateGridData, mode, isPlayComplete, showedHints, h
 		setColHintsData(_hint.colData)
 	}, [nonogram.gridData,isRestart])
 
-	// handle remove blue when restarting
+	// handle remove blur when restarting
 	useEffect(() => {
 		const blurRowElements = document.querySelectorAll('.row-hint-blur');
 		const blurColElemnts = document.querySelectorAll('.col-hint-blur');
@@ -81,6 +81,7 @@ const Grid = ({ rows, cols, updateGridData, mode, isPlayComplete, showedHints, h
 
 			element.classList.remove('col-hint-blur')
 		})
+		setBlur([]);
 	},[isRestart])
 	const handleCellClick = (props, isCellCorrect) => {
 		if (mode !== "edit") {
